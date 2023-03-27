@@ -6,67 +6,41 @@ const { v4: uuidv4 } = require('uuid');
 
 router.get('/', async (req, res, next) => {
     try {
-        const client = req.query.c;
-        const sort = req.query.sort;
         let page = req.query.page;
         if (page < 1 || !page) {
             page = 1;
         }
         const limit = 10;
-        let orders;
-        const allOrders = await db.select('id', 'nom', 'created_at', 'livraison', 'status', 'montant').from('commande');
-        if (page > Math.ceil(allOrders.length / limit)) {
-            page = Math.ceil(allOrders.length / limit);
+        let events;
+        const allEvents = await db.select('id', 'name', 'description', 'date', 'name_orga', 'mail_orga', 'id_place').from('Event');
+        if (page > Math.ceil(allEvents.length / limit)) {
+            page = Math.ceil(allEvents.length / limit);
         }
-        if (client) {
-            if (sort) {
-                let dbname;
-                switch (sort) {
-                    case creation:
-                        dbname = 'created_at';
-                        break;
-                    case livraison:
-                        dbname = 'livraison';
-                        break;
-                    case montant:
-                        dbname = 'montant';
-                    default:
-                        dbname = 'created_at';
-                        break;
-                }
-                orders = await db.select('id', 'nom', 'created_at', 'livraison', 'status', 'montant').from('commande').where({ mail: client }).limit(limit).offset((page - 1) * limit).orderBy(dbname, 'desc');
-            }
-            else {
-                orders = await db.select('id', 'nom', 'created_at', 'livraison', 'status', 'montant').from('commande').where({ mail: client }).limit(limit).offset((page - 1) * limit);
-            }
-        }
-        else {
-            orders = await db.select('id', 'nom', 'created_at', 'livraison', 'status', 'montant').from('commande').limit(limit).offset((page - 1) * limit);
-        }
-
-        if (!orders) {
-            res.status(404).json({ type: "error", error: 404, message: "ressource non disponible" });
+        events = await db.select('id', 'name', 'description', 'date', 'name_orga', 'mail_orga', 'id_place').from('Event').limit(limit).offset((page - 1) * limit);
+        
+        if (!events) {
+            res.status(404).json({ type: "error", error: 404, message: "events not found" });
             // res.sendStatus(404);
             //  next();
         } else {
-            // Affiche les commandes avec un lien vers leur commande 
+            // Affiche les données
             let data = [];
-            orders.forEach(order => {
+            events.forEach(event => {
                 data.push({
-                    order: order,
-                    links: { self: { href: "/orders/" + order.id } }
+                    event: event,
+                    links: { self: { href: "/events/" + event.id } }
                 })
             });
             let nextPage = parseInt(page) + 1;
             let prevPage = page - 1;
-            let lastPage = Math.ceil(allOrders.length / limit);
+            let lastPage = Math.ceil(allEvents.length / limit);
             if (prevPage < 1) {
                 prevPage = 1;
             }
             if (nextPage > lastPage) {
                 nextPage = lastPage;
             }
-            res.json({ type: "collection", count: allOrders.length, size: orders.length,links: { next: { href: "/orders?page=" + nextPage}, prev: { href: "/orders?page=" + prevPage}, last: { href: "/orders?page=" + lastPage}, first: { href: "/orders?page=1" } }, orders: data } );
+            res.json({ type: "collection", count: allEvents.length, size: events.length, links: { next: { href: "/events?page=" + nextPage}, prev: { href: "/events?page=" + prevPage}, last: { href: "/events?page=" + lastPage}, first: { href: "/events?page=1" } }, events: data } );
         }
 
     } catch (error) {
@@ -76,28 +50,27 @@ router.get('/', async (req, res, next) => {
 
 });
 
-// GET /api/orders/:id
+// GET events/:id
 router.get('/:id', async (req, res, next) => {
     try {
         const { id } = req.params;
-        const embed = req.query.embed === "items";
-        const task = await db.select('id', 'mail', 'nom', 'created_at', 'livraison', 'montant').from('commande').where({ id }).first();
+        const event = await db.select('id', 'name', 'description', 'date', 'name_orga', 'mail_orga', 'id_place').from('Event').where({ id }).first();
+        const id_place = event.id_place;
 
-        if (!task) {
-            res.status(404).json({ type: "error", error: 404, message: "ressource non disponible " + req.originalUrl });
+        if (!event) {
+            res.status(404).json({ type: "error", error: 404, message: "event not found " + req.originalUrl });
             // affiche lien de la ressource
         } else {
-            if (embed) {
-                const items = await db.select('id', 'uri', 'libelle', 'tarif', 'quantite').from('item').where({ command_id: id });
-                task.items = items;
-                res.status(200).json({ type: "resource", order: task, links: { items: { href: "/orders/" + id + "/items/" }, self: { href: "/orders/" + id } } });
+            if (id_place) {
+                const places = await db.select('id', 'name', 'adress', 'lat', 'lon').from('Place').where({ id: id_place });
+                res.status(200).json({ event: event, place: places });
 
             } else {
-                res.status(200).json({ type: "resource", order: task, links: { items: { href: "/orders/" + id + "/items/" }, self: { href: "/orders/" + id } } });
+                res.status(200).json({ event: event });
             }
         }
     } catch (error) {
-        res.status(500).json({ type: "error", error: 500, message: "erreur serveur", details: error });
+        res.status(500).json({ type: "error", error: 500, message: "server error", details: error });
         next(error);
     }
 });
