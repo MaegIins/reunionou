@@ -3,6 +3,7 @@
   <div class="map-container">
     <div id="map"></div>
     <div class="event-form" v-if="showEventForm">
+      <button class="close-btn" @click="showEventForm = false"><i class="fas fa-times"></i></button>
       <h2>Create Event</h2>
       <form @submit.prevent="createEvent">
         <label for="name">Name:</label>
@@ -39,7 +40,6 @@ export default {
       eventDescription: '',
       eventDate: '',
       marker: null,
-
       events: [], // add an empty array for events
       map: null, // add a data property for the map object
     }
