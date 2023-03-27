@@ -1,0 +1,97 @@
+@import "font&colors.scss";
+
+
+.accueil{
+    background: $bluePrimary;
+    background: radial-gradient(circle, $bluePrimary 0%, rgba(11,0,77,1) 17%, rgba(10,10,10,1) 59%, rgba(10,10,10,1) 100%);
+    padding: 0;
+    margin: 0;
+    top : 0;
+    left : 0;
+    height: 100vh;
+    width: 100vw;
+    position: fixed;
+
+
+
+    #main{
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        font-family:"Bungee", cursive;
+        height: 100vh;
+        width: 100vw;
+
+        h1{
+            font-size: 6rem;
+            font-weight: 700;
+            color: $white;
+            margin: 0;
+            padding: 0;
+        }
+
+        div{
+            display: flex;
+            flex-direction: column;
+            button{
+                font-size: 4rem;
+                font-family:"Bungee", cursive;
+                margin : 10px;
+                padding: 10px;
+                border-radius: 20px;
+                border: none;
+                transition: all 0.3s ease-in-out;
+            }
+
+            button:hover{
+
+                border-radius: 50px;
+                color: $bluePrimary;
+
+            }
+        }
+    }
+
+    .login{
+        position: fixed;
+        top:10px;
+        right: 10px;
+        display: flex;
+        flex-direction: row;
+        justify-content: center;
+        margin: 20px;
+
+        div{
+            display: flex;
+            flex-direction: row;
+            justify-content: center;
+            align-items: center;
+            *{
+                margin: 10px;
+            }
+
+            a{
+                text-decoration: none;
+                color: $white;
+                font-family:"Bungee", cursive;
+
+
+            }
+            a:hover{
+                color: $whitehover;
+            }
+
+
+
+        }
+
+        *{
+            color: $white;
+        }
+    }
+
+
+
+
+}
