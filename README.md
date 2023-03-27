@@ -9,7 +9,7 @@ version mobile (smartphones, tablettes).
 - [Tristan BELMONT](https://github.com/MaegIins)
 - [Quentin DAL BON](https://github.com/Quent5)
 - [Lucas FARRONI](https://github.com/lucasfarroni)
-- [Axel LEGUYEN](https://github.com/lgyn)
+- [Axel LEGUYEN](https://github.com/lgyn57)
 - [Clément PERRIN](https://github.com/alfiov)
 
 ---------------------------------------------------------------------------------
