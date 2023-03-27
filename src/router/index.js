@@ -7,11 +7,11 @@
  import InsideSharedAccount from "@/components/InsideSharedAccount.vue";
  */
 import AccueilApp from "@/components/AccueilApp.vue";
-
+import Map from "@/components/Map.vue";
 
 const routes = [
     {name: 'AllSharedAccount', path: '/', component: AccueilApp},
-   // {name: 'AddSharedAccount', path: '/newAccount', component: },
+    {name: 'TEST', path: '/Map', component: Map },
     //{name: 'InsideSharedAccount', path: '/accounts/:id', component: },
 
 
