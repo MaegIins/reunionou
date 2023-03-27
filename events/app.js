@@ -20,7 +20,7 @@ app.use(express.urlencoded({ extended: false }));
 
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
-app.use('/orders', ordersRouter);
+app.use('/events', ordersRouter);
 
 // 404 
 app.use((req, res, next) => {
