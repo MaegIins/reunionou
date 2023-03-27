@@ -1,3 +1,4 @@
+
 <template>
   <div class="map-container">
     <div id="map"></div>
@@ -16,16 +17,21 @@
     <ul class="event-list">
       <li v-for="(event, index) in events" :key="index">
         {{ event.name }} - {{ event.description }} - {{ event.date }}
+        <Comments :eventId="event.id" />
       </li>
     </ul>
   </div>
 </template>
 
 <script>
+
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
+import Comments from "./Comments.vue";
 export default {
   name: 'Map',
+  components: {Comments},
+
   data() {
     return {
       showEventForm: false,
@@ -33,6 +39,7 @@ export default {
       eventDescription: '',
       eventDate: '',
       marker: null,
+
       events: [], // add an empty array for events
       map: null, // add a data property for the map object
     }
@@ -60,6 +67,7 @@ export default {
     createEvent() {
       const { lat, lng } = this.marker.getLatLng();
       const newEvent = {
+        id: this.events.length + 1, // add an id to the new event object
         name: this.eventName,
         description: this.eventDescription,
         date: this.eventDate,
