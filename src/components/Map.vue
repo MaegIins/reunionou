@@ -13,13 +13,17 @@
         <button type="submit">Create</button>
       </form>
     </div>
+    <ul class="event-list">
+      <li v-for="(event, index) in events" :key="index">
+        {{ event.name }} - {{ event.description }} - {{ event.date }}
+      </li>
+    </ul>
   </div>
 </template>
 
 <script>
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
-
 export default {
   name: 'Map',
   data() {
@@ -28,28 +32,33 @@ export default {
       eventName: '',
       eventDescription: '',
       eventDate: '',
-      marker: null // add a marker variable to the component's data
+      marker: null,
+      events: [], // add an empty array for events
+      map: null, // add a data property for the map object
     }
   },
   mounted() {
-    const map = L.map('map').setView([48.8566, 2.3522], 13);
+    // create a map and assign it to the data property
+    this.map = L.map('map').setView([48.8566, 2.3522], 13);
 
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
       attribution: '&copy; OpenStreetMap contributors'
-    }).addTo(map);
+    }).addTo(this.map);
 
-    this.marker = L.marker([48.8566, 2.3522]).addTo(map); // assign the marker to the component's data
+    // add marker
+    this.marker = L.marker([48.8566, 2.3522]).addTo(this.map);
 
-    map.on('click', (e) => {
+    this.showEventsOnMap(this.marker);
+
+    this.map.on('click', (e) => {
       const { lat, lng } = e.latlng;
-      this.marker.setLatLng([lat, lng]); // use this.marker to update the marker's position
-
+      this.marker.setLatLng([lat, lng]);
       this.showEventForm = true;
     });
   },
   methods: {
     createEvent() {
-      const { lat, lng } = this.marker.getLatLng(); // use this.marker to get the marker's position
+      const { lat, lng } = this.marker.getLatLng();
       const newEvent = {
         name: this.eventName,
         description: this.eventDescription,
@@ -57,14 +66,29 @@ export default {
         lat: lat,
         lng: lng
       };
-      console.log('New Event:', newEvent);
+      this.events.push(newEvent); // add the new event to the events array
       this.eventName = '';
       this.eventDescription = '';
       this.eventDate = '';
       this.showEventForm = false;
+      console.log('New Event:', newEvent);
+      this.showEventsOnMap(this.map); // call the method to show events on the map and pass the map object
+    },
+    showEventsOnMap(map) {
+      this.events.map(event => {
+        const { lat, lng, name, description, date } = event;
+        console.log(lat, lng, name, description, date);
+        const popupContent = `
+<h2>${name}</h2>
+<p>${description}</p>
+<p>${date}</p>
+`;
+        const eventMarker = L.marker([lat, lng]).addTo(map);
+        eventMarker.bindPopup(popupContent);
+      });
     }
   }
-};
+}
 </script>
 
 <style>
