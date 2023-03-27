@@ -1,57 +1,61 @@
-SET NAMES utf8;
-SET time_zone = '+00:00';
-SET foreign_key_checks = 0;
-SET sql_mode = 'NO_AUTO_VALUE_ON_ZERO';
+SET
+    NAMES utf8;
 
-DROP TABLE IF EXISTS `client`;
-CREATE TABLE `client` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `nom_client` varchar(128) NOT NULL,
-  `mail_client` varchar(256) NOT NULL,
-  `passwd` varchar(256) NOT NULL,
-  `cumul_achats` decimal(8,2) DEFAULT NULL,
-  `created_at` datetime DEFAULT NULL,
-  `updated_at` datetime DEFAULT NULL,
-  PRIMARY KEY (`id`)
+SET
+    time_zone = '+00:00';
+
+SET
+    foreign_key_checks = 0;
+
+SET
+    sql_mode = 'NO_AUTO_VALUE_ON_ZERO';
+
+
+DROP TABLE IF EXISTS `Event`;
+CREATE TABLE `Event` (
+  `id` varchar(256) NOT NULL,
+  `name` varchar(128) NOT NULL,
+  `description` varchar(256) NOT NULL,
+  `date` datetime DEFAULT NULL,
+  `name_orga` varchar(256) NOT NULL,
+  `mail_orga` varchar(256) NOT NULL,
+  `id_place` varchar(256) NOT NULL,
+  PRIMARY KEY (`id`),
+  FOREIGN KEY (`id_place`) REFERENCES `Place`(`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 
-DROP TABLE IF EXISTS `mode_paiement`;
-CREATE TABLE `mode_paiement` (
+DROP TABLE IF EXISTS `Attendee`;
+CREATE TABLE `Attendee` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
-  `libelle` varchar(255) NOT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
-DROP TABLE IF EXISTS `commande`;
-CREATE TABLE `commande` (
-  `id` varchar(128) NOT NULL,
-  `created_at` datetime NOT NULL,
-  `updated_at` datetime DEFAULT NULL,
-  `livraison` datetime NOT NULL,
-  `nom` varchar(128) NOT NULL,
-  `mail` varchar(256) NOT NULL,
-  `montant` decimal(8,2) DEFAULT NULL,
-  `remise` decimal(8,2) DEFAULT NULL,
-  `token` varchar(128) DEFAULT NULL,
-  `client_id` int(11) DEFAULT NULL,
-  `ref_paiement` varchar(128) DEFAULT NULL,
-  `date_paiement` datetime DEFAULT NULL,
-  `mode_paiement` int(11) DEFAULT NULL,
-  `status` int(11) NOT NULL DEFAULT 1,
-  KEY `mode_paiement` (`mode_paiement`),
-  CONSTRAINT `commande_ibfk_1` FOREIGN KEY (`mode_paiement`) REFERENCES `mode_paiement` (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
+  `id_event` varchar(256) NOT NULL,
+  `name_user` varchar(256) NOT NULL,
+  `mail_user` varchar(256) DEFAULT NULL,  
+  `status` int(2) DEFAULT 0,
+  `details` varchar(256),
+  PRIMARY KEY (`id`),
+  FOREIGN KEY (`id_event`) REFERENCES `Event`(`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 
-
-DROP TABLE IF EXISTS `item`;
-CREATE TABLE `item` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `uri` varchar(128) NOT NULL,
-  `libelle` varchar(128) DEFAULT NULL,
-  `tarif` decimal(8,2) DEFAULT NULL,
-  `quantite` int(11) DEFAULT 1,
-  `command_id` varchar(128) NOT NULL,
+DROP TABLE IF EXISTS `Place`;
+CREATE TABLE `Place` (
+  `id` varchar(256) NOT NULL,
+  `name` varchar(128) NOT NULL,
+  `adress` varchar(128) NOT NULL,
+  `lat` decimal(22,10) NOT NULL,
+  `lon` decimal(22,10) NOT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+DROP TABLE IF EXISTS `Comments`;
+CREATE TABLE `Comments` (
+  `id_event` varchar(256) NOT NULL,
+  `id_attendee` int(11) NOT NULL,
+  `text` varchar(256) NOT NULL,
+  `date` datetime NOT NULL,
+  PRIMARY KEY (`id_event`, `id_attendee`),
+  FOREIGN KEY (`id_event`) REFERENCES `Event`(`id`),
+  FOREIGN KEY (`id_attendee`) REFERENCES `Attendee`(`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
