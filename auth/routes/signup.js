@@ -10,7 +10,7 @@ const Joi = require('joi')
     .extend(require('@joi/date'));
 
 const schema = Joi.object({
-    nom: Joi.string().max(25),
+    name: Joi.string().max(25),
     mail: Joi.string().max(20).email(),
     password: Joi.string().max(20).min(8),
 });
@@ -18,17 +18,17 @@ const schema = Joi.object({
 
 router.post('/', async (req, res, next) => {
     try {
-        const { client_name, client_mail, password } = req.body;
+        const { name, mail, password } = req.body;
         try {
-            const result = await schema.validateAsync({ nom: client_name, mail: client_mail, password: password });
+            const result = await schema.validateAsync({ name: name, mail: mail, password: password });
             if (result) {
-                const client = await db('client').where({ mail_client: client_mail });
-                if (client.length > 0) {
+                const user = await db('user').where({ user_mail: mail });
+                if (user.length > 0) {
                     res.status(409).json({ type: "error", error: 409, message: "EMAIL EXIST" });
                     return;
                 } else {
                     const hash = await bcrypt.hash(password, saltRounds);
-                    await db('client').insert({ nom_client: client_name, mail_client: client_mail, passwd: hash, created_at: new Date() });
+                    await db('user').insert({ user_name: name, user_mail: mail, passwd: hash });
                     res.status(201).json({ type: "sucess", error: 201, message: "CREATED" });
                 }
             }
@@ -37,7 +37,7 @@ router.post('/', async (req, res, next) => {
             res.status(500).json({ type: "error", error: err });
         }
     } catch (error) {
-        res.status(500).json({ type: "error", error: 500, message: "erreur serveur", details: error });
+        res.status(500).json({ type: "error", error: 500, message: "server error", details: error });
         next(error);
     }
 });

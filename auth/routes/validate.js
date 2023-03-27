@@ -30,9 +30,9 @@ router.get('/', async (req, res, next) => {
                 if (err) {
                     res.status(401).json({ type: "error", error: 401, message: err});
                 } else {
-                    const result = await db('client').select('id','nom_client', 'mail_client', 'passwd').where('id', decoded.id);
+                    const result = await db('user').select('id','user_name', 'user_mail', 'passwd').where('id', decoded.id);
                     if (result.length > 0) {
-                        res.status(200).json({ mail: result[0].mail_client, name: result[0].nom_client });
+                        res.status(200).json({ user_id: result[0].id, mail: result[0].user_mail, name: result[0].user_name });
                     } else {
                         res.status(401).json({ type: "error", error: 401, message: "error while retrieving user" });
                     }
@@ -41,7 +41,7 @@ router.get('/', async (req, res, next) => {
         }
     }
     catch (err) {
-        res.status(500).json({ type: "error", error: 500, message: "erreur serveur", details: err });
+        res.status(500).json({ type: "error", error: 500, message: "server error", details: err });
     }
 });
 

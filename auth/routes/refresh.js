@@ -27,19 +27,19 @@ router.post('/', async (req, res, next) => {
             } else {
                 const [type, token] = authHeader.split(' ');
                 console.log(token);
-                const result = await db('client').select('id','nom_client', 'mail_client', 'passwd', 'refresh_token').where('refresh_token', token);
+                const result = await db('user').select('id','user_name', 'user_mail', 'passwd', 'refresh_token').where('refresh_token', token);
                 if (result.length > 0) {
                     const payload = {
                         id: result[0].id,
-                        name: result[0].nom_client,
-                        mail: result[0].mail_client
+                        name: result[0].user_name,
+                        mail: result[0].user_mail
                     };
                     // access token
                     const accessToken = jwt.sign(payload, secretKey, { expiresIn: '1h' });
 
                     // refresh token
                     const refreshToken = randtoken.uid(50);
-                    await db('client').update({ refresh_token: refreshToken }).where('id', result[0].id);
+                    await db('user').update({ refresh_token: refreshToken }).where('id', result[0].id);
                     console.log(refreshToken);
 
                     res.status(200).json({ "access-token": accessToken, "refresh-token": refreshToken});
