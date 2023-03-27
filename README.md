@@ -6,14 +6,14 @@ version mobile (smartphones, tablettes).
 
 ## MEMBRES 
 
-- Tristan BELMONT
-- Quentin DAL BON
-- Lucas FARRONI
-- Axel LEGUYEN
-- Clément PERRIN
+- [Tristan BELMONT](https://github.com/MaegIins)
+- [Quentin DAL BON](https://github.com/Quent5)
+- [Lucas FARRONI](https://github.com/lucasfarroni)
+- [Axel LEGUYEN](https://github.com/lgyn)
+- [Clément PERRIN](https://github.com/alfiov)
 
 ---------------------------------------------------------------------------------
 
 ## Répartition du projet
 
-Le projet est répartis en 3 parties : La partie backend, la partie VueJS et la partie Flutter, chacun réparties dans leur branche.
+Le projet est répartis en 3 parties : La partie [backend](https://github.com/MaegIins/reunionou/tree/BACKEND), la partie [VueJS](https://github.com/MaegIins/reunionou/tree/VUE) et la partie [Flutter](https://github.com/MaegIins/reunionou/tree/FLUTTER), chacun réparties dans leur branche.
