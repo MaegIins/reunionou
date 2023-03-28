@@ -13,6 +13,14 @@ const schema = Joi.object({
     paiement_date: Joi.date().format('YYYY-MM-DD HH:mm').utc(),
 });
 
+const jwt = require('jsonwebtoken');
+
+const randtoken = require('rand-token');
+
+// La clé secrète pour la signature
+const secretKey = process.env.SECRET_KEY;
+
+
 
 // Voir tous les events
 router.get('/', async (req, res, next) => {
@@ -141,7 +149,23 @@ router.patch('/:id', async (req, res, next) => {
 });
 
 
-
+// uri share event with JWT token
+router.get('/:id/share', async (req, res, next) => {
+    try {
+        const { id } = req.params;
+        const event = await db.select('id', 'name', 'description', 'date', 'name_orga', 'mail_orga', 'id_place').from('Event').where({ id }).first();
+        if (!event) {
+            res.status(404).json({ type: "error", error: 404, message: "event not found " + req.originalUrl });
+        } else {
+            const payload = { id: event.id };
+            const token = jwt.sign( payload, secretKey, { expiresIn: '72h' });
+            res.status(200).json({ type: "sucess", message: "URI Created", shared_uri: "/invites?key=" + token });
+        }
+    } catch (error) {
+        res.status(500).json({ type: "error", error: 500, message: "server error", details: error });
+        next(error);
+    }
+});
 
 
 

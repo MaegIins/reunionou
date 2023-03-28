@@ -6,6 +6,7 @@ const indexRouter = require('./routes/index');
 const usersRouter = require('./routes/users');
 const ordersRouter = require('./routes/events');
 const placesRouter = require('./routes/places');
+const invitesRouter = require('./routes/invites');
 
 const app = express();
 
@@ -23,6 +24,7 @@ app.use('/', indexRouter);
 app.use('/users', usersRouter);
 app.use('/events', ordersRouter);
 app.use('/places', placesRouter);
+app.use('/invites', invitesRouter);
 
 // 404 
 app.use((req, res, next) => {
