@@ -27,7 +27,15 @@ router.get('/', async (req, res, next) => {
             let data = [];
             events.forEach(event => {
                 data.push({
-                    event: event,
+                    event: {
+                        id_event: event.id,
+                        name: event.name,
+                        description: event.description,
+                        date: event.date,
+                        attendee_name: event.name_orga,
+                        attendee_mail: event.mail_orga,
+                        place: event.id_place,
+                    },
                     links: { self: { href: "/events/" + event.id } }
                 })
             });
