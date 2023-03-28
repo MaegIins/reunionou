@@ -3,7 +3,18 @@ const router = express.Router();
 const db = require("../db_connection");
 const { v4: uuidv4 } = require('uuid');
 
+const Joi = require('joi')
+    .extend(require('@joi/date'));
 
+const schema = Joi.object({
+    nom: Joi.string().max(30),
+    mail: Joi.string().max(20).email(),
+    livraison: Joi.date().format('YYYY-MM-DD').utc(),
+    paiement_date: Joi.date().format('YYYY-MM-DD HH:mm').utc(),
+});
+
+
+// Voir tous les events
 router.get('/', async (req, res, next) => {
     try {
         let page = req.query.page;
@@ -58,7 +69,7 @@ router.get('/', async (req, res, next) => {
 
 });
 
-// GET events/:id
+// Voir un event avec son id
 router.get('/:id', async (req, res, next) => {
     try {
         const { id } = req.params;
@@ -90,8 +101,8 @@ router.get('/:id', async (req, res, next) => {
                 }
                 res.status(200).json(data);
 
-                } else {
-                    res.status(200).json({ event: event });
+            } else {
+                res.status(200).json({ event: event });
             }
         }
     } catch (error) {
@@ -100,89 +111,39 @@ router.get('/:id', async (req, res, next) => {
     }
 });
 
-
-
-const Joi = require('joi')
-    .extend(require('@joi/date'));
-
-const schema = Joi.object({
-    nom: Joi.string().max(30),
-    mail: Joi.string().max(20).email(),
-    livraison: Joi.date().format('YYYY-MM-DD').utc(),
-    paiement_date: Joi.date().format('YYYY-MM-DD HH:mm').utc(),
-});
-
-router.put('/:id', async (req, res, next) => {
-    try {
-        const { id } = req.params
-        const commande = await db('commande').where({ id }).first();
-        if (!commande) {
-            res.status(404).json({ type: "error", error: 404, message: "la commande n'existe pas " + req.originalUrl });
-        } else {
-            const { nom, mail, livraison } = req.body;
-            try {
-                const result = await schema.validateAsync({ nom: nom, mail: mail, livraison: livraison });
-                if (result) {
-                    await db('commande').where({ id }).update({ nom, mail, livraison });
-                    res.status(204).json({ type: "sucess", error: 204, message: "NO CONTENT" });
-                }
-            }
-            catch (err) {
-                res.status(500).json(err);
-
-            };
-        }
-    } catch (error) {
-        res.status(500).json({ type: "error", error: 500, message: "erreur serveur", details: error });
-        next(error);
-    }
-});
-
-router.patch('/:id/payment', async (req, res, next) => {
-    try {
-        const { id } = req.params
-        const commande = await db('commande').where({ id }).first();
-        if (!commande) {
-            res.status(404).json({ type: "error", error: 404, message: "la commande n'existe pas " + req.originalUrl });
-        } else {
-            const { moyen_de_paiement, paiement_date, status_commande } = req.body;
-            try {
-                const uuid = uuidv4();
-                const result = await schema.validateAsync({ paiement_date: paiement_date });
-                if (await db('mode_paiement').where({ id: moyen_de_paiement }).first() === undefined) return res.status(404).json({ type: "error", error: 404, message: "le mode de paiement n'existe pas " });
-                if (result) {
-                    await db('commande').where({ id }).update({ mode_paiement: moyen_de_paiement, date_paiement: paiement_date, ref_paiement: uuid, status: status_commande });
-                    res.status(200).json({ type: "succes", message: "SUCCES" });
-                }
-            }
-            catch (err) {
-                res.status(500).json(err);
-
-            };
-        }
-    } catch (error) {
-        res.status(500).json({ type: "error", error: 500, message: "erreur serveur", details: error });
-        next(error);
-    }
-});
-
-
-
-router.get('/:id/items', async (req, res, next) => {
+// Update event
+router.patch('/:id', async (req, res, next) => {
     try {
         const { id } = req.params;
-        const items = await db.select('id', 'uri', 'libelle', 'tarif', 'quantite').from('item').where({ command_id: id });
-        if (!items) {
-            res.status(404).json({ type: "error", error: 404, message: "La commande n'existe pas : " + req.originalUrl });
+        const event = await db.select('id', 'name', 'description', 'date', 'name_orga', 'mail_orga', 'id_place').from('Event').where({ id }).first();
+        if (!event) {
+            res.status(404).json({ type: "error", error: 404, message: "event not found " + req.originalUrl });
         } else {
-            res.status(200).json({ type: "collection", count: items.length, items: items });
-        }
+            const { name, description, date, name_orga, mail_orga, id_place } = req.body;
+            console.log(name, description, date, name_orga, mail_orga, id_place)
+            // if (!name || !description || !date || !name_orga || !mail_orga || !id_place) {
+            //     res.status(400).json({ type: "error", error: 400, message: "Bad request" });
+            // } else {
+                const result = await db('Event').where({ id }).update({ name, description, date, name_orga, mail_orga, id_place });
 
+                if (result) {
+                    res.status(201).set('Location', '/events/' + id).json({ type: "sucess", error: 201, message: "CREATED" });
+
+                } else {
+                    res.status(500).json({ type: "error", error: 500, message: "server error" });
+                }
+            }
+        // }
     } catch (error) {
-        res.status(500).json({ type: "error", error: 500, message: "erreur serveur", details: error });
+        res.status(500).json({ type: "error", error: 500, message: "server error", details: error });
         next(error);
     }
 });
+
+
+
+
+
 
 router.post('/', async (req, res, next) => {
     try {
