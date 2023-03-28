@@ -6,12 +6,6 @@ const { v4: uuidv4 } = require('uuid');
 const Joi = require('joi')
     .extend(require('@joi/date'));
 
-const schema = Joi.object({
-    nom: Joi.string().max(30),
-    mail: Joi.string().max(20).email(),
-    livraison: Joi.date().format('YYYY-MM-DD').utc(),
-    paiement_date: Joi.date().format('YYYY-MM-DD HH:mm').utc(),
-});
 
 const jwt = require('jsonwebtoken');
 
@@ -155,8 +149,6 @@ router.get('/:id/comments', async (req, res, next) => {
 
 
 
-const Joi = require('joi')
-    .extend(require('@joi/date'));
 
 const validUuid = Joi.string().guid().required();
 
@@ -181,41 +173,15 @@ router.put('/:id', async (req, res, next) => {
             // if (!name || !description || !date || !name_orga || !mail_orga || !id_place) {
             //     res.status(400).json({ type: "error", error: 400, message: "Bad request" });
             // } else {
-                const result = await db('Event').where({ id }).update({ name, description, date, name_orga, mail_orga, id_place });
-            };
-        }
+            const result = await db('Event').where({ id }).update({ name, description, date, name_orga, mail_orga, id_place });
+        };
     } catch (error) {
         res.status(500).json({ type: "error", error: 500, message: "erreur serveur", details: error });
         next(error);
     }
 });
 
-router.patch('/:id/payment', async (req, res, next) => {
-    try {
-        const { id } = req.params
-        const commande = await db('commande').where({ id }).first();
-        if (!commande) {
-            res.status(404).json({ type: "error", error: 404, message: "la commande n'existe pas " + req.originalUrl });
-        } else {
-            const { moyen_de_paiement, paiement_date, status_commande } = req.body;
-            try {
-                const uuid = uuidv4();
-                const result = await schema.validateAsync({ paiement_date: paiement_date });
-                if (await db('mode_paiement').where({ id: moyen_de_paiement }).first() === undefined) return res.status(404).json({ type: "error", error: 404, message: "le mode de paiement n'existe pas " });
 
-                if (result) {
-                    res.status(201).set('Location', '/events/' + id).json({ type: "sucess", error: 201, message: "CREATED" });
-
-                } else {
-                    res.status(500).json({ type: "error", error: 500, message: "server error" });
-                }
-            }
-        // }
-    } catch (error) {
-        res.status(500).json({ type: "error", error: 500, message: "server error", details: error });
-        next(error);
-    }
-});
 
 
 // uri share event with JWT token
@@ -227,7 +193,7 @@ router.get('/:id/share', async (req, res, next) => {
             res.status(404).json({ type: "error", error: 404, message: "event not found " + req.originalUrl });
         } else {
             const payload = { id: event.id };
-            const token = jwt.sign( payload, secretKey, { expiresIn: '72h' });
+            const token = jwt.sign(payload, secretKey, { expiresIn: '72h' });
             res.status(200).json({ type: "sucess", message: "URI Created", shared_uri: "/invites?key=" + token });
         }
     } catch (error) {
@@ -311,7 +277,7 @@ router.post('/', async (req, res, next) => {
                                 'adress': req.body.adress.street + ", " + req.body.adress.city,
                                 'lat': data[0].lat,
                                 'lon': data[0].lon,
-                            }
+                            })
                             //insertion de l'evenement
                             await db('Event').insert({
                                 'id': uuid,
