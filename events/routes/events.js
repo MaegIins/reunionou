@@ -81,10 +81,12 @@ const Joi = require('joi')
     .extend(require('@joi/date'));
 
 const schema = Joi.object({
-    nom: Joi.string().max(30),
-    mail: Joi.string().max(20).email(),
-    livraison: Joi.date().format('YYYY-MM-DD').utc(),
-    paiement_date: Joi.date().format('YYYY-MM-DD HH:mm').utc(),
+    title: Joi.string().max(100),
+    description: Joi.string().max(256),
+    date: Joi.date().format('YYYY-MM-DD').utc(),
+    name_orga: Joi.string().max(30),
+    name_place: Joi.string().max(100),
+    mail_orga: Joi.string().max(35).email(),
 });
 
 router.put('/:id', async (req, res, next) => {
@@ -120,11 +122,11 @@ router.patch('/:id/payment', async (req, res, next) => {
         if (!commande) {
             res.status(404).json({ type: "error", error: 404, message: "la commande n'existe pas " + req.originalUrl });
         } else {
-            const { moyen_de_paiement , paiement_date , status_commande   } = req.body;
+            const { moyen_de_paiement, paiement_date, status_commande } = req.body;
             try {
                 const uuid = uuidv4();
-                const result = await schema.validateAsync({paiement_date: paiement_date });
-                if(await db('mode_paiement').where({ id: moyen_de_paiement }).first() === undefined) return res.status(404).json({ type: "error", error: 404, message: "le mode de paiement n'existe pas "  });
+                const result = await schema.validateAsync({ paiement_date: paiement_date });
+                if (await db('mode_paiement').where({ id: moyen_de_paiement }).first() === undefined) return res.status(404).json({ type: "error", error: 404, message: "le mode de paiement n'existe pas " });
                 if (result) {
                     await db('commande').where({ id }).update({ mode_paiement: moyen_de_paiement, date_paiement: paiement_date, ref_paiement: uuid, status: status_commande });
                     res.status(200).json({ type: "succes", message: "SUCCES" });
@@ -141,7 +143,7 @@ router.patch('/:id/payment', async (req, res, next) => {
     }
 });
 
-                    
+
 
 router.get('/:id/items', async (req, res, next) => {
     try {
@@ -161,55 +163,75 @@ router.get('/:id/items', async (req, res, next) => {
 
 router.post('/', async (req, res, next) => {
     try {
-        if (req.body.nom === undefined || req.body.mail === undefined || req.body.delivery === undefined || req.body.delivery.date === undefined || req.body.delivery.time === undefined) {
-            res.status(400).json({ type: "error", error: 400, message: "La requête est invalide" });
+        if (req.body.title === undefined || req.body.description === undefined || req.body.date.date === undefined || req.body.date.time === undefined || req.body.name_orga === undefined || req.body.name_place === undefined || req.body.mail_orga === undefined) {
+            res.status(400).json({ type: "error", error: 400, message: "The request is invalid" });
         } else {
-        try {
-            const uuid = uuidv4();
-            let montant = 0.0;
-            const created_at = new Date();
-            const fullDateDelivery = new Date(req.body.delivery.date + "T" + req.body.delivery.time + ":00.000Z");
-            // Permet la validation des valeurs présentes dans le body
-            const result = await schema.validateAsync({ nom: req.body.nom, mail: req.body.mail, livraison: req.body.delivery.date });
+            try {
+                const uuid = uuidv4();
+                const date = new Date(req.body.date.date + "T" + req.body.date.time + ":00.000Z");
+                // Permet la validation des valeurs présentes dans le body
+                const result = await schema.validateAsync({ title: req.body.title, description: req.body.description, date: date, name_orga: req.body.name_orga, name_place: req.body.name_place, mail_orga: req.body.mail_orga });
+                if (result.details !== undefined) {
+                    //regarde si le lieu existe deja
+                    const place = await db.select("id").from("Place").where({ name: req.body.name_place });
+                    //si oui alors on utilise son id pour créer l'evenement
+                    if (place[0] !== undefined) {
+                        await db('Event').insert({
+                            'id': uuid,
+                            'name': req.body.title,
+                            'description': req.body.description,
+                            'date': date,
+                            'name_orga': req.body.name_orga,
+                            'mail_orga': req.body.mail_orga,
+                            'id_place': place[0].id
+                        });
+                        //null quand l'utilisateur n'a pas saisie d'adresse
+                    } else if (req.body.adress.street !== null || req.body.adress.city !== null) {
+                        // sinon on créer le lieu et on le ratache a l'événement
 
-            if (result) {
-                // Ajoute la commande en base de données
-                await db('commande').insert({
-                    'id': uuid,
-                    'created_at': created_at,
-                    'livraison': fullDateDelivery,
-                    'nom': req.body.nom,
-                    'mail': req.body.mail,
-                    'montant': montant
-                });
-            }
-            if (req.body.items) {
-                // Ajoute tous les items présents dans le body en base de données
-                req.body.items.forEach(async (item) => {
-                    montant += item.price;
-                    await db('item').insert({
-                        'uri': item.uri,
-                        'libelle': item.name,
-                        'tarif': item.price,
-                        'quantite': item.quantite,
-                        'command_id': uuid
-                    });
-                });
-                console.log(montant);
-                // Modifie le champ montant dans la base de données
-                await db('commande').where({ id: uuid }).update({
-                    'montant': montant
-                });
-            }
+                        //api qui recup les coordonnées gps a partie d'une adress
+                        const gps = await fetch('https://nominatim.openstreetmap.org/search?street=+' + req.body.adress.street.replace(/\s+/g, '+') + '&city=' + req.body.adress.city + '&format=json')
+                        const data = await gps.json()
+                        if (data.length !== 0) {
+                            let uuidPlace = uuidv4();
 
-            // Retourne un code 201 (created) et Location sur /orders/{id}
-            res.status(201).set('Location', '/orders/' + uuid).json({ type: "sucess", error: 201, message: "CREATED" });
+                            //insertion du lieu
+                            await db('Place').insert({
+                                'id': uuidPlace,
+                                'name': req.body.name_place,
+                                'adress': req.body.adress.street + ", " + req.body.adress.city,
+                                'lat': data[0].lat,
+                                'lon': data[0].lon,
+                            });
+
+                            //insertion de l'evenement
+                            await db('Event').insert({
+                                'id': uuid,
+                                'name': req.body.title,
+                                'description': req.body.description,
+                                'date': date,
+                                'name_orga': req.body.name_orga,
+                                'mail_orga': req.body.mail_orga,
+                                'id_place': uuidPlace
+                            });
+                            // Retourne un code 201 (created) et Location sur /events/{id}
+                            res.status(201).set('Location', '/events/' + uuid).json({ type: "sucess", error: 201, message: "CREATED" });
+                        } else {
+                            res.status(404).json({ type: "error", error: "404", message: "Adress not found" })
+                        }
+                    } else {
+                        res.status(400).json({ type: "error", error: "400", message: "The request is invalid" })
+                    }
+                } else {
+                    res.status(400).json({ type: "error", error: "400", message: "Non-compliant data" })
+                }
+            }
+            catch (err) {
+                console.log(err)
+                res.status(500).json(err);
+
+            };
         }
-        catch (err) {
-            res.status(500).json(err);
-
-        };
-    }
     } catch (error) {
         res.status(500).json({ type: "error", error: 500, message: "erreur serveur", details: error });
         next(error);
