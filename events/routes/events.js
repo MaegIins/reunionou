@@ -17,7 +17,7 @@ router.get('/', async (req, res, next) => {
             page = Math.ceil(allEvents.length / limit);
         }
         events = await db.select('id', 'name', 'description', 'date', 'name_orga', 'mail_orga', 'id_place').from('Event').limit(limit).offset((page - 1) * limit);
-        
+
         if (!events) {
             res.status(404).json({ type: "error", error: 404, message: "events not found" });
             // res.sendStatus(404);
@@ -40,7 +40,7 @@ router.get('/', async (req, res, next) => {
             if (nextPage > lastPage) {
                 nextPage = lastPage;
             }
-            res.json({ type: "collection", count: allEvents.length, size: events.length, links: { next: { href: "/events?page=" + nextPage}, prev: { href: "/events?page=" + prevPage}, last: { href: "/events?page=" + lastPage}, first: { href: "/events?page=1" } }, events: data } );
+            res.json({ type: "collection", count: allEvents.length, size: events.length, links: { next: { href: "/events?page=" + nextPage }, prev: { href: "/events?page=" + prevPage }, last: { href: "/events?page=" + lastPage }, first: { href: "/events?page=1" } }, events: data });
         }
 
     } catch (error) {
@@ -79,6 +79,8 @@ router.get('/:id', async (req, res, next) => {
 
 const Joi = require('joi')
     .extend(require('@joi/date'));
+
+const validUuid = Joi.string().guid().required();
 
 const schema = Joi.object({
     title: Joi.string().max(100),
@@ -145,14 +147,30 @@ router.patch('/:id/payment', async (req, res, next) => {
 
 
 
-router.get('/:id/items', async (req, res, next) => {
+router.get('/:id/attendee', async (req, res, next) => {
     try {
         const { id } = req.params;
-        const items = await db.select('id', 'uri', 'libelle', 'tarif', 'quantite').from('item').where({ command_id: id });
-        if (!items) {
-            res.status(404).json({ type: "error", error: 404, message: "La commande n'existe pas : " + req.originalUrl });
-        } else {
-            res.status(200).json({ type: "collection", count: items.length, items: items });
+
+        //verifie que l'utilisateur a renseigner un id d'event
+        if (id !== undefined) {
+            const result = validUuid.validate(id)
+            //on regarde si id saisie est un uuid valide
+            if (result.error) {
+                //si non valide on renvoie une erreur
+                res.status(404).json({ type: "error", error: 404, message: "Event not found : " + id });
+            } else {
+                //sinon on interroge la base de données 
+                const attendee = await db.select("name_user", "mail_user", "status").from('Attendee').where({ id_event: id })
+
+                //on regarde si il y a des participant dans l'evenement
+                if (attendee.length !== 0) {//si oui on retourne les participants
+                    res.status(200).json(attendee)
+                } else { //sinon on renvoie une erreur
+                    res.status(400).json({ type: "error", error: 404, message: "No attendee" });
+                }
+            }
+        } else {//l'id n'est pas renseigné
+            res.status(400).json({ type: "error", error: 400, message: "The request is invalid" });
         }
 
     } catch (error) {
