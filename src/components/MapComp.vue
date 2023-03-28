@@ -1,4 +1,3 @@
-
 <template>
   <div class="map-container">
     <div id="map"></div>
@@ -15,12 +14,7 @@
         <button type="submit">Create</button>
       </form>
     </div>
-    <ul class="event-list">
-      <li v-for="(event, index) in events" :key="index">
-        {{ event.name }} - {{ event.description }} - {{ event.date }}
-        <Comments :eventId="event.id" />
-      </li>
-    </ul>
+
   </div>
 </template>
 
@@ -28,20 +22,22 @@
 
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
-import Comments from "./Comments.vue";
+
 export default {
-  name: 'Map',
-  components: {Comments},
+  name: 'MapComp',
+  props: [
+    'eventPos'
+  ],
 
   data() {
     return {
-      showEventForm: false,
-      eventName: '',
-      eventDescription: '',
-      eventDate: '',
+
+      position: null,
       marker: null,
       events: [], // add an empty array for events
       map: null, // add a data property for the map object
+      eventPosLat: this.eventPos[0],
+      eventPosLng: this.eventPos[1],
     }
   },
   mounted() {
@@ -52,44 +48,52 @@ export default {
       attribution: '&copy; OpenStreetMap contributors'
     }).addTo(this.map);
 
-    // add marker
-    this.marker = L.marker([48.8566, 2.3522]).addTo(this.map);
 
-    this.showEventsOnMap(this.marker);
+    this.marker = L.marker(this.eventPos).addTo(this.map);
+    console.log(this.eventPosLat, this.eventPosLng);
+
+
+
 
     this.map.on('click', (e) => {
-      const { lat, lng } = e.latlng;
+      const {lat, lng} = e.latlng;
       this.marker.setLatLng([lat, lng]);
       this.showEventForm = true;
     });
   },
+  //Created SECTION
+  created() {
+    this.$getLocation()
+        .then((coordinates) => {
+          this.position = coordinates;
+          this.latU = coordinates.lat;
+          this.lngU = coordinates.lng;
+
+          this.marker = L.marker([this.latU, this.lngU]).addTo(this.map);
+          console.log(this.latU, this.lngU);
+
+
+          this.showEventsOnMap(this.marker);
+
+
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+
+
+  },
+  //METHODS SECTION
   methods: {
-    createEvent() {
-      const { lat, lng } = this.marker.getLatLng();
-      const newEvent = {
-        id: this.events.length + 1, // add an id to the new event object
-        name: this.eventName,
-        description: this.eventDescription,
-        date: this.eventDate,
-        lat: lat,
-        lng: lng
-      };
-      this.events.push(newEvent); // add the new event to the events array
-      this.eventName = '';
-      this.eventDescription = '';
-      this.eventDate = '';
-      this.showEventForm = false;
-      console.log('New Event:', newEvent);
-      this.showEventsOnMap(this.map); // call the method to show events on the map and pass the map object
-    },
+
     showEventsOnMap(map) {
       this.events.map(event => {
-        const { lat, lng, name, description, date } = event;
+        const {lat, lng, name, description, date} = event;
         console.log(lat, lng, name, description, date);
         const popupContent = `
-<h2>${name}</h2>
-<p>${description}</p>
-<p>${date}</p>
+            <h2>${name}</h2>
+            <p>${description}</p>
+            <p>${date}</p>
 `;
         const eventMarker = L.marker([lat, lng]).addTo(map);
         eventMarker.bindPopup(popupContent);
@@ -102,6 +106,7 @@ export default {
 <style>
 .map-container {
   height: 500px;
+  width: 500px;
 }
 
 #map {
@@ -115,7 +120,7 @@ export default {
   background-color: white;
   padding: 10px;
   border-radius: 5px;
-  box-shadow: 0 0 10px rgba(0,0,0,0.3);
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
   z-index: 1000;
 }
 </style>

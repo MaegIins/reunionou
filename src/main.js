@@ -1,10 +1,14 @@
-import { createApp } from 'vue'
-import router  from './router'
+import {createApp} from 'vue'
+import router from './router'
 import App from './App.vue'
-//import 'bootstrap-icons/font/bootstrap-icons.css';
+import 'bootstrap/dist/css/bootstrap.min.css';
+
+import 'bootstrap-icons/font/bootstrap-icons.css';
+import VueGeolocation from "vue3-geolocation/src";
+
+const app = createApp(App)
+app.use(router)
+app.use(VueGeolocation);
 
 
-
-
-
-createApp(App).use(router).mount('#app')
+app.mount('#app')

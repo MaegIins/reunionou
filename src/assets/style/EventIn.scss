@@ -1,0 +1,157 @@
+@import "font&colors";
+
+
+#EventIn {
+  min-height: 100vh;
+  color: $white;
+  width: 100vw;
+  background: $bluePrimary;
+  background: radial-gradient(circle, $bluePrimary 0%, rgba(11, 0, 77, 1) 17%, rgba(10, 10, 10, 1) 59%, rgba(10, 10, 10, 1) 100%);
+
+  h1 {
+    font-family: "Bungee", cursive;
+    text-decoration: none;
+    color: $white;
+
+  }
+
+  router-link {
+
+
+  }
+
+  div {
+    h2 {
+      font-family: "Bungee", cursive;
+      text-align: center;
+    }
+  }
+
+
+  #elements {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+
+    div {
+      margin: 8px;
+    }
+
+    //PARTIE GAUCHE
+    #pplList {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+
+
+      width: 20%;
+
+      #everyPpl {
+        display: flex;
+        flex-direction: column;
+        height: 500px;
+        overflow-y: scroll;
+
+
+      }
+
+      #everyPpl::-webkit-scrollbar {
+        width: 20px;
+      }
+
+      #everyPpl::-webkit-scrollbar-track {
+        background-color: transparent;
+      }
+
+      #everyPpl::-webkit-scrollbar-thumb {
+        background-color: $bluePrimary;
+        border-radius: 20px;
+        border: 6px solid transparent;
+        background-clip: content-box;
+      }
+
+      #everyPpl::-webkit-scrollbar-thumb:hover {
+        cursor: pointer;
+      }
+
+      button {
+        margin: 5px;
+        padding: 5px;
+        border-radius: 20px;
+        border: none;
+        transition: all 0.3s ease-in-out;
+        font-size: 1.5rem;
+        font-family: "Bungee", cursive;
+        color: $white;
+        background: $bluePrimary;
+
+        &:hover {
+          border-radius: 50px;
+          color: $bluePrimary;
+          background: $white;
+        }
+      }
+
+      #pplin {
+        display: flex;
+        flex-direction: column;
+
+
+        .people {
+          --max-height: auto;
+          --display: inline-block;
+          vertical-align: middle;
+          padding: 20px;
+          color: $white;
+          justify-content: space-between;
+
+          font-size: 1.5rem;
+          --vertical-align: middle;
+
+          display: flex;
+          align-items: center;
+          --justify-content: center;
+
+          border-radius: 20px;
+
+
+        }
+
+        #coming {
+          background: rgb(78, 255, 0);
+          background: linear-gradient(156deg, rgba(78, 255, 0, 1) 0%, rgba(39, 152, 0, 1) 100%);
+
+
+        }
+
+        #notComing {
+          background: rgb(255, 0, 0);
+          background: linear-gradient(156deg, rgba(255, 0, 0, 1) 0%, rgba(181, 0, 0, 1) 100%);
+        }
+
+        #maybe {
+          background: $white;
+          color: $black;
+        }
+
+      }
+    }
+  }
+
+
+  //PARTIE CENTRALE
+
+  #comments {
+
+
+
+    #listComs{
+      height: 500px;
+      margin: 20px;
+    }
+
+  }
+
+
+}
+
