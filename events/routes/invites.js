@@ -59,6 +59,47 @@ router.post('/confirm', async (req, res, next) => {
     }
 });
 
+
+// get details of an event
+router.get('/details', async (req, res, next) => {
+    try {
+        const { key } = req.query;
+        const decoded = jwt.verify(key, secretKey);
+        const event = await db.select('id', 'name', 'description', 'date', 'name_orga', 'mail_orga', 'id_place').from('Event').where({ id: decoded.id }).first();
+        if (!event) {
+            res.status(404).json({ type: "error", error: 404, message: "event not found " + req.originalUrl });
+        } else {
+            const id_place = event.id_place;
+            if (id_place) {
+                const place = await db.select('id', 'name', 'adress', 'lat', 'lon').from('Place').where({ id: id_place });
+                event.place = place;
+                const data = {
+                        id_event: event.id,
+                        name: event.name,
+                        description: event.description,
+                        date: event.date,
+                        name_orga: event.name_orga,
+                        mail_orga: event.mail_orga,
+                        place: {
+                            id_place: place[0].id,
+                            name: place[0].name,
+                            adress: place[0].adress,
+                            lat: place[0].lat,
+                            lon: place[0].lon,
+                        },
+                }
+                res.status(200).json({ type: "sucess", message: "INVITE OK", event: data });
+
+            } else {
+                res.status(200).json({ type: "sucess", message: "INVITE OK", event: event });
+        }
+    }
+    } catch (error) {
+        res.status(500).json({ type: "error", error: 500, message: "server error", details: error });
+        next(error);
+    }
+});
+
                 
 
 
