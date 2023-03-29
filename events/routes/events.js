@@ -232,8 +232,12 @@ router.get('/:id/attendees', async (req, res, next) => {
     }
 });
 
-
-
+/**
+ * Route qui permet de créer un event
+ * Les champs doivent etre rensigné obligatoirement : title, description, date/time, name_orga, name_place, mail_orga
+ * Si le name_place n'existe pas dans la base => on créé une nouvelle place avec l'adresse qu'il faut alors renseigné : street/ city
+ * Donc l'adress est nécessaire si la place n'existe pas 
+ */
 router.post('/', async (req, res, next) => {
     try {
         if (req.body.title === undefined || req.body.description === undefined || req.body.date.date === undefined || req.body.date.time === undefined || req.body.name_orga === undefined || req.body.name_place === undefined || req.body.mail_orga === undefined) {
