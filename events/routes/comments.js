@@ -54,7 +54,19 @@ router.get('/events/:id', async (req, res, next) => {
 
 });
 
-
+/**
+ * Ajoute un commentaire a un evenement verifie si l'utilisateur qui saisie le commentaire participe a l'evenement
+ * Exemple de body remplir id_event et mail_attendee :
+ * {
+    "id_event":"",
+    "mail_attendee":"",
+    "date":{
+        "date":"2023-03-29",
+        "time":"16:56"
+    },
+    "text":"Super evenement, j'espère pouvoir recommencer"
+}
+ */
 router.post('/add', async (req, res, next) => {
 
     try {
@@ -80,16 +92,16 @@ router.post('/add', async (req, res, next) => {
                             'date': date,
 
                         });
-                        res.status(201).set('Location', '/comments/events/' + id_event).json({ type: "sucess", error: 201, message: "CREATED" });
+                        res.status(201).set('Location', '/comments/events/' + req.body.id_event).json({ type: "sucess", error: 201, message: "CREATED" });
                         // Retourne un code 201 (created) et Location sur /events/{id}
                     } else {
                         res.status(404).json({ type: "error", error: "404", message: "Attendee not associate at this event" })
                     }
-                } else {
-                    res.status(400).json({ type: "error", error: "400", message: "Non-compliant data" })
                 }
             } catch (error) {
                 console.log(error)
+                res.status(400).json({ type: "error", error: "400", message: "Non-compliant data" })
+
             }
         }
     } catch (error) {
