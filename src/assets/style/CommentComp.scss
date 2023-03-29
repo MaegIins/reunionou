@@ -1,0 +1,129 @@
+@import "font&colors.scss";
+
+#comments {
+  width: 30%;
+
+  #listComs {
+    height: 500px;
+    margin: 20px;
+    width: 100%;
+    overflow-y: scroll;
+    overflow-x: hidden;
+
+    &::-webkit-scrollbar {
+      width: 20px;
+    }
+
+    &::-webkit-scrollbar-track {
+      background-color: transparent;
+    }
+
+    &::-webkit-scrollbar-thumb {
+      background-color: $bluePrimary;
+      border-radius: 20px;
+      border: 6px solid transparent;
+      background-clip: content-box;
+    }
+
+    &::-webkit-scrollbar-thumb:hover {
+      cursor: pointer;
+    }
+
+    #comment {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+
+      #commentHeader {
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
+        width: 100%;
+        margin-bottom: -10px;
+
+        #name {
+          font-family: "Bungee", cursive;
+        }
+
+
+      }
+
+      #commentBody {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        width: 100%;
+        margin: 10px;
+        padding: 10px;
+        border-radius: 20px;
+        border: none;
+        transition: all 0.3s ease-in-out;
+        font-size: 1.5rem;
+
+        color: $white;
+        background: $bluePrimary;
+
+      }
+
+    }
+
+
+  }
+
+  #commentForm {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    margin: 20px;
+    background: $bluePrimary;
+    border-radius: 20px;
+    padding: 8px;
+
+    textarea {
+      width: 100%;
+      height: 100%;
+      border-radius: 20px;
+      border: none;
+      transition: all 0.3s ease-in-out;
+      font-size: 1.5rem;
+      font-family: "Bungee", cursive;
+      color: $white;
+      background: $bluePrimary;
+      padding: 10px;
+
+      &:focus {
+        outline: none;
+      }
+
+
+    }
+
+    button {
+      margin: 5px;
+      padding: 5px;
+      height: 50px;
+      width: 50px;
+      border-radius: 50px;
+      border: none;
+      transition: all 0.3s ease-in-out;
+      font-size: 1.5rem;
+      font-family: "Bungee", cursive;
+      color: $white;
+      background: $blueSecondary;
+
+      &:hover {
+        border-radius: 20px;
+
+
+      }
+    }
+
+
+  }
+
+
+}

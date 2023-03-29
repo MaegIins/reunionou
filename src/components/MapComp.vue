@@ -1,5 +1,6 @@
 <template>
   <div class="map-container">
+    <h2>Lieu de la réunion</h2>
     <div id="map"></div>
     <div class="event-form" v-if="showEventForm">
       <button class="close-btn" @click="showEventForm = false"><i class="fas fa-times"></i></button>

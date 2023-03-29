@@ -1,0 +1,80 @@
+@import "font&colors.scss";
+
+#pplList {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  width: 20%;
+
+  #everyPpl {
+    display: flex;
+    flex-direction: column;
+    height: 500px;
+    overflow-y: scroll;
+
+    &::-webkit-scrollbar {
+      width: 20px;
+    }
+
+    &::-webkit-scrollbar-track {
+      background-color: transparent;
+    }
+
+    &::-webkit-scrollbar-thumb {
+      background-color: $bluePrimary;
+      border-radius: 20px;
+      border: 6px solid transparent;
+      background-clip: content-box;
+    }
+
+    &::-webkit-scrollbar-thumb:hover {
+      cursor: pointer;
+    }
+  }
+
+  button {
+    margin: 5px;
+    padding: 5px;
+    border-radius: 20px;
+    border: none;
+    transition: all 0.3s ease-in-out;
+    font-size: 1.5rem;
+    font-family: "Bungee", cursive;
+    color: $white;
+    background: $bluePrimary;
+
+    &:hover {
+      border-radius: 50px;
+      color: $bluePrimary;
+      background: $white;
+    }
+  }
+
+  #pplin {
+    display: flex;
+    flex-direction: column;
+
+    .people {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 20px;
+      font-size: 1.5rem;
+      border-radius: 20px;
+      color: $white;
+
+    }
+    #coming {
+      background: linear-gradient(156deg, rgba(78, 255, 0, 1) 0%, rgba(39, 152, 0, 1) 100%);
+    }
+
+    #notComing {
+      background: linear-gradient(156deg, rgba(255, 0, 0, 1) 0%, rgba(181, 0, 0, 1) 100%);
+    }
+
+    #maybe {
+      background: $white;
+      color: $black;
+    }
+  }
+}

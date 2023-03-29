@@ -7,11 +7,15 @@ import {createRouter, createWebHistory} from "vue-router";
  */
 import AccueilApp from "@/components/AccueilApp.vue";
 import EventIn from "@/components/EventIn.vue";
+import LogInComp from "@/components/LogInComp.vue";
+import SignUpComp from "@/components/SignUpComp.vue";
 
 const routes = [
     {name: 'Main', path: '/', component: AccueilApp},
     {name: 'AccueilApp', path: '/accueil', component: AccueilApp},
     {name: 'InsideEvent', path: '/reunion/:id', component: EventIn},
+    {name: 'LogIn', path: '/login', component: LogInComp},
+    {name: 'SignUp', path: '/signup', component: SignUpComp},
     //{name: 'InsideSharedAccount', path: '/accounts/:id', component: },
 
 
