@@ -4,10 +4,14 @@ const axios = require('axios');
 const Joi = require('joi')
     .extend(require('@joi/date'));
 
+
 const schema = Joi.object({
-    nom: Joi.string().max(30),
-    mail: Joi.string().max(20).email(),
-    livraison: Joi.date().format('YYYY-MM-DD').utc().greater('now'),
+    title: Joi.string().max(100),
+    description: Joi.string().max(256),
+    date: Joi.date().format('YYYY-MM-DD').utc(),
+    name_orga: Joi.string().max(30),
+    name_place: Joi.string().max(100),
+    mail_orga: Joi.string().max(35).email(),
 });
 
 router.get('/', async (req, res, next) => {
@@ -39,23 +43,24 @@ router.post('/', async (req, res, next) => {
                     res.status(400).json({ type: "error", error: 400, message: "La requête est invalide" });
                 } else {
                     try {
-                    const result = await schema.validateAsync({ nom: req.body.nom, mail: req.body.mail, livraison: req.body.delivery.date });
-                    if (result) {
-                        await axios.post('http://events:3000/events', req.body)
-                            .then((response) => {
-                                res.set('Location', 'http://events:3000/' + response.headers.location);
-                                res.redirect(response.headers.location);
-                            })
-                            .catch((error) => {
-                                res.status(400).json(error.response.data);
-                            });
+                        const result = await schema.validateAsync({ nom: req.body.nom, mail: req.body.mail, livraison: req.body.delivery.date });
+                        if (result) {
+                            await axios.post('http://events:3000/events', req.body)
+                                .then((response) => {
+                                    res.set('Location', 'http://events:3000/' + response.headers.location);
+                                    res.redirect(response.headers.location);
+                                })
+                                .catch((error) => {
+                                    res.status(400).json(error.response.data);
+                                });
                         }
                     }
-                    catch(error) {
-                        res.status(400).json({ type: "error", error: 400, message: error});
+                    catch (error) {
+                        res.status(400).json({ type: "error", error: 400, message: error });
                     }
-                }}
-                )
+                }
+            }
+            )
             .catch((error) => {
                 res.status(401).json(error.response.data);
             });
@@ -70,19 +75,14 @@ router.get('/:id', async (req, res, next) => {
         await axios.get('http://auth:3000/validate', { headers: { 'Authorization': req.headers.authorization } })
             .then(async (validateResponse) => {
                 await axios.get('http://events:3000/events/' + req.params.id)
-                    .then((response) => {
-                        if(response.data.mail !== validateResponse.data.mail) {
-                            res.status(403).json({ type: "error", error: 403, message: "Vous n'avez pas accès à cette commande" });
-
-                       }
-
-                        else {
-                            res.json(response.data);}
-                    })
-                    
-                    .catch((error) => {
-                        res.status(404).json(error.response.data);
-                    });
+                                    .then((response) => {
+                                        res.json(response.data);
+                                    }
+                                    )
+                                    .catch((error) => {
+                                        res.status(404).json(error.response.data);
+                                    }
+                                    );
             })
             .catch((error) => {
                 res.status(401).json(error.response.data);
@@ -98,13 +98,13 @@ router.get('/:id/items', async (req, res, next) => {
         await axios.get('http://auth:3000/validate', { headers: { 'Authorization': req.headers.authorization } })
             .then(async (response) => {
                 try {
-                await axios.get('http://events:3000/events/' + req.params.id + '/items')
-                    .then((response) => {
-                        res.json(response.data);
-                    })
-                    .catch((error) => {
-                        res.status(404).json(error.response.data);
-                    });
+                    await axios.get('http://events:3000/events/' + req.params.id + '/items')
+                        .then((response) => {
+                            res.json(response.data);
+                        })
+                        .catch((error) => {
+                            res.status(404).json(error.response.data);
+                        });
                 }
                 catch (error) {
                     res.status(500).json(error);
@@ -124,19 +124,19 @@ router.patch('/:id/payment', async (req, res, next) => {
         await axios.get('http://auth:3000/validate', { headers: { 'Authorization': req.headers.authorization } })
             .then(async (responsePayment) => {
                 try {
-                await axios.patch('http://events:3000/events/' + req.params.id + '/payment', req.body)
+                    await axios.patch('http://events:3000/events/' + req.params.id + '/payment', req.body)
 
-                    .then((response) => {
-                        if(response.data.mail !== responsePayment.data.mail) {
-                        res.status(403).json({ type: "error", error: 403, message: "Vous n'avez pas accès à cette commande" });
-                        }
-                        else{
-                        res.json(response.data);
-                        }
-                    })
-                    .catch((error) => {
-                        res.status(404).json(error.response.data);
-                    });
+                        .then((response) => {
+                            if (response.data.mail !== responsePayment.data.mail) {
+                                res.status(403).json({ type: "error", error: 403, message: "Vous n'avez pas accès à cette commande" });
+                            }
+                            else {
+                                res.json(response.data);
+                            }
+                        })
+                        .catch((error) => {
+                            res.status(404).json(error.response.data);
+                        });
                 }
                 catch (error) {
                     res.status(500).json(error);
@@ -148,7 +148,7 @@ router.patch('/:id/payment', async (req, res, next) => {
     }
     catch (error) {
         res.status(500).json(error);
-    }   
+    }
 });
 
 

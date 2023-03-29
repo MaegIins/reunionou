@@ -4,8 +4,8 @@ const helmet = require("helmet");
 
 const indexRouter = require('./routes/index');
 const authRouter = require('./routes/auth');
-const ordersRouter = require('./routes/events');
-const catalogRouter = require('./routes/catalog');
+const eventsRouter = require('./routes/events');
+const invitesRouter = require('./routes/invites');
 
 
 const app = express();
@@ -22,8 +22,8 @@ app.use(express.urlencoded({ extended: false }));
 
 app.use('/', indexRouter);
 app.use('/auth', authRouter);
-app.use('/orders', ordersRouter);
-app.use('/catalog', catalogRouter);
+app.use('/events', eventsRouter);
+app.use('/invites', invitesRouter);
 
 
 // 404 

@@ -30,7 +30,7 @@ app.use('/refresh', refreshRouter);
 
 // 404 
 app.use((req, res, next) => {
-    res.status(404).json({type: "error", error: 404, message: "ressource non disponible " + req.originalUrl});
+    res.status(404).json({type: "error", error: 404, message: "not found " + req.originalUrl});
 });
 
 module.exports = app;

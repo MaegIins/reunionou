@@ -45,8 +45,8 @@ router.get('/', async (req, res, next) => {
                         name: event.name,
                         description: event.description,
                         date: event.date,
-                        attendee_name: event.name_orga,
-                        attendee_mail: event.mail_orga,
+                        name_orga: event.name_orga,
+                        mail_orga: event.mail_orga,
                         place: event.id_place,
                     },
                     links: { self: { href: "/events/" + event.id } }
@@ -63,7 +63,6 @@ router.get('/', async (req, res, next) => {
             }
             res.json({ type: "collection", count: allEvents.length, size: events.length, links: { next: { href: "/events?page=" + nextPage }, prev: { href: "/events?page=" + prevPage }, last: { href: "/events?page=" + lastPage }, first: { href: "/events?page=1" } }, events: data });
         }
-
     } catch (error) {
         console.error(error);
         next(error);
@@ -90,8 +89,8 @@ router.get('/:id', async (req, res, next) => {
                         name: event.name,
                         description: event.description,
                         date: event.date,
-                        attendee_name: event.name_orga,
-                        attendee_mail: event.mail_orga,
+                        name_orga: event.name_orga,
+                        mail_orga: event.mail_orga,
                         place: {
                             id_place: places[0].id,
                             name: places[0].name,
@@ -202,7 +201,7 @@ router.get('/:id/share', async (req, res, next) => {
     }
 });
 
-router.get('/:id/attendee', async (req, res, next) => {
+router.get('/:id/attendees', async (req, res, next) => {
     try {
         const { id } = req.params;
 
@@ -246,6 +245,7 @@ router.post('/', async (req, res, next) => {
                 const date = new Date(req.body.date.date + "T" + req.body.date.time + ":00.000Z");
                 // Permet la validation des valeurs présentes dans le body
                 const result = await schema.validateAsync({ title: req.body.title, description: req.body.description, date: date, name_orga: req.body.name_orga, name_place: req.body.name_place, mail_orga: req.body.mail_orga });
+                console.log(result)
                 if (result.details !== undefined) {
                     //regarde si le lieu existe deja
                     const place = await db.select("id").from("Place").where({ name: req.body.name_place });

@@ -29,7 +29,7 @@ router.post('/', async (req, res, next) => {
                 } else {
                     const hash = await bcrypt.hash(password, saltRounds);
                     await db('user').insert({ user_name: name, user_mail: mail, passwd: hash });
-                    res.status(201).json({ type: "sucess", error: 201, message: "CREATED" });
+                    res.status(201).json({ type: "success", error: 201, message: "CREATED" });
                 }
             }
         }
