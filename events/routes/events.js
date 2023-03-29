@@ -33,25 +33,32 @@ router.get('/', async (req, res, next) => {
 
         if (!events) {
             res.status(404).json({ type: "error", error: 404, message: "events not found" });
-            // res.sendStatus(404);
-            //  next();
         } else {
-            // Affiche les données
             let data = [];
-            events.forEach(event => {
-                data.push({
-                    event: {
-                        id_event: event.id,
-                        name: event.name,
-                        description: event.description,
-                        date: event.date,
-                        name_orga: event.name_orga,
-                        mail_orga: event.mail_orga,
-                        place: event.id_place,
-                    },
-                    links: { self: { href: "/events/" + event.id } }
-                })
-            });
+            for (const event of events) {
+                const id_place = event.id_place;
+                const places = await db.select('id', 'name', 'adress', 'lat', 'lon').from('Place').where({ id: id_place });
+                if (places && places.length > 0) {
+                    data.push({
+                        event: {
+                            id_event: event.id,
+                            name: event.name,
+                            description: event.description,
+                            date: event.date,
+                            name_orga: event.name_orga,
+                            mail_orga: event.mail_orga,
+                            place: {
+                                id_place: places[0].id,
+                                name: places[0].name,
+                                adress: places[0].adress,
+                                lat: places[0].lat,
+                                lon: places[0].lon,
+                            }
+                        },
+                        links: { self: { href: "/events/" + event.id } }
+                    });
+                }
+            }
             let nextPage = parseInt(page) + 1;
             let prevPage = page - 1;
             let lastPage = Math.ceil(allEvents.length / limit);
@@ -67,7 +74,6 @@ router.get('/', async (req, res, next) => {
         console.error(error);
         next(error);
     }
-
 });
 
 // Voir un event avec son id
