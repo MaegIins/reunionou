@@ -2,20 +2,6 @@
   <div class="map-container">
     <h2>Lieu de la réunion</h2>
     <div id="map"></div>
-    <div class="event-form" v-if="showEventForm">
-      <button class="close-btn" @click="showEventForm = false"><i class="fas fa-times"></i></button>
-      <h2>Create Event</h2>
-      <form @submit.prevent="createEvent">
-        <label for="name">Name:</label>
-        <input type="text" id="name" v-model="eventName" required>
-        <label for="description">Description:</label>
-        <textarea id="description" v-model="eventDescription"></textarea>
-        <label for="date">Date:</label>
-        <input type="date" id="date" v-model="eventDate" required>
-        <button type="submit">Create</button>
-      </form>
-    </div>
-
   </div>
 </template>
 
@@ -23,6 +9,7 @@
 
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
+import '../assets/style/mapComp.css';
 
 export default {
   name: 'MapComp',
