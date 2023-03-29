@@ -41,28 +41,15 @@ router.post('/', async (req, res, next) => {
     try {
         await axios.get('http://auth:3000/validate', { headers: { 'Authorization': req.headers.authorization } })
             .then(async (response) => {
-                if (req.body.nom === undefined || req.body.mail === undefined || req.body.delivery === undefined || req.body.delivery.date === undefined || req.body.delivery.time === undefined) {
-                    res.status(400).json({ type: "error", error: 400, message: "La requête est invalide" });
-                } else {
-                    try {
-                        const result = await schema.validateAsync({ nom: req.body.nom, mail: req.body.mail, livraison: req.body.delivery.date });
-                        if (result) {
-                            await axios.post('http://events:3000/events', req.body)
-                                .then((response) => {
-                                    res.set('Location', 'http://events:3000/' + response.headers.location);
-                                    res.redirect(response.headers.location);
-                                })
-                                .catch((error) => {
-                                    res.status(400).json(error.response.data);
-                                });
-                        }
-                    }
-                    catch (error) {
-                        res.status(400).json({ type: "error", error: 400, message: error });
-                    }
-                }
-            }
-            )
+                        await axios.post('http://events:3000/events', req.body)
+                            .then((response) => {
+                                res.set('Location', 'http://events:3000/' + response.headers.location);
+                                res.redirect(response.headers.location);
+                            })
+                            .catch((error) => {
+                                res.status(400).json(error.response.data);
+                            });
+            })
             .catch((error) => {
                 res.status(401).json(error.response.data);
             });
@@ -72,19 +59,20 @@ router.post('/', async (req, res, next) => {
     }
 });
 
+
 router.get('/:id', async (req, res, next) => {
     try {
         await axios.get('http://auth:3000/validate', { headers: { 'Authorization': req.headers.authorization } })
             .then(async (validateResponse) => {
                 await axios.get('http://events:3000/events/' + req.params.id)
-                                    .then((response) => {
-                                        res.json(response.data);
-                                    }
-                                    )
-                                    .catch((error) => {
-                                        res.status(404).json(error.response.data);
-                                    }
-                                    );
+                    .then((response) => {
+                        res.json(response.data);
+                    }
+                    )
+                    .catch((error) => {
+                        res.status(404).json(error.response.data);
+                    }
+                    );
             })
             .catch((error) => {
                 res.status(401).json(error.response.data);
