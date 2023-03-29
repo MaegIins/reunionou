@@ -245,8 +245,8 @@ router.post('/', async (req, res, next) => {
                 const date = new Date(req.body.date.date + "T" + req.body.date.time + ":00.000Z");
                 // Permet la validation des valeurs présentes dans le body
                 const result = await schema.validateAsync({ title: req.body.title, description: req.body.description, date: date, name_orga: req.body.name_orga, name_place: req.body.name_place, mail_orga: req.body.mail_orga });
-                console.log(result)
-                if (result.details !== undefined) {
+                console.log(result.error)
+                if (result.error === undefined) {
                     //regarde si le lieu existe deja
                     const place = await db.select("id").from("Place").where({ name: req.body.name_place });
                     //si oui alors on utilise son id pour créer l'evenement
@@ -297,6 +297,7 @@ router.post('/', async (req, res, next) => {
                         res.status(400).json({ type: "error", error: "400", message: "The request is invalid" })
                     }
                 } else {
+                    console.log(result)
                     res.status(400).json({ type: "error", error: "400", message: "Non-compliant data" })
                 }
             }
