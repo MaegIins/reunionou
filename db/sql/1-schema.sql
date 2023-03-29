@@ -50,11 +50,12 @@ CREATE TABLE `Place` (
 
 DROP TABLE IF EXISTS `Comments`;
 CREATE TABLE `Comments` (
+  `id` varchar(256) NOT NULL,
   `id_event` varchar(256) NOT NULL,
   `id_attendee` int(11) NOT NULL,
   `text` varchar(256) NOT NULL,
   `date` datetime NOT NULL,
-  PRIMARY KEY (`id_event`, `id_attendee`),
+  PRIMARY KEY (`id`),
   FOREIGN KEY (`id_event`) REFERENCES `Event`(`id`),
   FOREIGN KEY (`id_attendee`) REFERENCES `Attendee`(`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;

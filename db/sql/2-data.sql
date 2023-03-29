@@ -21,7 +21,7 @@ INSERT INTO `Attendee` (`id`, `id_event`, `name_user`, `mail_user`, `status`, `d
 ('3', '9a105e54-cd03-4559-91d7-263de33aa7ef', 'Lucie Bernard', 'lucie.bernard@mail.com', '1', 'Membre du Musée');
 
 -- Insertion des commentaires (Comments)
-INSERT INTO `Comments` (`id_event`, `id_attendee`, `text`, `date`) VALUES
-('7904c62f-3d4f-446f-8a23-56c5660f466f', '1', 'Super événement !', '2023-06-22 09:00:00'),
-('7904c62f-3d4f-446f-8a23-56c5660f466f', '2', 'Dommage qu il ait plu...', '2023-06-22 09:30:00'),
-('9a105e54-cd03-4559-91d7-263de33aa7ef', '3', 'Magnifique exposition !', '2023-08-01 12:00:00');
+INSERT INTO `Comments` (`id`,`id_event`, `id_attendee`, `text`, `date`) VALUES
+('a9ec9454-7dad-401f-a6f2-f118aa77e9a1','7904c62f-3d4f-446f-8a23-56c5660f466f', '1', 'Super événement !', '2023-06-22 09:00:00'),
+('3144d9e7-a7b6-45ee-8539-56e2b6a0f750','7904c62f-3d4f-446f-8a23-56c5660f466f', '2', 'Dommage qu il ait plu...', '2023-06-22 09:30:00'),
+('6530c96b-450d-4eb3-9995-cdf5d54ebf83','9a105e54-cd03-4559-91d7-263de33aa7ef', '3', 'Magnifique exposition !', '2023-08-01 12:00:00');
