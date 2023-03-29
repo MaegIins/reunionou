@@ -156,6 +156,8 @@ const schema = Joi.object({
     name_orga: Joi.string().max(30),
     name_place: Joi.string().max(100),
     mail_orga: Joi.string().max(35).email(),
+    street: Joi.string().max(100),
+    city: Joi.string().max(50),
 });
 
 router.put('/:id', async (req, res, next) => {
@@ -232,13 +234,13 @@ router.get('/:id/attendees', async (req, res, next) => {
 
 /**
  * Route qui permet de créer un event
- * Les champs doivent etre rensigné obligatoirement : title, description, date/time, name_orga, name_place, mail_orga
- * Si le name_place n'existe pas dans la base => on créé une nouvelle place avec l'adresse qu'il faut alors renseigné : street/ city
- * Donc l'adress est nécessaire si la place n'existe pas 
+ * Les champs doivent etre rensigné obligatoirement : title, description, date/time, name_orga, name_place, mail_orga, adress:street/city
+ * Renseigné tjr une adresse meme si le lieu existe deja
  */
 router.post('/', async (req, res, next) => {
     try {
-        if (req.body.title === undefined || req.body.description === undefined || req.body.date.date === undefined || req.body.date.time === undefined || req.body.name_orga === undefined || req.body.name_place === undefined || req.body.mail_orga === undefined) {
+        console.log(req.body)
+        if (req.body.title === undefined || req.body.description === undefined || req.body.date.date === undefined || req.body.date.time === undefined || req.body.name_orga === undefined || req.body.name_place === undefined || req.body.mail_orga === undefined || req.body.adress.city === undefined || req.body.adress.street === undefined) {
             res.status(400).json({ type: "error", error: 400, message: "The request is invalid" });
         } else {
             try {
@@ -246,8 +248,7 @@ router.post('/', async (req, res, next) => {
 
                 const date = new Date(req.body.date.date + "T" + req.body.date.time + ":00.000Z");
                 // Permet la validation des valeurs présentes dans le body
-                const result = await schema.validateAsync({ title: req.body.title, description: req.body.description, date: date, name_orga: req.body.name_orga, name_place: req.body.name_place, mail_orga: req.body.mail_orga });
-                console.log(result.error)
+                const result = await schema.validateAsync({ title: req.body.title, description: req.body.description, date: date, name_orga: req.body.name_orga, name_place: req.body.name_place, mail_orga: req.body.mail_orga, street: req.body.adress.street, city: req.body.adress.city });
                 if (result.error === undefined) {
                     //regarde si le lieu existe deja
                     const place = await db.select("id").from("Place").where({ name: req.body.name_place });
@@ -262,44 +263,46 @@ router.post('/', async (req, res, next) => {
                             'mail_orga': req.body.mail_orga,
                             'id_place': place[0].id
                         });
-                        //null quand l'utilisateur n'a pas saisie d'adresse
-                    } else if (req.body.adress.street !== null || req.body.adress.city !== null) {
+                        // Retourne un code 201 (created) et Location sur /events/{id}
+                        res.status(201).set('Location', '/events/' + uuid).json({ type: "sucess", error: 201, message: "CREATED" });
+                    } else {
                         // sinon on créer le lieu et on le ratache a l'événement
 
                         //api qui recup les coordonnées gps a partie d'une adress
-                        const gps = await fetch('https://nominatim.openstreetmap.org/search?street=+' + req.body.adress.street.replace(/\s+/g, '+') + '&city=' + req.body.adress.city + '&format=json')
-                        const data = await gps.json()
-                        if (data.length !== 0) {
-                            let uuidPlace = uuidv4();
-
-                            //insertion du lieu
-                            await db('Place').insert({
-                                'id': uuidPlace,
-                                'name': req.body.name_place,
-                                'adress': req.body.adress.street + ", " + req.body.adress.city,
-                                'lat': data[0].lat,
-                                'lon': data[0].lon,
-                            })
-                            //insertion de l'evenement
-                            await db('Event').insert({
-                                'id': uuid,
-                                'name': req.body.title,
-                                'description': req.body.description,
-                                'date': date,
-                                'name_orga': req.body.name_orga,
-                                'mail_orga': req.body.mail_orga,
-                                'id_place': uuidPlace
-                            });
-                            // Retourne un code 201 (created) et Location sur /events/{id}
-                            res.status(201).set('Location', '/events/' + uuid).json({ type: "sucess", error: 201, message: "CREATED" });
+                        if (req.body.adress.street == "null" || req.body.adress.city == "null") {
+                            res.status(404).json({ type: "error", error: "404", message: "Adress incorrect" })
                         } else {
-                            res.status(404).json({ type: "error", error: "404", message: "Adress not found" })
+                            const gps = await fetch('https://nominatim.openstreetmap.org/search?street=' + req.body.adress.street.replace(/\s+/g, '+') + '&city=' + req.body.adress.city + '&format=json')
+                            const data = await gps.json()
+                            if (data.length !== 0) {
+                                let uuidPlace = uuidv4();
+
+                                //insertion du lieu
+                                await db('Place').insert({
+                                    'id': uuidPlace,
+                                    'name': req.body.name_place,
+                                    'adress': req.body.adress.street + ", " + req.body.adress.city,
+                                    'lat': data[0].lat,
+                                    'lon': data[0].lon,
+                                })
+                                //insertion de l'evenement
+                                await db('Event').insert({
+                                    'id': uuid,
+                                    'name': req.body.title,
+                                    'description': req.body.description,
+                                    'date': date,
+                                    'name_orga': req.body.name_orga,
+                                    'mail_orga': req.body.mail_orga,
+                                    'id_place': uuidPlace
+                                });
+                                // Retourne un code 201 (created) et Location sur /events/{id}
+                                res.status(201).set('Location', '/events/' + uuid).json({ type: "sucess", error: 201, message: "CREATED" });
+                            } else {
+                                res.status(404).json({ type: "error", error: "404", message: "Adress not found" })
+                            }
                         }
-                    } else {
-                        res.status(400).json({ type: "error", error: "400", message: "The request is invalid" })
                     }
                 } else {
-                    console.log(result)
                     res.status(400).json({ type: "error", error: "400", message: "Non-compliant data" })
                 }
             }
@@ -310,6 +313,7 @@ router.post('/', async (req, res, next) => {
             };
         }
     } catch (error) {
+        console.log(error)
         res.status(500).json({ type: "error", error: 500, message: "erreur serveur", details: error });
         next(error);
     }
