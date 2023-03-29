@@ -19,17 +19,19 @@ const secretKey = process.env.SECRET_KEY;
 // Voir tous les events
 router.get('/', async (req, res, next) => {
     try {
-        let page = req.query.page;
-        if (page < 1 || !page) {
-            page = 1;
-        }
-        const limit = 10;
         let events;
-        const allEvents = await db.select('id', 'name', 'description', 'date', 'name_orga', 'mail_orga', 'id_place').from('Event');
-        if (page > Math.ceil(allEvents.length / limit)) {
-            page = Math.ceil(allEvents.length / limit);
-        }
-        events = await db.select('id', 'name', 'description', 'date', 'name_orga', 'mail_orga', 'id_place').from('Event').limit(limit).offset((page - 1) * limit);
+
+        // Récupérer l'adresse e-mail donnée par le gateway
+        const userEmail = req.headers['user-email'];
+        console.log("userEmail", userEmail);
+        // Trouver les événements auxquels l'utilisateur participe
+        const attendingEvents = await db.select('id_event').from('Attendee').where({ mail_user: userEmail });
+
+        // Extraire uniquement les ID d'événements
+        const eventIds = attendingEvents.map(event => event.id_event);
+
+        // Récupérer les détails des événements auxquels l'utilisateur participe
+        events = await db.select('id', 'name', 'description', 'date', 'name_orga', 'mail_orga', 'id_place').from('Event').whereIn('id', eventIds);
 
         if (!events) {
             res.status(404).json({ type: "error", error: 404, message: "events not found" });
@@ -59,23 +61,13 @@ router.get('/', async (req, res, next) => {
                     });
                 }
             }
-            let nextPage = parseInt(page) + 1;
-            let prevPage = page - 1;
-            let lastPage = Math.ceil(allEvents.length / limit);
-            if (prevPage < 1) {
-                prevPage = 1;
-            }
-            if (nextPage > lastPage) {
-                nextPage = lastPage;
-            }
-            res.json({ type: "collection", count: allEvents.length, size: events.length, links: { next: { href: "/events?page=" + nextPage }, prev: { href: "/events?page=" + prevPage }, last: { href: "/events?page=" + lastPage }, first: { href: "/events?page=1" } }, events: data });
+            res.json({ type: "collection", count: events.length, events: data });
         }
     } catch (error) {
         console.error(error);
         next(error);
     }
 });
-
 // Voir un event avec son id
 router.get('/:id', async (req, res, next) => {
     try {

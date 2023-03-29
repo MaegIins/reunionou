@@ -14,11 +14,13 @@ const schema = Joi.object({
     mail_orga: Joi.string().max(35).email(),
 });
 
+// Liste des événements par utilisateur (GET)
 router.get('/', async (req, res, next) => {
     try {
         await axios.get('http://auth:3000/validate', { headers: { 'Authorization': req.headers.authorization } })
             .then(async (response) => {
-                await axios.get('http://events:3000/events')
+                const userEmail = response.data.mail; // Get the user email from the auth service response
+                await axios.get('http://events:3000/events', { headers: { 'user-email': userEmail } }) // Pass the user email in the headers
                     .then((response) => {
                         res.json(response.data);
                     })
