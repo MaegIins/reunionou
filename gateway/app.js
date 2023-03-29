@@ -1,6 +1,7 @@
 const express = require('express');
 const logger = require('morgan');
 const helmet = require("helmet");
+var cors = require('cors');
 
 const indexRouter = require('./routes/index');
 const authRouter = require('./routes/auth');
@@ -9,6 +10,7 @@ const invitesRouter = require('./routes/invites');
 
 
 const app = express();
+app.use(cors());
 
 const env = process.env.NODE_ENV;
 
