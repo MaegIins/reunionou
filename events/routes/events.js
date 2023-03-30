@@ -110,41 +110,6 @@ router.get('/:id', async (req, res, next) => {
     }
 });
 
-//Get all the comments from a 
-router.get('/:id/comments', async (req, res, next) => {
-
-    try {
-        const { id } = req.params;
-
-        //verifie que l'utilisateur a renseigner un id d'event
-        if (id !== undefined) {
-            const result = validUuid.validate(id)
-            //on regarde si id saisie est un uuid valide
-            if (result.error) {
-                //si non valide on renvoie une erreur
-                res.status(404).json({ type: "error", error: 404, message: "Event not found : " + id });
-            } else {
-                //sinon on interroge la base de données 
-                const attendee = await db.select("id_attendee", "text", "date").from('Comments').where({ id_event: id })
-
-                //on regarde si il y a des commentaires dans l'evenement
-                if (attendee.length !== 0) {//si oui on retourne les commentaires
-                    res.status(200).json(attendee)
-                } else { //sinon on renvoie une erreur
-                    res.status(400).json({ type: "error", error: 404, message: "No comments" });
-                }
-            }
-        } else {//l'id n'est pas renseigné
-            res.status(400).json({ type: "error", error: 400, message: "The request is invalid" });
-        }
-
-    } catch (error) {
-        res.status(500).json({ type: "error", error: 500, message: "erreur serveur", details: error });
-        next(error);
-    }
-})
-
-
 
 
 const validUuid = Joi.string().guid().required();
