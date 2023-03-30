@@ -45,11 +45,11 @@ router.post('/confirm', async (req, res, next) => {
                 if (!attendee) {
                     await db('Attendee').insert({ id_event: decoded.id, name_user: name, mail_user: mail, status: participate, details: comment });
                     const newAttendee = await db('Attendee').where({ id_event: decoded.id, name_user: name, mail_user: mail, status: participate, details: comment }).first();
-                    res.status(200).json({ type: "sucess", message: "INVITE OK", attendee: newAttendee });
+                    res.status(200).json({ type: "success", message: "INVITE OK", attendee: newAttendee });
                 } else {
                     await db('Attendee').where({ id_event: decoded.id, mail_user: mail }).update({ status: participate, details: comment });
                     const newAttendee = await db('Attendee').where({ id_event: decoded.id, mail_user: mail }).first();
-                    res.status(200).json({ type: "sucess", message: "UPDATE INVITE OK", attendee: newAttendee });
+                    res.status(200).json({ type: "success", message: "UPDATE INVITE OK", attendee: newAttendee });
                 }
             }
         }
