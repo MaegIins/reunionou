@@ -39,23 +39,27 @@ router.get('/', async (req, res, next) => {
 
 router.post('/', async (req, res, next) => {
     try {
-        await axios.get('http://auth:3000/validate', { headers: { 'Authorization': req.headers.authorization } })
-            .then(async (response) => {
-                        await axios.post('http://events:3000/events', req.body)
-                            .then((response) => {
-                                res.set('Location', 'http://events:3000/' + response.headers.location);
-                                res.redirect(response.headers.location);
-                            })
-                            .catch((error) => {
-                                res.status(400).json(error.response.data);
-                            });
-            })
-            .catch((error) => {
-                res.status(401).json(error.response.data);
-            });
-    }
-    catch (error) {
-        res.status(500).json(error);
+        const { data } = await axios.get('http://auth:3000/validate', {
+            headers: { 'Authorization': req.headers.authorization }
+        });
+
+        const { mail: userEmail, name: userName } = data;
+
+        const { headers: { location } } = await axios.post('http://events:3000/events', {
+            ...req.body
+        }, {
+            headers: { 'user-mail': userEmail, 'user-name': userName }
+        });
+
+        res.set('Location', `http://events:3000/${location}`);
+        res.redirect(location);
+    } catch (error) {
+        if (error.response) {
+            const { status, data } = error.response;
+            res.status(status).json(data);
+        } else {
+            res.status(500).json(error);
+        }
     }
 });
 

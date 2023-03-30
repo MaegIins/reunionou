@@ -199,13 +199,13 @@ router.get('/:id/attendees', async (req, res, next) => {
 
 /**
  * Route qui permet de créer un event
- * Les champs doivent etre rensigné obligatoirement : title, description, date/time, name_orga, name_place, mail_orga, adress:street/city
+ * Les champs doivent etre rensigné obligatoirement : title, description, date/time, name_place, adress:street/city
  * Renseigné tjr une adresse meme si le lieu existe deja
  */
 router.post('/', async (req, res, next) => {
     try {
         console.log(req.body)
-        if (req.body.title === undefined || req.body.description === undefined || req.body.date.date === undefined || req.body.date.time === undefined || req.body.name_orga === undefined || req.body.name_place === undefined || req.body.mail_orga === undefined || req.body.adress.city === undefined || req.body.adress.street === undefined) {
+        if (req.body.title === undefined || req.body.description === undefined || req.body.date.date === undefined || req.body.date.time === undefined || req.body.name_place === undefined || req.body.adress.city === undefined || req.body.adress.street === undefined) {
             res.status(400).json({ type: "error", error: 400, message: "The request is invalid" });
         } else {
             try {
@@ -213,7 +213,11 @@ router.post('/', async (req, res, next) => {
 
                 const date = new Date(req.body.date.date + "T" + req.body.date.time + ":00.000Z");
                 // Permet la validation des valeurs présentes dans le body
-                const result = await schema.validateAsync({ title: req.body.title, description: req.body.description, date: date, name_orga: req.body.name_orga, name_place: req.body.name_place, mail_orga: req.body.mail_orga, street: req.body.adress.street, city: req.body.adress.city });
+                const result = await schema.validateAsync({ title: req.body.title, description: req.body.description, date: date, name_place: req.body.name_place, street: req.body.adress.street, city: req.body.adress.city });
+
+                const mailOrga = req.headers['user-mail'];
+                const nameOrga = req.headers['user-name'];
+
                 if (result.error === undefined) {
                     //regarde si le lieu existe deja
                     const place = await db.select("id").from("Place").where({ name: req.body.name_place });
@@ -224,8 +228,8 @@ router.post('/', async (req, res, next) => {
                             'name': req.body.title,
                             'description': req.body.description,
                             'date': date,
-                            'name_orga': req.body.name_orga,
-                            'mail_orga': req.body.mail_orga,
+                            'name_orga': nameOrga,
+                            'mail_orga': mailOrga,
                             'id_place': place[0].id
                         });
                         // Retourne un code 201 (created) et Location sur /events/{id}
@@ -256,8 +260,8 @@ router.post('/', async (req, res, next) => {
                                     'name': req.body.title,
                                     'description': req.body.description,
                                     'date': date,
-                                    'name_orga': req.body.name_orga,
-                                    'mail_orga': req.body.mail_orga,
+                                    'name_orga': nameOrga,
+                                    'mail_orga': mailOrga,
                                     'id_place': uuidPlace
                                 });
                                 // Retourne un code 201 (created) et Location sur /events/{id}
