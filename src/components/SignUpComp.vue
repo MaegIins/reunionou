@@ -1,8 +1,8 @@
 <template>
   <div>
-    <h1>SignIn</h1>
+    <h1>SignUp</h1>
     <input v-model="name" placeholder="USERNAME"/>
-    <input v-model="email">
+    <input v-model="email" placeholder="EMAIl">
     <input v-model="password" placeholder="PASSWORD"/>
     <button v-on:click="signIn">SIGN IN</button>
   </div>
@@ -22,7 +22,7 @@ export default {
   methods: {
     signIn() {
       axios
-        .post("http://localhost:33323/auth/signup", {
+        .post("http://localhost:3333/auth/signup", {
           name: this.name,
           email: this.email,
           password: this.password,
