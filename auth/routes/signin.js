@@ -45,7 +45,7 @@ router.post('/', async (req, res, next) => {
                     await db('user').update({ refresh_token: refreshToken }).where('id', result[0].id);
                     console.log(refreshToken);
                     console.log(token);
-                    res.status(200).json({ "access-token": token, "refresh-token": refreshToken });
+                    res.status(200).json({ "access_token": token, "refresh_token": refreshToken });
                 } else {
                     res.status(401).json({ type: "error", error: 401, message: "wrong password" });
                 }
