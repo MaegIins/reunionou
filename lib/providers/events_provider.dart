@@ -1,22 +1,42 @@
-
 import 'dart:convert';
-
 import 'package:http/http.dart' as http;
+import 'package:partouille/Singleton/Auth.dart';
+import 'package:partouille/models/event.dart';
 
 class EventsProvider {
-  final String apiUrl = 'https://example.com/api/events';
+  final String apiUrl = 'http://localhost:3333/events';
 
-  Future<List<dynamic>> getEvents() async {
-    final response = await http.get(Uri.parse(apiUrl));
+  Future<List<event>> getEvents(String bearerToken) async {
+    final response = await http.get(
+      Uri.parse(apiUrl),
+      headers: <String, String>{'Authorization': bearerToken},
+    );
 
     if (response.statusCode == 200) {
-      final jsonResponse = json.decode(response.body);
-      return jsonResponse;
+      final List<dynamic> eventsJson = jsonDecode(response.body)['events'];
+      final List<event> events = eventsJson.map((eventJson) {
+        final eventMap = eventJson['event'];
+        final placeMap = eventMap['place'];
+        return event(
+          id: eventMap['id_event'],
+          name: eventMap['name'],
+          description: eventMap['description'],
+          date: DateTime.parse(eventMap['date']),
+          nameOrga: eventMap['name_orga'],
+          mailOrga: eventMap['mail_orga'],
+          address: placeMap['adress'],
+          lat: placeMap['lat'],
+          lon: placeMap['lon'],
+        );
+      }).toList();
+      return events;
     } else {
-      throw Exception('Failed to load events from API');
+      throw Exception('Failed to load events data');
     }
   }
+}
 
+/*
   Future<dynamic> getEventById(String id) async {
     final response = await http.get(Uri.parse('$apiUrl/$id'));
 
@@ -67,4 +87,4 @@ final response = await http.delete(Uri.parse('$apiUrl/$id'));if (response.status
     }
   }
 
-}
+}*/
