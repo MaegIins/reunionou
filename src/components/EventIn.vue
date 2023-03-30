@@ -16,8 +16,6 @@
       </div>
     </div>
 
-    <button @click="attendee">Tester la méthode attendee</button>
-
   </div>
 </template>
 
@@ -44,35 +42,40 @@ export default {
     },
 
     attendee() {
-      axios
-        .get("http://localhost:3333/events/"+this.idEvent+"/attendees", {
-          headers:{'Authorization': 'Bearer ' + sessionStorage.getItem("acces-token")}
-        })
+
+      const config = {
+        headers: { Authorization: `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MywibmFtZSI6IlF1ZW50aW4iLCJtYWlsIjoicXVlbnRpbkBpdXQuZnIiLCJpYXQiOjE2ODAxODgxOTgsImV4cCI6MTY4MDE5MTc5OH0.dfnlFKQWBB30OP4v85RZ9ZtFkeqTZzxATP9SPArPmDg` }
+      };
+      axios.get("http://localhost:3333/events/" + this.idEvent + "/attendees", config)
         .then((response) => {
-          if (response.status === 200 || response.status === 201) {
-            this.confirmMessage = "Votre compte a bien été créé.";
-            this.showConfirmMessage = true;
-          } else {
-            this.serverError = "Merci de renseigner tous les champs correctement.";
-            this.showServerError = true;
-          }
-        })
-        .then(data => {
-          console.log(data.json)
+          this.people = response.data
+          console.log(response.data)
         })
         .catch((error) => {
-          if (error.response.status === 422) {
-            this.validationError = "Des champs sont manquants ou invalides.";
-            this.showValidationErrors = true;
-          } else {
-            this.serverError = "Merci de renseigner tous les champs correctement.";
-            this.showServerError = true;
-          }
+          console.log(error)
         });
+
     },
 
+    //faire la même chose que les participant pour les com, mettre les comments dans la gateway
+    // comments() {
 
+    //   const config = {
+    //     headers: { Authorization: `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MywibmFtZSI6IlF1ZW50aW4iLCJtYWlsIjoicXVlbnRpbkBpdXQuZnIiLCJpYXQiOjE2ODAxODgxOTgsImV4cCI6MTY4MDE5MTc5OH0.dfnlFKQWBB30OP4v85RZ9ZtFkeqTZzxATP9SPArPmDg` }
+    //   };
+    //   axios.get("http://localhost:3333/events/" + this.idEvent + "/attendees", config)
+    //     .then((response) => {
+    //       this.people = response.data
+    //       console.log(response.data)
+    //     })
+    //     .catch((error) => {
+    //       console.log(error)
+    //     });
 
+    // },
+  },
+  mounted() {
+    this.attendee()
   },
 
   props: {},
@@ -81,17 +84,7 @@ export default {
       logged: false,
       idEvent: this.$route.params.id,
       eventPosition: [48.8566, 2.3522],
-      people: [
-        { id: 1, name: "Jean", ok: 1 },
-        { id: 2, name: "Pierre", ok: 2 },
-        { id: 3, name: "Paul", ok: 3 },
-        { id: 4, name: "Jacques", ok: 1 },
-        { id: 5, name: "Marie", ok: 2 },
-        { id: 6, name: "Jeanne", ok: 3 },
-        { id: 7, name: "Pierre", ok: 1 },
-        { id: 8, name: "Paul", ok: 2 },
-        { id: 9, name: "Jacques", ok: 3 },
-      ],
+      people: [],
       comments: [{
         id: 1, name: "Jean", comment: "Je suis là !",
         date: "13:23 12/12/2020"

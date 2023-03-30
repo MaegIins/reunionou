@@ -4,18 +4,19 @@
     <div id="everyPpl">
       <div v-for="person in listPpl" :key="person.id" id="pplin">
 
-        <div v-if="person.ok === 1" class="people" id="coming">
-          <p>{{ person.name }}</p>
-          <i class="bi bi-check2"></i>
-        </div>
-        <div v-if="person.ok === 2" class="people" id="notComing">
-          <p>{{ person.name }}</p>
-          <i class="bi bi-x-lg"></i>
-        </div>
-        <div v-if="person.ok === 3" class="people" id="maybe">
-          <p>{{ person.name }}</p>
+        <div v-if="person.status === 0" class="people" id="maybe">
+          <p>{{ person.name_user }}</p>
           <i class="bi bi-question-circle"></i>
         </div>
+        <div v-if="person.status === 1" class="people" id="coming">
+          <p>{{ person.name_user }}</p>
+          <i class="bi bi-check2"></i>
+        </div>
+        <div v-if="person.status === 2" class="people" id="notComing">
+          <p>{{ person.name_user }}</p>
+          <i class="bi bi-x-lg"></i>
+        </div>
+
       </div>
     </div>
 
@@ -29,8 +30,7 @@ export default {
   name: "PresentComp",
   props: ["listPpl"],
 }
+
 </script>
 
-<style scoped>
-
-</style>
+<style scoped></style>
