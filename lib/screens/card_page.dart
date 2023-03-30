@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:latlong2/latlong.dart';
 import 'event_form.dart';
-import '../assets/JSON/events.json' as events;
 
 class CardPage extends StatelessWidget {
   const CardPage({Key? key}) : super(key: key);

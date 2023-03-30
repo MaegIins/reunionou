@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:partouille/Singleton/Auth.dart';
 
 // Endpoint du serveur Node.js pour générer les tokens
 const String tokenEndpoint = "http://localhost:3333/auth/signin";
@@ -17,7 +18,7 @@ class _LoginPageState extends State<LoginPage> {
   final TextEditingController _passwordController = TextEditingController();
 
   // Le token d'authentification généré par le serveur Node.js
-  late String _token = "";
+  //late String _token = "";
 
   // La fonction de connexion qui envoie les informations d'identification au serveur Node.js pour vérification
   Future<void> _login() async {
@@ -37,7 +38,7 @@ class _LoginPageState extends State<LoginPage> {
     if (response.statusCode == 200) {
       final Map<String, dynamic> data = json.decode(response.body);
       setState(() {
-        _token = data["access_token"];
+        Auth().token = data["access_token"];
       });
     } else {
       // Si les informations d'identification ne sont pas valides, afficher un message d'erreur
@@ -65,14 +66,14 @@ class _LoginPageState extends State<LoginPage> {
   // La fonction de déconnexion qui supprime le token d'authentification stocké localement
   void _logout() {
     setState(() {
-      _token = "";
+      Auth().token = "";
     });
   }
 
   @override
   Widget build(BuildContext context) {
     // Si l'utilisateur est déjà connecté, afficher une page de bienvenue
-    if (_token != "") {
+    if (Auth().token != "") {
       return Scaffold(
         appBar: AppBar(
           title: Text("Bienvenue"),
