@@ -1,19 +1,16 @@
-# Reunionou.app
+# flutter_application_1
 
-Reunionou.app est une application qui permet à des groupes de personnes (famille, amis,
-groupe de collègues) de se fixer un rendez-vous en un lieu déterminé et d'organiser ce rendezvous. L'application est disponible en version web (ordinateurs et terminaux mobiles) et en
-version mobile (smartphones, tablettes).
+A new Flutter project.
 
-## MEMBRES 
+## Getting Started
 
-- [Tristan BELMONT](https://github.com/MaegIins)
-- [Quentin DAL BON](https://github.com/Quent5)
-- [Lucas FARRONI](https://github.com/lucasfarroni)
-- [Axel LEGUYEN](https://github.com/lgyn57)
-- [Clément PERRIN](https://github.com/alfiov)
+This project is a starting point for a Flutter application.
 
----------------------------------------------------------------------------------
+A few resources to get you started if this is your first Flutter project:
 
-## Répartition du projet
+- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
+- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
 
-Le projet est répartis en 3 parties : La partie [backend](https://github.com/MaegIins/reunionou/tree/BACKEND), la partie [VueJS](https://github.com/MaegIins/reunionou/tree/VUE) et la partie [Flutter](https://github.com/MaegIins/reunionou/tree/FLUTTER), chacun réparties dans leur branche.
+For help getting started with Flutter development, view the
+[online documentation](https://docs.flutter.dev/), which offers tutorials,
+samples, guidance on mobile development, and a full API reference.
