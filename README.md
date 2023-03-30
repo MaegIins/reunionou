@@ -9,6 +9,7 @@ https://docs.google.com/spreadsheets/d/1TWsrBvNRiZ8rOQKc0nNv6weMWEgEDcjEBpcA715o
 
 docker compose run --rm auth npm install
 docker compose run --rm events npm install 
+docker compose run --rm gateway npm install
 
 pour run les services
 
