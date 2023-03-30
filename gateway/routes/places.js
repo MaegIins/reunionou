@@ -10,14 +10,14 @@ router.get('/', async (req, res, next) => {
             .then(async (validateResponse) => {
                 await axios.get('http://events:3000/places')
                     .then((response) => {
-                        res.json(response.data);
+                        res.status(response.status).json(response.data);
                     })
                     .catch((error) => {
-                        res.status(404).json(error.response.data);
+                        res.status(error.response.status).json(error.response.data);
                     });
             })
             .catch((error) => {
-                res.status(401).json(error.response.data);
+                res.status(error.response.status).json(error.response.data);
             });
     }
     catch (error) {

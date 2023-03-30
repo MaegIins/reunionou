@@ -8,10 +8,10 @@ router.post('/confirm', async (req, res, next) => {
     try {
       await axios.post('http://events:3000/invites/confirm', req.body)
         .then((response) => {
-          res.json(response.data);
+          res.status(response.status).json(response.data);
         })
         .catch((error) => {
-          res.status(404).json(error.response.data);
+          res.status(error.response.status).json(error.response.data);
         });
     }
     catch (error) {
@@ -25,10 +25,10 @@ router.get('/', async (req, res, next) => {
       const { key } = req.query;
           await axios.get('http://events:3000/invites/details', { params: { key } })
             .then((response) => {
-              res.json(response.data);
+              res.status(response.status).json(response.data);
             })
             .catch((error) => {
-              res.status(404).json(error.response.data);
+              res.status(error.response.status).json(error.response.data);
             });
     }
     catch (error) {

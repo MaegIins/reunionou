@@ -22,14 +22,14 @@ router.get('/', async (req, res, next) => {
                 const userEmail = response.data.mail; // Get the user email from the auth service response
                 await axios.get('http://events:3000/events', { headers: { 'user-email': userEmail } }) // Pass the user email in the headers
                     .then((response) => {
-                        res.json(response.data);
+                        res.status(response.status).json(response.data);
                     })
                     .catch((error) => {
-                        res.status(404).json(error.response.data);
+                        res.status(error.response.status).json(error.response.data);
                     });
             })
             .catch((error) => {
-                res.status(401).json(error.response.data);
+                res.status(error.response.status).json(error.response.data);
             });
     }
     catch (error) {
@@ -74,12 +74,12 @@ router.get('/:id', async (req, res, next) => {
                     }
                     )
                     .catch((error) => {
-                        res.status(404).json(error.response.data);
+                        res.status(error.response.status).json(error.response.data);
                     }
                     );
             })
             .catch((error) => {
-                res.status(401).json(error.response.data);
+                res.status(error.response.status).json(error.response.data);
             });
     }
     catch (error) {
@@ -97,16 +97,15 @@ router.get('/:id/attendees', async (req, res, next) => {
                             res.json(response.data);
                         })
                         .catch((error) => {
-                            console.log(error)
-                            res.status(404).json(error.response.data);
+                            res.status(error.response.status).json(error.response.data);
                         });
                 }
                 catch (error) {
-                    res.status(500).json(error);
+                    res.status(error.response.status).json(error);
                 }
             })
             .catch((error) => {
-                res.status(401).json(error.response.data);
+                res.status(error.response.status).json(error.response.data);
             });
     }
     catch (error) {
@@ -122,18 +121,18 @@ router.get('/:id/share', async (req, res, next) => {
                 try {
                     await axios.get('http://events:3000/events/' + req.params.id + '/share', req.body)
                         .then((response) => {
-                            res.json(response.data);
+                            res.status(response.status).json(response.data);
                         })
                         .catch((error) => {
-                            res.status(404).json(error.response.data);
+                            res.status(error.response.status).json(error.response.data);
                         });
                 }
                 catch (error) {
-                    res.status(500).json(error);
+                    res.status(error.response.status).json(error);
                 }
             })
             .catch((error) => {
-                res.status(401).json(error.response.data);
+                res.status(error.response.status).json(error.response.data);
             });
     }
     catch (error) {
