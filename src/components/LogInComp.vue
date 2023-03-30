@@ -45,9 +45,9 @@ export default {
             this.showLoginSuccess = true;
             this.showLoginError = false;
 
-            sessionStorage.setItem("access_token", response.access_token);
-            sessionStorage.setItem("refresh_token", response.refresh_token);
-            this.$router.push("/");
+            sessionStorage.setItem("access_token", response.data.access_token);
+            sessionStorage.setItem("refresh_token", response.data.refresh_token);
+            // this.$router.push("/");
           } else {
             this.showLoginSuccess = false;
             this.showLoginError = true;
