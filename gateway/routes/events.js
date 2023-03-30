@@ -145,5 +145,32 @@ router.patch('/:id/payment', async (req, res, next) => {
     }
 });
 
+// partager un événement
+router.get('/:id/share', async (req, res, next) => {
+    try {
+        await axios.get('http://auth:3000/validate', { headers: { 'Authorization': req.headers.authorization } })
+            .then(async (response) => {
+                try {
+                    await axios.get('http://events:3000/events/' + req.params.id + '/share', req.body)
+                        .then((response) => {
+                            res.json(response.data);
+                        })
+                        .catch((error) => {
+                            res.status(404).json(error.response.data);
+                        });
+                }
+                catch (error) {
+                    res.status(500).json(error);
+                }
+            })
+            .catch((error) => {
+                res.status(401).json(error.response.data);
+            });
+    }
+    catch (error) {
+        res.status(500).json(error);
+    }
+});
+
 
 module.exports = router;
