@@ -7,6 +7,7 @@ const indexRouter = require('./routes/index');
 const authRouter = require('./routes/auth');
 const eventsRouter = require('./routes/events');
 const invitesRouter = require('./routes/invites');
+const placesRouter = require('./routes/places');
 
 
 const app = express();
@@ -26,6 +27,7 @@ app.use('/', indexRouter);
 app.use('/auth', authRouter);
 app.use('/events', eventsRouter);
 app.use('/invites', invitesRouter);
+app.use('/places', placesRouter);
 
 
 // 404 
