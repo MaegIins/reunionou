@@ -3,15 +3,17 @@ import 'package:http/http.dart' as http;
 import 'package:partouille/Singleton/Auth.dart';
 import 'package:partouille/models/event.dart';
 import 'package:partouille/models/eventAdress.dart';
+
 class EventsProvider {
   final String apiUrl = 'http://localhost:3333/events';
 
   Future<List<event>> getEvents(String bearerToken) async {
     final response = await http.get(
       Uri.parse(apiUrl),
-      headers: <String, String>{'Authorization': bearerToken},
+      headers: <String, String>{"Authorization": bearerToken},
     );
 
+    print(response.statusCode);
     if (response.statusCode == 200) {
       final List<dynamic> eventsJson = jsonDecode(response.body)['events'];
       final List<event> events = eventsJson.map((eventJson) {
@@ -35,34 +37,34 @@ class EventsProvider {
     }
   }
 
-Future<void> addEvent(String bearerToken, EventAdress eventAdress) async {
-  print(eventAdress);
-  final response = await http.post(
-    Uri.parse(apiUrl),
-    headers: <String, String>{
-      'Authorization': bearerToken,
-      'Content-Type': 'application/json',
-    },
-    body: jsonEncode({
-      'title': eventAdress.name,
-      'description': eventAdress.description,
-      'date': {
-        'date': eventAdress.date.toIso8601String().substring(0, 10),
-        'time': eventAdress.date.toIso8601String().substring(11, 16),
+  Future<void> addEvent(String bearerToken, EventAdress eventAdress) async {
+    print(eventAdress);
+    print(eventAdress.date.toIso8601String().substring(0, 9));
+    print(eventAdress.date.toIso8601String().substring(11, 16));
+    final response = await http.post(
+      Uri.parse(apiUrl),
+      headers: <String, String>{
+        "Authorization": bearerToken,
       },
-      'name_place': eventAdress.namePlace,
-      'address': {
-        'street': eventAdress.address.street,
-        'city': eventAdress.address.city,
-      },
-    }),
-  );
+      body: jsonEncode({
+        "title": eventAdress.name,
+        "description": eventAdress.description,
+        "date": {
+          "date": eventAdress.date.toIso8601String().substring(0, 9),
+          "time": eventAdress.date.toIso8601String().substring(11, 16),
+        },
+        "name_place": eventAdress.namePlace,
+        "adress": {
+          "street": eventAdress.address.street,
+          "city": eventAdress.address.city,
+        },
+      }),
+    );
 
-  if (response.statusCode != 201) {
-    throw Exception('Failed to add event');
+    if (response.statusCode != 201) {
+      throw Exception('Failed to add event');
+    }
   }
-}
-
 }
 /*
   Future<dynamic> getEventById(String id) async {
