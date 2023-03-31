@@ -8,6 +8,7 @@ const authRouter = require('./routes/auth');
 const eventsRouter = require('./routes/events');
 const invitesRouter = require('./routes/invites');
 const placesRouter = require('./routes/places');
+const commentsRouter = require('./routes/comments');
 
 
 const app = express();
@@ -28,6 +29,7 @@ app.use('/auth', authRouter);
 app.use('/events', eventsRouter);
 app.use('/invites', invitesRouter);
 app.use('/places', placesRouter);
+app.use('/comments', commentsRouter);
 
 
 // 404 
