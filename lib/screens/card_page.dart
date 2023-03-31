@@ -58,7 +58,8 @@ class CardPage extends StatelessWidget {
                 Expanded(
                   child: FlutterMap(
                     options: MapOptions(
-                      center: LatLng(48.8566, 2.3522), // Paris, France
+                      center: // position metz
+                          LatLng(49.119, 6.175),
                       zoom: 13.0,
                     ),
                     layers: [
