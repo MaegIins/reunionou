@@ -45,7 +45,7 @@ router.post('/', async (req, res, next) => {
 
         const { mail: userEmail, name: userName } = data;
         
-        const { headers: { location } } = await axios.post('http://events:3000/comments/add', {
+        const { headers: { location } } = await axios.post('http://events:3000/events', {
             ...req.body
         }, {
             headers: { 'user-mail': userEmail, 'user-name': userName }
