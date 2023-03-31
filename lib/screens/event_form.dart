@@ -28,9 +28,9 @@ class _EventFormState extends State<EventForm> {
     super.initState();
     _nameController = TextEditingController();
     _descriptionController = TextEditingController();
-   _dateController = TextEditingController(
-    text: DateFormat('yyyy-MM-ddTHH:mm').format(DateTime.now()),
-);
+    _dateController = TextEditingController(
+      text: DateFormat('yyyy-MM-ddTHH:mm').format(DateTime.now()),
+    );
     _namePlaceController = TextEditingController();
     _streetController = TextEditingController();
     _cityController = TextEditingController();
@@ -50,7 +50,7 @@ class _EventFormState extends State<EventForm> {
   Future<void> _submitForm() async {
     if (_formKey.currentState!.validate()) {
       final bearerToken = await Auth().getToken();
-      
+
       final eventAdress = EventAdress(
         name: _nameController.text,
         description: _descriptionController.text,
@@ -75,8 +75,6 @@ class _EventFormState extends State<EventForm> {
       }
     }
   }
-
-
 
   @override
   Widget build(BuildContext context) {
@@ -109,99 +107,100 @@ class _EventFormState extends State<EventForm> {
                     labelText: 'Description',
                   ),
                   validator: (value) {
-                    if (value == null || value.isEmpty){
-return 'Please enter a description';
-}
-return null;
-},
-),
-GestureDetector(
-  onTap: () async {
-    final initialDate = DateTime.parse(_dateController.text);
-    final pickedDate = await showDatePicker(
-      context: context,
-      initialDate: initialDate,
-      firstDate: DateTime.now(),
-      lastDate: DateTime.now().add(Duration(days: 365)),
-    );
-    if (pickedDate != null) {
-      final pickedTime = await showTimePicker(
-        context: context,
-        initialTime: TimeOfDay.fromDateTime(initialDate),
-      );
-      if (pickedTime != null) {
-        final newDateTime = DateTime(
-          pickedDate.year,
-          pickedDate.month,
-          pickedDate.day,
-          pickedTime.hour,
-          pickedTime.minute,
-        );
-        _dateController.text = DateFormat('yyyy-MM-ddTHH:mm').format(newDateTime);
-      }
-    }
-  },
-  child: AbsorbPointer(
-    child: TextFormField(
-      controller: _dateController,
-      decoration: InputDecoration(
-        labelText: 'Date',
+                    if (value == null || value.isEmpty) {
+                      return 'Please enter a description';
+                    }
+                    return null;
+                  },
+                ),
+                GestureDetector(
+                  onTap: () async {
+                    final initialDate = DateTime.parse(_dateController.text);
+                    final pickedDate = await showDatePicker(
+                      context: context,
+                      initialDate: initialDate,
+                      firstDate: DateTime.now(),
+                      lastDate: DateTime.now().add(Duration(days: 365)),
+                    );
+                    if (pickedDate != null) {
+                      final pickedTime = await showTimePicker(
+                        context: context,
+                        initialTime: TimeOfDay.fromDateTime(initialDate),
+                      );
+                      if (pickedTime != null) {
+                        final newDateTime = DateTime(
+                          pickedDate.year,
+                          pickedDate.month,
+                          pickedDate.day,
+                          pickedTime.hour,
+                          pickedTime.minute,
+                        );
+                        _dateController.text =
+                            DateFormat('yyyy-MM-ddTHH:mm').format(newDateTime);
+                      }
+                    }
+                  },
+                  child: AbsorbPointer(
+                    child: TextFormField(
+                      controller: _dateController,
+                      decoration: InputDecoration(
+                        labelText: 'Date',
+                      ),
+                      validator: (value) {
+                        if (value == null || value.isEmpty) {
+                          return 'Please enter a date';
+                        }
+                        return null;
+                      },
+                    ),
+                  ),
+                ),
+                TextFormField(
+                  controller: _namePlaceController,
+                  decoration: InputDecoration(
+                    labelText: 'Place name',
+                  ),
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return 'Please enter a place name';
+                    }
+                    return null;
+                  },
+                ),
+                TextFormField(
+                  controller: _streetController,
+                  decoration: InputDecoration(
+                    labelText: 'Street address',
+                  ),
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return 'Please enter a street address';
+                    }
+                    return null;
+                  },
+                ),
+                TextFormField(
+                  controller: _cityController,
+                  decoration: InputDecoration(
+                    labelText: 'City',
+                  ),
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return 'Please enter a city';
+                    }
+                    return null;
+                  },
+                ),
+                SizedBox(height: 16.0),
+                ElevatedButton(
+                  onPressed: _submitForm,
+                  child: Text('Add Event'),
+                ),
+              ],
+            ),
+          ),
+        ),
       ),
-      validator: (value) {
-        if (value == null || value.isEmpty) {
-          return 'Please enter a date';
-        }
-        return null;
-      },
-    ),
-  ),
-),
-TextFormField(
-controller: _namePlaceController,
-decoration: InputDecoration(
-labelText: 'Place name',
-),
-validator: (value) {
-if (value == null || value.isEmpty) {
-return 'Please enter a place name';
-}
-return null;
-},
-),
-TextFormField(
-controller: _streetController,
-decoration: InputDecoration(
-labelText: 'Street address',
-),
-validator: (value) {
-if (value == null || value.isEmpty) {
-return 'Please enter a street address';
-}
-return null;
-},
-),
-TextFormField(
-controller: _cityController,
-decoration: InputDecoration(
-labelText: 'City',
-),
-validator: (value) {
-if (value == null || value.isEmpty) {
-return 'Please enter a city';
-}
-return null;
-},
-),
-SizedBox(height: 16.0),
-ElevatedButton(
-onPressed: _submitForm,
-child: Text('Add Event'),
-),
-],
-),
-),
-),
-),
-);
-}
+    );
+  }
 }
