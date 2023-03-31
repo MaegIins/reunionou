@@ -14,4 +14,9 @@ class Auth {
   set token(String value) {
     _token = value;
   }
+
+  bool get isAuthenticated {
+    // Check if the token is not empty or null to determine if the user is authenticated.
+    return _token.isNotEmpty && _token != null;
+  }
 }

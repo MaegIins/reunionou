@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:latlong2/latlong.dart';
+import 'package:partouille/models/event.dart';
+import '../providers/events_provider.dart';
+import '../Singleton/Auth.dart';
 import 'event_form.dart';
 
 class CardPage extends StatelessWidget {
@@ -8,73 +11,97 @@ class CardPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Center(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Expanded(
-            child: FlutterMap(
-              options: MapOptions(
-                center: LatLng(48.8566, 2.3522), // Paris, France
-                zoom: 13.0,
-              ),
-              layers: [
-                TileLayerOptions(
-                  urlTemplate:
-                      "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
-                  subdomains: ['a', 'b', 'c'],
-                ),
-                MarkerLayerOptions(
-                  markers: [
-                    Marker(
-                      width: 80.0,
-                      height: 80.0,
-                      point: LatLng(48.8584, 2.2945), // Tour Eiffel
-                      builder: (ctx) => GestureDetector(
-                        onTap: () {
-                          showDialog(
-                            context: context,
-                            builder: (BuildContext context) {
-                              return AlertDialog(
-                                title: Text("Tour Eiffel"),
-                                content: Text(
-                                    'La Tour Eiffel est une tour de fer puddlé \nde 324 mètres de hauteur située à Paris,\n à l’extrémité nord-ouest du parc du Champ-de-Mars \n en bordure de la Seine dans le 7ᵉ arrondissement.'),
-                                actions: [
-                                  TextButton(
-                                    onPressed: () {
-                                      Navigator.of(context).pop();
-                                    },
-                                    child: Text('Fermer'),
-                                  ),
-                                ],
-                              );
+    return FutureBuilder(
+      future: _loadEvents(),
+      builder: (context, snapshot) {
+        if (snapshot.hasData) {
+          final events = snapshot.data as List<event>;
+
+          final markers = events.map((event) {
+            return Marker(
+              width: 80.0,
+              height: 80.0,
+              point: LatLng(event.lat!, event.lon!),
+              builder: (ctx) => GestureDetector(
+                onTap: () {
+                  showDialog(
+                    context: context,
+                    builder: (BuildContext context) {
+                      return AlertDialog(
+                        title: Text(event.name!),
+                        content: Text(event.description!),
+                        actions: [
+                          TextButton(
+                            onPressed: () {
+                              Navigator.of(context).pop();
                             },
-                          );
-                        },
-                        child: Icon(
-                          Icons.location_on,
-                          color: Colors.red,
-                          size: 50.0,
-                        ),
-                      ),
+                            child: Text('Fermer'),
+                          ),
+                        ],
+                      );
+                    },
+                  );
+                },
+                child: Icon(
+                  Icons.location_on,
+                  color: Colors.red,
+                  size: 50.0,
+                ),
+              ),
+            );
+          }).toList();
+
+          return Center(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Expanded(
+                  child: FlutterMap(
+                    options: MapOptions(
+                      center: LatLng(48.8566, 2.3522), // Paris, France
+                      zoom: 13.0,
                     ),
-                  ],
+                    layers: [
+                      TileLayerOptions(
+                        urlTemplate:
+                            "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
+                        subdomains: ['a', 'b', 'c'],
+                      ),
+                      MarkerLayerOptions(markers: markers),
+                    ],
+                  ),
+                ),
+                SizedBox(height: 13.0),
+                ElevatedButton(
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => EventForm()),
+                    );
+                  },
+                  child: Text('Ajouter un événement'),
                 ),
               ],
             ),
-          ),
-          SizedBox(height: 13.0),
-          ElevatedButton(
-            onPressed: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => EventForm()),
-              );
-            },
-            child: Text('Ajouter un événement'),
-          ),
-        ],
-      ),
+          );
+        } else if (snapshot.hasError) {
+          return Center(child: Text('Erreur de chargement des événements'));
+        } else {
+          return Center(child: CircularProgressIndicator());
+        }
+      },
     );
+  }
+
+  Future<List<event>> _loadEvents() async {
+    final auth = Auth();
+
+    if (!auth.isAuthenticated) {
+      return Future.value([]);
+    }
+
+    final bearerToken = "Bearer " + auth.token!;
+    final events = await EventsProvider().getEvents(bearerToken);
+    return events;
   }
 }
