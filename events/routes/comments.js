@@ -70,16 +70,19 @@ router.get('/events/:id', async (req, res, next) => {
 router.post('/add', async (req, res, next) => {
 
     try {
-        if (req.body.id_event === undefined || req.body.mail_attendee === undefined || req.body.date.date === undefined || req.body.date.time === undefined || req.body.text === undefined) {
+        if (req.body.id_event === undefined || req.body.date.date === undefined || req.body.date.time === undefined || req.body.text === undefined) {
             res.status(400).json({ type: "error", error: 400, message: "The request is invalid" });
         } else {
             const date = new Date(req.body.date.date + "T" + req.body.date.time + ":00.000Z");
             // Permet la validation des valeurs présentes dans le body
             try {
-                let result = await schema.validateAsync({ id_event: req.body.id_event, mail_attendee: req.body.mail_attendee, date: date, text: req.body.text });
+                const userEmail = req.headers['user-mail'];
+                console.log(userEmail)
+                console.log(req.body)
+                let result = await schema.validateAsync({ id_event: req.body.id_event, mail_attendee: userEmail, date: date, text: req.body.text });
                 if (result) {
                     //regarde si l'utilisateur est asscoier au bon id_event
-                    const attendee = await db.select("id").from("Attendee").where({ id_event: req.body.id_event, mail_user: req.body.mail_attendee });
+                    const attendee = await db.select("id").from("Attendee").where({ id_event: req.body.id_event, mail_user: userEmail });
                     //si oui alors on utilise son id pour créer le commentaires
                     if (attendee[0] !== undefined) {
                         const uuid = uuidv4();
