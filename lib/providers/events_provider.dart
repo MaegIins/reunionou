@@ -2,7 +2,7 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:partouille/Singleton/Auth.dart';
 import 'package:partouille/models/event.dart';
-
+import 'package:partouille/models/eventAdress.dart';
 class EventsProvider {
   final String apiUrl = 'http://localhost:3333/events';
 
@@ -34,8 +34,35 @@ class EventsProvider {
       throw Exception('Failed to load events data');
     }
   }
+
+Future<void> addEvent(String bearerToken, EventAdress eventAdress) async {
+  final response = await http.post(
+    Uri.parse(apiUrl),
+    headers: <String, String>{
+      'Authorization': bearerToken,
+      'Content-Type': 'application/json',
+    },
+    body: jsonEncode({
+      'title': eventAdress.name,
+      'description': eventAdress.description,
+      'date': {
+        'date': eventAdress.date.toIso8601String().substring(0, 10),
+        'time': eventAdress.date.toIso8601String().substring(11, 16),
+      },
+      'name_place': eventAdress.namePlace,
+      'address': {
+        'street': eventAdress.address.street,
+        'city': eventAdress.address.city,
+      },
+    }),
+  );
+
+  if (response.statusCode != 201) {
+    throw Exception('Failed to add event');
+  }
 }
 
+}
 /*
   Future<dynamic> getEventById(String id) async {
     final response = await http.get(Uri.parse('$apiUrl/$id'));

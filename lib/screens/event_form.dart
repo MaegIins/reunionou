@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:intl/intl.dart';
-import 'package:partouille/models/event.dart';
-import 'package:http/http.dart' as http;
+import 'package:partouille/models/eventAdress.dart';
+import '../providers/events_provider.dart';
+import 'package:flutter/cupertino.dart';
 
-import '../Singleton/Auth.dart';
+import 'package:partouille/Singleton/Auth.dart';
 
 class EventForm extends StatefulWidget {
   const EventForm({Key? key}) : super(key: key);
@@ -13,211 +14,194 @@ class EventForm extends StatefulWidget {
   _EventFormState createState() => _EventFormState();
 }
 
-final String apiUrl = 'http://localhost:3333/events';
-
 class _EventFormState extends State<EventForm> {
-  final _formKey = GlobalKey<FormState>();
-  final _event = event();
-  late DateTime _selectedDate;
-  Future<void> _selectDate(BuildContext context) async {
-    final DateTime? picked = await showDatePicker(
-        context: context,
-        initialDate: _selectedDate,
-        firstDate: DateTime.now(),
-        lastDate: DateTime(2100));
-    if (picked != null && picked != _selectedDate) {
-      setState(() {
-        _selectedDate = picked;
-      });
-    }
-  }
+  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+  late TextEditingController _nameController;
+  late TextEditingController _descriptionController;
+  late TextEditingController _dateController;
+  late TextEditingController _namePlaceController;
+  late TextEditingController _streetController;
+  late TextEditingController _cityController;
 
   @override
   void initState() {
     super.initState();
-    _selectedDate = DateTime.now();
+    _nameController = TextEditingController();
+    _descriptionController = TextEditingController();
+   _dateController = TextEditingController(
+    text: DateFormat('yyyy-MM-ddTHH:mm').format(DateTime.now()),
+);
+    _namePlaceController = TextEditingController();
+    _streetController = TextEditingController();
+    _cityController = TextEditingController();
   }
 
   @override
+  void dispose() {
+    _nameController.dispose();
+    _descriptionController.dispose();
+    _dateController.dispose();
+    _namePlaceController.dispose();
+    _streetController.dispose();
+    _cityController.dispose();
+    super.dispose();
+  }
+
+  Future<void> _submitForm() async {
+    if (_formKey.currentState!.validate()) {
+      final bearerToken = await Auth().getToken();
+      
+      final eventAdress = EventAdress(
+        name: _nameController.text,
+        description: _descriptionController.text,
+        date: DateTime.parse(_dateController.text),
+        namePlace: _namePlaceController.text,
+        address: Address(
+          street: _streetController.text,
+          city: _cityController.text,
+        ),
+      );
+      try {
+        await EventsProvider().addEvent(bearerToken, eventAdress);
+        Navigator.of(context).pop();
+      } catch (error) {
+        print(error);
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Failed to add event'),
+            backgroundColor: Colors.red,
+          ),
+        );
+      }
+    }
+  }
+
+
+
+  @override
   Widget build(BuildContext context) {
-    final bearerToken = "Bearer " + Auth().token;
     return Scaffold(
       appBar: AppBar(
-        title: Text('Ajouter un événement'),
+        title: Text('Add Event'),
       ),
-      body: SingleChildScrollView(
-        child: Form(
-          key: _formKey,
-          child: Padding(
-            padding: EdgeInsets.all(8.0),
+      body: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: SingleChildScrollView(
+          child: Form(
+            key: _formKey,
             child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 TextFormField(
-                  decoration: InputDecoration(labelText: 'Nom'),
-                  onSaved: (value) => _event.name = value!,
-                  validator: (value) {
-                    if (value!.isEmpty) {
-                      return 'Veuillez entrer un nom';
-                    }
-                    return null;
-                  },
-                ),
-                TextFormField(
-                  decoration: InputDecoration(labelText: 'Description'),
-                  maxLines: 3,
-                  onSaved: (value) => _event.description = value!,
-                  validator: (value) {
-                    if (value!.isEmpty) {
-                      return 'Veuillez entrer une description';
-                    }
-                    return null;
-                  },
-                ),
-                TextFormField(
-                  decoration: InputDecoration(labelText: 'Adresse Complète'),
-                  onSaved: (value) => _event.address = value!,
-                  validator: (value) {
-                    if (value!.isEmpty) {
-                      return 'Veuillez entrer une adresse';
-                    }
-                    return null;
-                  },
-                ),
-                TextFormField(
-                  decoration: InputDecoration(labelText: 'Ville'),
-                  onSaved: (value) => _event.city = value!,
-                  validator: (value) {
-                    if (value!.isEmpty) {
-                      return 'Veuillez entrer une adresse';
-                    }
-                    return null;
-                  },
-                ),
-                TextFormField(
-                  decoration: InputDecoration(labelText: 'Rue'),
-                  onSaved: (value) => _event.street = value!,
-                  validator: (value) {
-                    if (value!.isEmpty) {
-                      return 'Veuillez entrer une adresse';
-                    }
-                    return null;
-                  },
-                ),
-                GestureDetector(
-                  onTap: () => _selectDate(context),
-                  child: AbsorbPointer(
-                    child: TextFormField(
-                      decoration: InputDecoration(
-                        labelText: 'Date',
-                        suffixIcon: Icon(Icons.calendar_today),
-                      ),
-                      controller: TextEditingController(
-                          text: DateFormat('dd/mm/yyyy').format(_selectedDate)),
-                      onSaved: (value) =>
-                          _event.date = DateFormat('yyyy/mm/dd').parse(value!),
-                      validator: (value) {
-                        if (value!.isEmpty) {
-                          return 'Veuillez entrer une date';
-                        }
-                        try {
-                          DateFormat('yyyy/mm/dd').parse(value);
-                        } catch (e) {
-                          return 'Veuillez entrer une date valide';
-                        }
-                        return null;
-                      },
-                    ),
-                  ),
-                ),
-                TextFormField(
-                  decoration: InputDecoration(labelText: 'Heure'),
-                  onSaved: (value) => _event.time = value!,
-                  validator: (value) {
-                    if (value!.isEmpty) {
-                      return 'Veuillez entrer une heure';
-                    }
-                    return null;
-                  },
-                ),
-                TextFormField(
-                  decoration:
-                      InputDecoration(labelText: 'Nom de l\'organisateur'),
-                  onSaved: (value) => _event.nameOrga = value!,
-                  validator: (value) {
-                    if (value!.isEmpty) {
-                      return 'Veuillez entrer un nom d\'organisateur';
-                    }
-                    return null;
-                  },
-                ),
-                TextFormField(
+                  controller: _nameController,
                   decoration: InputDecoration(
-                      labelText: 'Adresse email de l\'organisateur'),
-                  keyboardType: TextInputType.emailAddress,
-                  onSaved: (value) => _event.mailOrga = value!,
+                    labelText: 'Name',
+                  ),
                   validator: (value) {
-                    if (value!.isEmpty) {
-                      return 'Veuillez entrer une adresse email';
-                    }
-                    if (!value.contains('@')) {
-                      return 'Veuillez entrer une adresse email valide';
+                    if (value == null || value.isEmpty) {
+                      return 'Please enter a name';
                     }
                     return null;
                   },
                 ),
-                SizedBox(height: 8.0),
-                ElevatedButton(
-                  onPressed: () async {
-                    if (_formKey.currentState!.validate()) {
-                      _formKey.currentState!.save();
-
-                      final headers = <String, String>{
-                        'Authorization': bearerToken,
-                      };
-                      final body = <String, dynamic>{
-                        'title': _event.name,
-                        'description': _event.description,
-                        'date': {
-                          'date': _event.date?.toIso8601String(),
-                          'time': _event.time,
-                        },
-                        "name_place": _event.address,
-                        'address': {
-                          'street': _event.street,
-                          'city': _event.city,
-                        },
-                        'nameOrga': _event.nameOrga,
-                        'mailOrga': _event.mailOrga,
-                      };
-                      final response = await http.post(Uri.parse(apiUrl),
-                          headers: headers, body: body);
-
-                      if (response.statusCode == 200) {
-                        // La requête a réussi, afficher un message de confirmation
-                        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                          content: Text("La requête a réussi"),
-                          duration: Duration(seconds: 2),
-                        ));
-                      } else {
-                        // La requête a échoué, afficher une erreur
-                        ScaffoldMessenger.of(context)
-                            .showSnackBar(const SnackBar(
-                          content: Text("La requête a échoué"),
-                        ));
-                      }
-
-                      // ignore: use_build_context_synchronously
-                      Navigator.pop(context);
-                    }
-                  },
-                  child: Text('Enregistrer'),
-                ),
-              ],
-            ),
-          ),
-        ),
-      ),
+                TextFormField(
+                  controller: _descriptionController,
+                  decoration: InputDecoration(
+                    labelText: 'Description',
+                  ),
+                  validator: (value) {
+                    if (value == null || value.isEmpty){
+return 'Please enter a description';
+}
+return null;
+},
+),
+GestureDetector(
+  onTap: () async {
+    final initialDate = DateTime.parse(_dateController.text);
+    final pickedDate = await showDatePicker(
+      context: context,
+      initialDate: initialDate,
+      firstDate: DateTime.now(),
+      lastDate: DateTime.now().add(Duration(days: 365)),
     );
-  }
+    if (pickedDate != null) {
+      final pickedTime = await showTimePicker(
+        context: context,
+        initialTime: TimeOfDay.fromDateTime(initialDate),
+      );
+      if (pickedTime != null) {
+        final newDateTime = DateTime(
+          pickedDate.year,
+          pickedDate.month,
+          pickedDate.day,
+          pickedTime.hour,
+          pickedTime.minute,
+        );
+        _dateController.text = DateFormat('yyyy-MM-ddTHH:mm').format(newDateTime);
+      }
+    }
+  },
+  child: AbsorbPointer(
+    child: TextFormField(
+      controller: _dateController,
+      decoration: InputDecoration(
+        labelText: 'Date',
+      ),
+      validator: (value) {
+        if (value == null || value.isEmpty) {
+          return 'Please enter a date';
+        }
+        return null;
+      },
+    ),
+  ),
+),
+TextFormField(
+controller: _namePlaceController,
+decoration: InputDecoration(
+labelText: 'Place name',
+),
+validator: (value) {
+if (value == null || value.isEmpty) {
+return 'Please enter a place name';
+}
+return null;
+},
+),
+TextFormField(
+controller: _streetController,
+decoration: InputDecoration(
+labelText: 'Street address',
+),
+validator: (value) {
+if (value == null || value.isEmpty) {
+return 'Please enter a street address';
+}
+return null;
+},
+),
+TextFormField(
+controller: _cityController,
+decoration: InputDecoration(
+labelText: 'City',
+),
+validator: (value) {
+if (value == null || value.isEmpty) {
+return 'Please enter a city';
+}
+return null;
+},
+),
+SizedBox(height: 16.0),
+ElevatedButton(
+onPressed: _submitForm,
+child: Text('Add Event'),
+),
+],
+),
+),
+),
+),
+);
+}
 }
