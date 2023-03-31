@@ -51,7 +51,7 @@ class _EventFormState extends State<EventForm> {
     if (_formKey.currentState!.validate()) {
 
       final bearerToken = "Bearer " + Auth().token;
-      
+      print(bearerToken);
 
       final eventAdress = EventAdress(
         name: _nameController.text,
@@ -64,7 +64,7 @@ class _EventFormState extends State<EventForm> {
         ),
       );
       try {
-        print(eventAdress.name);
+        print(eventAdress.address.city);
         print(bearerToken);
         await EventsProvider().addEvent(bearerToken, eventAdress);
         Navigator.of(context).pop();

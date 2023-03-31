@@ -36,9 +36,13 @@ class EventsProvider {
   }
 
 Future<void> addEvent(String bearerToken, EventAdress eventAdress) async {
-  print(eventAdress);
+
+  final String apiUrl1 = 'http://localhost:3333/events';
+
+  print(eventAdress.address.city);
+  print(bearerToken);
   final response = await http.post(
-    Uri.parse(apiUrl),
+    Uri.parse(apiUrl1),
     headers: <String, String>{
       'Authorization': bearerToken,
       'Content-Type': 'application/json',
@@ -51,7 +55,7 @@ Future<void> addEvent(String bearerToken, EventAdress eventAdress) async {
         'time': eventAdress.date.toIso8601String().substring(11, 16),
       },
       'name_place': eventAdress.namePlace,
-      'address': {
+      'adress': {
         'street': eventAdress.address.street,
         'city': eventAdress.address.city,
       },
