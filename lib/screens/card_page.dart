@@ -73,15 +73,16 @@ class CardPage extends StatelessWidget {
                   ),
                 ),
                 SizedBox(height: 13.0),
-                ElevatedButton(
-                  onPressed: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(builder: (context) => EventForm()),
-                    );
-                  },
-                  child: Text('Ajouter un événement'),
-                ),
+                if (Auth().token != "")
+                  ElevatedButton(
+                    onPressed: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) => EventForm()),
+                      );
+                    },
+                    child: Text('Ajouter un événement'),
+                  ),
               ],
             ),
           );
@@ -101,7 +102,7 @@ class CardPage extends StatelessWidget {
       return Future.value([]);
     }
 
-    final bearerToken = "Bearer " + auth.token!;
+    final bearerToken = "Bearer " + auth.token;
     final events = await EventsProvider().getEvents(bearerToken);
     return events;
   }
