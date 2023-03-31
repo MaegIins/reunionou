@@ -36,6 +36,7 @@ class EventsProvider {
   }
 
 Future<void> addEvent(String bearerToken, EventAdress eventAdress) async {
+  print(eventAdress);
   final response = await http.post(
     Uri.parse(apiUrl),
     headers: <String, String>{
