@@ -50,6 +50,7 @@ class _EventFormState extends State<EventForm> {
   Future<void> _submitForm() async {
     if (_formKey.currentState!.validate()) {
       final bearerToken = "Bearer " + Auth().token;
+      print(bearerToken);
 
       final eventAdress = EventAdress(
         name: _nameController.text,
