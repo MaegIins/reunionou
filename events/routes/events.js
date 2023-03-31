@@ -16,7 +16,7 @@ const secretKey = process.env.SECRET_KEY;
 
 
 
-// Voir tous les events
+// Voir tous les events (uniquement participant ou organisateur)
 router.get('/', async (req, res, next) => {
     try {
         let events;
@@ -24,15 +24,24 @@ router.get('/', async (req, res, next) => {
         // Récupérer l'adresse e-mail donnée par le gateway
         const userEmail = req.headers['user-email'];
         console.log("userEmail", userEmail);
+
         // Trouver les événements auxquels l'utilisateur participe
         const attendingEvents = await db.select('id_event').from('Attendee').where({ mail_user: userEmail });
 
         // Extraire uniquement les ID d'événements
         const eventIds = attendingEvents.map(event => event.id_event);
 
-        // Récupérer les détails des événements auxquels l'utilisateur participe
-        events = await db.select('id', 'name', 'description', 'date', 'name_orga', 'mail_orga', 'id_place').from('Event').whereIn('id', eventIds);
+        // Trouver les événements dont l'utilisateur est l'organisateur
+        const organizedEvents = await db.select('id').from('Event').where({ mail_orga: userEmail });
 
+        // Extraire uniquement les ID d'événements
+        const organizedEventIds = organizedEvents.map(event => event.id);
+
+        // Fusionner les tableaux d'ID d'événements
+        const combinedEventIds = [...new Set([...eventIds, ...organizedEventIds])];
+
+        // Récupérer les détails des événements auxquels l'utilisateur participe ou qu'il organise
+        events = await db.select('id', 'name', 'description', 'date', 'name_orga', 'mail_orga', 'id_place').from('Event').whereIn('id', combinedEventIds);
         if (!events) {
             res.status(404).json({ type: "error", error: 404, message: "events not found" });
         } else {
