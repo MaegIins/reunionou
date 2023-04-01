@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 
 import '../models/event.dart';
+import 'EventDetailsPage.dart';
+import 'EventParticipantsPage.dart';
 
 class EventDetailsPage extends StatelessWidget {
   final event? eventDetails;
@@ -97,6 +99,19 @@ class EventDetailsPage extends StatelessWidget {
               Text(
                 eventDetails?.description ?? '',
                 style: TextStyle(fontSize: 16.0),
+              ),
+              SizedBox(height: 16),
+              ElevatedButton(
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) =>
+                          EventParticipantsPage(eventDetails: eventDetails),
+                    ),
+                  );
+                },
+                child: Text('Voir les participants'),
               ),
             ],
           ),
