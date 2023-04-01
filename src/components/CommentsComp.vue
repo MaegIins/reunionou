@@ -6,11 +6,11 @@
 
       <div v-for="comment in comments" :key="comment.id" id="comment">
         <div id="commentHeader">
-          <p id="name">{{ comment.name }}</p>
+          <p id="name">{{ comment.id }}</p>
           <p>{{ comment.date }}</p>
         </div>
         <div id="commentBody">
-          <p>{{ comment.comment }}</p>
+          <p>{{ comment.text }}</p>
         </div>
       </div>
     </div>
