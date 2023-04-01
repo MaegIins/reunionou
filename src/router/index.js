@@ -10,6 +10,7 @@ import EventIn from "@/components/EventIn.vue";
 import LogInComp from "@/components/LogInComp.vue";
 import SignUpComp from "@/components/SignUpComp.vue";
 import ListEvents from "@/components/ListEvents.vue";
+import NewEvent from "@/components/NewEvent.vue";
 
 const routes = [
     {name: 'Main', path: '/', component: AccueilApp},
@@ -18,6 +19,7 @@ const routes = [
     {name: 'LogIn', path: '/login', component: LogInComp},
     {name: 'SignUp', path: '/signup', component: SignUpComp},
     {name: 'ListEvents', path: '/liste/:idUser', component: ListEvents},
+    {name: 'NewReunion', path: '/newreunion', component: NewEvent}
 
 
 
