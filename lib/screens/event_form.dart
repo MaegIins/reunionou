@@ -49,7 +49,6 @@ class _EventFormState extends State<EventForm> {
 
   Future<void> _submitForm() async {
     if (_formKey.currentState!.validate()) {
-
       final bearerToken = "Bearer " + Auth().token;
       print(bearerToken);
 
@@ -64,7 +63,7 @@ class _EventFormState extends State<EventForm> {
         ),
       );
       try {
-        print(eventAdress.address.city);
+        print(eventAdress.name);
         print(bearerToken);
         await EventsProvider().addEvent(bearerToken, eventAdress);
         Navigator.of(context).pop();

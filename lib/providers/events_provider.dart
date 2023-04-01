@@ -3,15 +3,17 @@ import 'package:http/http.dart' as http;
 import 'package:partouille/Singleton/Auth.dart';
 import 'package:partouille/models/event.dart';
 import 'package:partouille/models/eventAdress.dart';
+
 class EventsProvider {
   final String apiUrl = 'http://localhost:3333/events';
 
   Future<List<event>> getEvents(String bearerToken) async {
     final response = await http.get(
       Uri.parse(apiUrl),
-      headers: <String, String>{'Authorization': bearerToken},
+      headers: <String, String>{"Authorization": bearerToken},
     );
 
+    print(response.statusCode);
     if (response.statusCode == 200) {
       final List<dynamic> eventsJson = jsonDecode(response.body)['events'];
       final List<event> events = eventsJson.map((eventJson) {
@@ -67,4 +69,42 @@ Future<void> addEvent(String bearerToken, EventAdress eventAdress) async {
   }
 }
 
+}
+/*
+  Future<dynamic> getEventById(String id) async {
+    final response = await http.get(Uri.parse('$apiUrl/$id'));
+
+    if (response.statusCode == 200) {
+      final jsonResponse = json.decode(response.body);
+      return jsonResponse;
+    } else {
+      throw Exception('Failed to load event by ID from API');
+    }
+  }
+
+  Future<dynamic> addEvent(Map<String, dynamic> event) async {
+    final response = await http.post(
+      Uri.parse(apiUrl),
+      headers: <String, String>{
+        "Authorization": bearerToken,
+      },
+      body: jsonEncode({
+        "title": eventAdress.name,
+        "description": eventAdress.description,
+        "date": {
+          "date": eventAdress.date.toIso8601String().substring(0, 9),
+          "time": eventAdress.date.toIso8601String().substring(11, 16),
+        },
+        "name_place": eventAdress.namePlace,
+        "adress": {
+          "street": eventAdress.address.street,
+          "city": eventAdress.address.city,
+        },
+      }),
+    );
+
+    if (response.statusCode != 201) {
+      throw Exception('Failed to add event');
+    }
+  }
 }
