@@ -38,10 +38,9 @@ class EventsProvider {
   }
 
   Future<void> addEvent(String bearerToken, EventAdress eventAdress) async {
-    final String apiUrl1 = 'http://localhost:3333/events';
-
-    print(eventAdress.address.city);
-    print(bearerToken);
+    print(eventAdress);
+    print(eventAdress.date.toIso8601String().substring(0, 9));
+    print(eventAdress.date.toIso8601String().substring(11, 16));
     final response = await http.post(
       Uri.parse(apiUrl1),
       headers: <String, String>{
