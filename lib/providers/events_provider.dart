@@ -38,83 +38,35 @@ class EventsProvider {
   }
 
   Future<void> addEvent(String bearerToken, EventAdress eventAdress) async {
-    print(eventAdress);
-    print(eventAdress.date.toIso8601String().substring(0, 9));
-    print(eventAdress.date.toIso8601String().substring(11, 16));
+    final String apiUrl1 = 'http://localhost:3333/events';
+
+    print(eventAdress.address.city);
+    print(bearerToken);
     final response = await http.post(
-      Uri.parse(apiUrl),
+      Uri.parse(apiUrl1),
       headers: <String, String>{
-        "Authorization": bearerToken,
+        'Authorization': bearerToken,
+        'Content-Type': 'application/json',
       },
       body: jsonEncode({
-        "title": eventAdress.name,
-        "description": eventAdress.description,
-        "date": {
-          "date": eventAdress.date.toIso8601String().substring(0, 9),
-          "time": eventAdress.date.toIso8601String().substring(11, 16),
+        'title': eventAdress.name,
+        'description': eventAdress.description,
+        'date': {
+          'date': eventAdress.date.toIso8601String().substring(0, 10),
+          'time': eventAdress.date.toIso8601String().substring(11, 16),
         },
-        "name_place": eventAdress.namePlace,
-        "adress": {
-          "street": eventAdress.address.street,
-          "city": eventAdress.address.city,
+        'name_place': eventAdress.namePlace,
+        'adress': {
+          'street': eventAdress.address.street,
+          'city': eventAdress.address.city,
         },
       }),
     );
 
-    if (response.statusCode != 201) {
+    if (response.statusCode != 201 &&
+        response.statusCode != 302 &&
+        response.statusCode != 200) {
       throw Exception('Failed to add event');
     }
   }
 }
-/*
-  Future<dynamic> getEventById(String id) async {
-    final response = await http.get(Uri.parse('$apiUrl/$id'));
-
-    if (response.statusCode == 200) {
-      final jsonResponse = json.decode(response.body);
-      return jsonResponse;
-    } else {
-      throw Exception('Failed to load event by ID from API');
-    }
-  }
-
-  Future<dynamic> addEvent(Map<String, dynamic> event) async {
-    final response = await http.post(
-      Uri.parse(apiUrl),
-      headers: <String, String>{
-        'Content-Type': 'application/json; charset=UTF-8',
-      },
-      body: jsonEncode(event),
-    );
-        if (response.statusCode == 201) {
-      final jsonResponse = json.decode(response.body);
-      return jsonResponse;
-    } else {
-      throw Exception('Failed to add event to API');
-  }
-  }
-
-
-Future<dynamic> updateEvent(String id, Map<String, dynamic> updatedEvent) async {
-final response = await http.put(
-Uri.parse('$apiUrl/$id'),
-headers: <String, String>{
-'Content-Type': 'application/json; charset=UTF-8',
-},
-body: jsonEncode(updatedEvent),
-);if (response.statusCode == 200) {
-  final jsonResponse = json.decode(response.body);
-  return jsonResponse;
-} else {
-  throw Exception('Failed to update event on API');
-}
-}
-
-Future<void> deleteEvent(String id) async {
-
-final response = await http.delete(Uri.parse('$apiUrl/$id'));if (response.statusCode != 204) {
-  throw Exception('Failed to delete event from API');
-    }
-  }
-
-}*/

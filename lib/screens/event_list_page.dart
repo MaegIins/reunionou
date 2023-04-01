@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import '../providers/events_provider.dart';
 import '../Singleton/Auth.dart';
 import '../models/event.dart';
+import 'EventDetailsPage.dart';
 
 class EventListPage extends StatelessWidget {
   const EventListPage({Key? key}) : super(key: key);
@@ -24,9 +25,20 @@ class EventListPage extends StatelessWidget {
             itemCount: events?.length,
             itemBuilder: (BuildContext context, int index) {
               final event = events?[index];
-              return ListTile(
-                title: Text(event?.name ?? ''),
-                subtitle: Text(event?.description ?? ''),
+              return GestureDetector(
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) =>
+                          EventDetailsPage(eventDetails: event),
+                    ),
+                  );
+                },
+                child: ListTile(
+                  title: Text(event?.name ?? ''),
+                  subtitle: Text(event?.description ?? ''),
+                ),
               );
             },
           );
