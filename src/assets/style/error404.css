@@ -1,0 +1,42 @@
+@import url("https://fonts.googleapis.com/css2?family=Averia+Libre&family=Bungee&display=swap");
+#ErrorFourOFour {
+  background: radial-gradient(circle, rgb(17, 0, 119) 0%, rgb(11, 0, 77) 17%, rgb(10, 10, 10) 59%, rgb(10, 10, 10) 100%);
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+#ErrorFourOFour h1, #ErrorFourOFour h2 {
+  font-family: "Bungee", cursive;
+  text-decoration: none;
+  color: #fdfdfd;
+  font-size: 2.5em;
+  margin: 0;
+  padding: 0;
+}
+#ErrorFourOFour h2 {
+  font-size: 1.5em;
+}
+#ErrorFourOFour .router {
+  height: 100px;
+  width: 300px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-decoration: none;
+  color: #fdfdfd;
+  background: rgb(17, 0, 119);
+  border-radius: 20px;
+  padding: 8px;
+  margin: 100px;
+  transition: all 0.3s ease-in-out;
+  font-family: "Bungee", cursive;
+}
+#ErrorFourOFour .router:hover {
+  border-radius: 50px;
+  color: #e6e6e6;
+}
+
+/*# sourceMappingURL=error404.css.map */

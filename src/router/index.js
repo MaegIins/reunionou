@@ -11,6 +11,7 @@ import LogInComp from "@/components/LogInComp.vue";
 import SignUpComp from "@/components/SignUpComp.vue";
 import ListEvents from "@/components/ListEvents.vue";
 import NewEvent from "@/components/NewEvent.vue";
+import ErrorFourOFour from "@/components/ErrorFourOFour.vue";
 
 const routes = [
     {name: 'Main', path: '/', component: AccueilApp},
@@ -19,11 +20,11 @@ const routes = [
     {name: 'LogIn', path: '/login', component: LogInComp},
     {name: 'SignUp', path: '/signup', component: SignUpComp},
     {name: 'ListEvents', path: '/liste/:idUser', component: ListEvents},
-    {name: 'NewReunion', path: '/newreunion', component: NewEvent}
+    {name: 'NewReunion', path: '/newreunion', component: NewEvent},
 
 
 
-    //{name: 'Error404', path: '/:pathMatch(.*)*', component: ErrorFourOFour}
+    {name: 'Error404', path: '/:pathMatch(.*)*', component: ErrorFourOFour}
 ]
 
 const router = createRouter({
