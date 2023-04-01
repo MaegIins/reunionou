@@ -9,6 +9,7 @@ import AccueilApp from "@/components/AccueilApp.vue";
 import EventIn from "@/components/EventIn.vue";
 import LogInComp from "@/components/LogInComp.vue";
 import SignUpComp from "@/components/SignUpComp.vue";
+import ListEvents from "@/components/ListEvents.vue";
 
 const routes = [
     {name: 'Main', path: '/', component: AccueilApp},
@@ -16,7 +17,8 @@ const routes = [
     {name: 'InsideEvent', path: '/reunion/:id', component: EventIn},
     {name: 'LogIn', path: '/login', component: LogInComp},
     {name: 'SignUp', path: '/signup', component: SignUpComp},
-    //{name: 'InsideSharedAccount', path: '/accounts/:id', component: },
+    {name: 'ListEvents', path: '/liste/:idUser', component: ListEvents},
+
 
 
     //{name: 'Error404', path: '/:pathMatch(.*)*', component: ErrorFourOFour}

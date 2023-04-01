@@ -1,0 +1,105 @@
+@import "font&colors";
+
+
+#ListEvents {
+  background: $background;
+  min-height: 100vh;
+
+  h1 {
+    font-size: 2.5em;
+    color: $white;
+    font-family: "Bungee", cursive;
+    margin: 0;
+    padding: 0;
+  }
+
+  .router {
+    text-decoration: none;
+    color: $white;
+
+  }
+
+  button{
+    width: 100%;
+    height: 100%;
+    border-radius: 20px;
+    border: none;
+    transition: all 0.3s ease-in-out;
+    font-size: 1.5rem;
+    font-family: "Bungee", cursive;
+    color: $white;
+    background: $bluePrimary;
+    padding: 10px;
+
+    &:focus {
+      outline: none;
+    }
+
+    &:hover {
+      border-radius: 50px;
+      color: $whitehover;
+    }
+  }
+
+  #events {
+    padding : 10px 20px 0 20px;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr); /* Crée 3 colonnes égales */
+    grid-gap: 20px; /* Ajoute un espace de 20px entre les divs */
+
+    .event {
+
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      width: 100%;
+      background: $white;
+      border-radius: 20px;
+      color: $black;
+      h2 {
+        font-family: "Bungee", cursive;
+        font-size: 1.5em;
+        margin: 0;
+        padding: 0;
+      }
+
+      transition: all 0.2s ease-in-out;
+
+      &:hover {
+        background: $whitehover;
+        border-radius: 30px;
+      }
+
+      padding: 20px; /* Ajoute un peu d'espace autour du contenu de chaque div */
+      /* Place chaque div à l'endroit souhaité dans la grille */
+      &:nth-child(1) {
+        grid-row: 1 / span 2; /* Prend 2 rangées verticales à partir de la première */
+        grid-column: 1; /* Prend la première colonne */
+      }
+
+      &:nth-child(2) {
+        grid-row: 1; /* Prend la première rangée */
+        grid-column: 2 / span 2; /* Prend 2 colonnes horizontales à partir de la deuxième */
+      }
+
+      &:nth-child(3) {
+        grid-row: 3; /* Prend la troisième rangée */
+        grid-column: 1 / span 2; /* Prend 2 colonnes horizontales à partir de la première */
+      }
+
+      &:nth-child(4) {
+        grid-row: 2; /* Prend la deuxième rangée */
+        grid-column: 3; /* Prend la troisième colonne */
+      }
+    }
+
+    #oldEvent{
+      background: $grey;
+    }
+
+
+  }
+
+
+}

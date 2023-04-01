@@ -1,0 +1,86 @@
+@charset "UTF-8";
+@import url("https://fonts.googleapis.com/css2?family=Averia+Libre&family=Bungee&display=swap");
+#ListEvents {
+  background: radial-gradient(circle, rgb(17, 0, 119) 0%, rgb(11, 0, 77) 17%, rgb(10, 10, 10) 59%, rgb(10, 10, 10) 100%);
+  min-height: 100vh;
+}
+#ListEvents h1 {
+  font-size: 2.5em;
+  color: #fdfdfd;
+  font-family: "Bungee", cursive;
+  margin: 0;
+  padding: 0;
+}
+#ListEvents .router {
+  text-decoration: none;
+  color: #fdfdfd;
+}
+#ListEvents button {
+  width: 100%;
+  height: 100%;
+  border-radius: 20px;
+  border: none;
+  transition: all 0.3s ease-in-out;
+  font-size: 1.5rem;
+  font-family: "Bungee", cursive;
+  color: #fdfdfd;
+  background: rgb(17, 0, 119);
+  padding: 10px;
+}
+#ListEvents button:focus {
+  outline: none;
+}
+#ListEvents button:hover {
+  border-radius: 50px;
+  color: #e6e6e6;
+}
+#ListEvents #events {
+  padding: 10px 20px 0 20px;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr); /* Crée 3 colonnes égales */
+  grid-gap: 20px; /* Ajoute un espace de 20px entre les divs */
+}
+#ListEvents #events .event {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  background: #fdfdfd;
+  border-radius: 20px;
+  color: #0a0a0a;
+  transition: all 0.2s ease-in-out;
+  padding: 20px; /* Ajoute un peu d'espace autour du contenu de chaque div */
+  /* Place chaque div à l'endroit souhaité dans la grille */
+}
+#ListEvents #events .event h2 {
+  font-family: "Bungee", cursive;
+  font-size: 1.5em;
+  margin: 0;
+  padding: 0;
+}
+#ListEvents #events .event:hover {
+  background: #e6e6e6;
+  border-radius: 30px;
+}
+#ListEvents #events .event:nth-child(1) {
+  grid-row: 1/span 2; /* Prend 2 rangées verticales à partir de la première */
+  grid-column: 1; /* Prend la première colonne */
+}
+#ListEvents #events .event:nth-child(2) {
+  grid-row: 1; /* Prend la première rangée */
+  grid-column: 2/span 2; /* Prend 2 colonnes horizontales à partir de la deuxième */
+}
+#ListEvents #events .event:nth-child(3) {
+  grid-row: 3; /* Prend la troisième rangée */
+  grid-column: 1/span 2; /* Prend 2 colonnes horizontales à partir de la première */
+}
+#ListEvents #events .event:nth-child(4) {
+  grid-row: 2; /* Prend la deuxième rangée */
+  grid-column: 3; /* Prend la troisième colonne */
+}
+#ListEvents #events #oldEvent {
+  background: #989898;
+}
+
+/*# sourceMappingURL=ListEvents.css.map */
