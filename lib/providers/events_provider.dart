@@ -5,10 +5,19 @@ import 'package:partouille/Singleton/Auth.dart';
 import 'package:partouille/models/event.dart';
 import 'package:partouille/models/eventAdress.dart';
 import 'package:partouille/models/attendee.dart';
-
+/**
+ * EventsProvider
+ * 
+ * This class is used to fetch events data from the API
+ * 
+ */
 class EventsProvider {
   final String apiUrl = 'http://localhost:3333/events';
 
+/**
+ * getEvents
+ * this function is used to fetch events data from the API
+ */
   Future<List<event>> getEvents(String bearerToken) async {
     final response = await http.get(
       Uri.parse(apiUrl),
@@ -39,6 +48,10 @@ class EventsProvider {
     }
   }
 
+/**
+ * addEvent
+ * this function is used to add an event to the API
+ */
   Future<void> addEvent(String bearerToken, EventAdress eventAdress) async {
     final String apiUrl1 = 'http://localhost:3333/events';
 
@@ -69,7 +82,10 @@ class EventsProvider {
     throw Exception('Failed to add event');
   }
 }
-
+/**
+ * getEventAttendees
+ * this function is used to fetch attendees data from the API
+ */
 Future<List<attendee>> getEventAttendees(String bearerToken, event eventId) async {
   final eventUrl = eventId.id.toString();
   
