@@ -8,7 +8,9 @@ import 'package:flutter/cupertino.dart';
 import 'package:partouille/Singleton/Auth.dart';
 
 class EventForm extends StatefulWidget {
-  const EventForm({Key? key}) : super(key: key);
+
+final VoidCallback reloadEvents;
+  const EventForm({Key? key, required this.reloadEvents}) : super(key: key);
 
   @override
   _EventFormState createState() => _EventFormState();
@@ -66,6 +68,7 @@ class _EventFormState extends State<EventForm> {
         print(eventAdress.name);
         print(bearerToken);
         await EventsProvider().addEvent(bearerToken, eventAdress);
+        widget.reloadEvents(); // call the callback function to reload events
         Navigator.of(context).pop();
       } catch (error) {
         print(error);
@@ -196,9 +199,14 @@ class _EventFormState extends State<EventForm> {
                 ),
                 SizedBox(height: 16.0),
                 ElevatedButton(
-                  onPressed: _submitForm,
-                  child: Text('Add Event'),
-                ),
+                   onPressed: () {
+                        _submitForm().then((_) {
+                          // Reload events when new event is added
+                          setState(() {});
+                        });
+                      },
+                      child: Text('Add'),
+                    ),
               ],
             ),
           ),

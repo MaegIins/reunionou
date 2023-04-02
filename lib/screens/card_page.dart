@@ -7,13 +7,33 @@ import '../Singleton/Auth.dart';
 import 'EventDetailsPage.dart';
 import 'event_form.dart';
 
-class CardPage extends StatelessWidget {
+class CardPage extends StatefulWidget {
   const CardPage({Key? key}) : super(key: key);
+
+  @override
+  _CardPageState createState() => _CardPageState();
+}
+
+class _CardPageState extends State<CardPage> {
+  late Future<List<event>> _eventsFuture;
+
+  @override
+  void initState() {
+    super.initState();
+    _eventsFuture = _loadEvents();
+  }
+
+   Future<void> _reloadEvents() async {
+    setState(() {
+      _eventsFuture = _loadEvents();
+    });
+  }
+
 
   @override
   Widget build(BuildContext context) {
     return FutureBuilder(
-      future: _loadEvents(),
+      future: _eventsFuture,
       builder: (context, snapshot) {
         if (snapshot.hasData) {
           final events = snapshot.data as List<event>;
@@ -49,8 +69,7 @@ class CardPage extends StatelessWidget {
                 Expanded(
                   child: FlutterMap(
                     options: MapOptions(
-                      center: // position metz
-                          LatLng(49.119, 6.175),
+                      center: LatLng(49.119, 6.175), // position metz
                       zoom: 13.0,
                     ),
                     layers: [
@@ -66,11 +85,16 @@ class CardPage extends StatelessWidget {
                 SizedBox(height: 13.0),
                 if (Auth().token != "")
                   ElevatedButton(
-                    onPressed: () {
-                      Navigator.push(
+                    onPressed: () async {
+                      final result = await Navigator.push(
                         context,
-                        MaterialPageRoute(builder: (context) => EventForm()),
+                         MaterialPageRoute(builder: (context) => EventForm(reloadEvents: _reloadEvents)),
                       );
+                      if (result == true) {
+                        setState(() {
+                          _eventsFuture = _loadEvents();
+                        });
+                      }
                     },
                     child: Text('Ajouter un événement'),
                   ),
