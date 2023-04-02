@@ -16,8 +16,8 @@
     </div>
     <div id="commentForm">
 
-      <textarea placeholder="Ajouter un commentaire..."></textarea>
-      <button><i class="bi bi-send"></i></button>
+      <textarea v-model="newCommentText" placeholder="Ajouter un commentaire..."></textarea>
+      <button @click="sendComment"><i class="bi bi-send"></i></button>
 
     </div>
   </div>
@@ -27,6 +27,11 @@
 import "./../assets/style/CommentComp.css";
 
 export default {
+  data() {
+    return {
+      newCommentText: "",
+    };
+  },
   name: "CommentsComp",
   props: ["comments"],
   methods: {
@@ -41,7 +46,12 @@ export default {
 
       return `${day}/${month}/${year} ${hours}:${minutes}:${seconds}`;
     },
+    sendComment() {
+      this.$emit("send-comment", this.newCommentText);
+      this.newCommentText = "";
+    },
   },
+
 }
 </script>
 

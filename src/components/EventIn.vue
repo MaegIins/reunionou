@@ -22,7 +22,8 @@
 
 
       <PresentComp :listPpl="people"></PresentComp>
-      <CommentsComp :comments="comments"></CommentsComp>
+      <CommentsComp :comments="comments" @send-comment="sendComment"></CommentsComp>
+
 
       <div>
         <MapComp :eventPos="eventPosition"></MapComp>
@@ -48,15 +49,15 @@ export default {
   components: { CommentsComp, PresentComp, MapComp, Map },
   methods: {
     formatDate(dateString) {
-    const date = new Date(dateString);
-    const day = date.getDate().toString().padStart(2, "0");
-    const month = (date.getMonth() + 1).toString().padStart(2, "0");
-    const year = date.getFullYear();
-    const hours = date.getHours().toString().padStart(2, "0");
-    const minutes = date.getMinutes().toString().padStart(2, "0");
+      const date = new Date(dateString);
+      const day = date.getDate().toString().padStart(2, "0");
+      const month = (date.getMonth() + 1).toString().padStart(2, "0");
+      const year = date.getFullYear();
+      const hours = date.getHours().toString().padStart(2, "0");
+      const minutes = date.getMinutes().toString().padStart(2, "0");
 
-    return `${day}/${month}/${year} ${hours}h${minutes}`;
-  },
+      return `${day}/${month}/${year} ${hours}h${minutes}`;
+    },
 
 
     router() {
@@ -77,8 +78,25 @@ export default {
           console.log(error);
         });
     },
-    sendComment() {
-      console.log("sendComment")
+    sendComment(commentText) {
+      const commentData = {
+        id_event: this.idEvent,
+        text: commentText,
+      };
+
+      const config = {
+        headers: { Authorization: `Bearer ${sessionStorage.getItem("access_token")}` },
+      };
+
+      axios
+        .post("http://localhost:3333/comments/add", commentData, config)
+        .then((response) => {
+          this.comments.push(response.data);
+          console.log('aaa', response.data);
+        })
+        .catch((error) => {
+          console.log(error);
+        });
     },
 
     attendee() {
