@@ -4,6 +4,7 @@ import 'package:latlong2/latlong.dart';
 import 'package:partouille/models/event.dart';
 import '../providers/events_provider.dart';
 import '../Singleton/Auth.dart';
+import 'EventDetailsPage.dart';
 import 'event_form.dart';
 
 class CardPage extends StatelessWidget {
@@ -24,22 +25,12 @@ class CardPage extends StatelessWidget {
               point: LatLng(event.lat!, event.lon!),
               builder: (ctx) => GestureDetector(
                 onTap: () {
-                  showDialog(
-                    context: context,
-                    builder: (BuildContext context) {
-                      return AlertDialog(
-                        title: Text(event.name!),
-                        content: Text(event.description!),
-                        actions: [
-                          TextButton(
-                            onPressed: () {
-                              Navigator.of(context).pop();
-                            },
-                            child: Text('Fermer'),
-                          ),
-                        ],
-                      );
-                    },
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) =>
+                          EventDetailsPage(eventDetails: event),
+                    ),
                   );
                 },
                 child: Icon(
