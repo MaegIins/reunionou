@@ -1,11 +1,11 @@
-import 'dart:html';
-
+import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
-import 'dart:convert';
-
-import '../models/event.dart';
-import 'EventDetailsPage.dart';
+import 'package:partouille/models/event.dart';
+import 'package:partouille/models/attendee.dart';
+import 'package:partouille/providers/events_provider.dart';
+import 'package:partouille/Singleton/Auth.dart';
+import 'package:partouille/models/attendee.dart';
 
 class EventParticipantsPage extends StatefulWidget {
   final event? eventDetails;
@@ -18,23 +18,23 @@ class EventParticipantsPage extends StatefulWidget {
 }
 
 class _EventParticipantsPageState extends State<EventParticipantsPage> {
-  List<dynamic> _participantsList = [];
+  List<attendee> _participantsList = [];
 
   @override
   void initState() {
     super.initState();
-    _getParticipantsList();
+    getParticipants();
   }
 
-  void _getParticipantsList() async {
-    final response = await http.post(Uri.parse(
-        'http://localhost:3333/events/${widget.eventDetails?.id}/attendees'));
-    if (response.statusCode == 200) {
+  Future<void> getParticipants() async {
+    final bearerToken = "Bearer " + Auth().token;
+    try {
+      final attendees = await EventsProvider().getEventAttendees(bearerToken, widget.eventDetails!);
       setState(() {
-        _participantsList = json.decode(response.body);
+        _participantsList = attendees;
       });
-    } else {
-      // Gestion des erreurs
+    } catch (e) {
+      print('Error fetching participants: $e');
     }
   }
 
@@ -46,7 +46,7 @@ class _EventParticipantsPageState extends State<EventParticipantsPage> {
       ),
       body: SingleChildScrollView(
         child: Padding(
-          padding: EdgeInsets.all(16.0),
+          padding: const EdgeInsets.all(16.0),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -62,8 +62,8 @@ class _EventParticipantsPageState extends State<EventParticipantsPage> {
                   itemBuilder: (context, index) {
                     final participant = _participantsList[index];
                     return ListTile(
-                      title: Text(participant['name']),
-                      subtitle: Text(participant['email']),
+                      title: Text(participant.nameUser ?? ''),
+                      subtitle: Text(participant.mailUser ?? ''),
                     );
                   },
                 ),
