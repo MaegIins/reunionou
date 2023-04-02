@@ -4,11 +4,16 @@
     <router-link to="/accueil">
       <h1>REUNIONOU.APP</h1>
     </router-link>
+    <div id="event-details">
+      <h2>{{ eventName }}</h2>
+      <h2>{{ formatDate(eventDate) }}</h2>
+      <p>Organisateur : {{ organizerEmail }}</p>
+    </div>
 
 
     <div id="boutons">
       <div>
-        <button>Je viens!</button>
+        <button>Je viens !</button>
         <button>Je ne viens pas</button>
       </div>
     </div>
@@ -42,8 +47,35 @@ export default {
   name: "EventIn",
   components: { CommentsComp, PresentComp, MapComp, Map },
   methods: {
+    formatDate(dateString) {
+    const date = new Date(dateString);
+    const day = date.getDate().toString().padStart(2, "0");
+    const month = (date.getMonth() + 1).toString().padStart(2, "0");
+    const year = date.getFullYear();
+    const hours = date.getHours().toString().padStart(2, "0");
+    const minutes = date.getMinutes().toString().padStart(2, "0");
+
+    return `${day}/${month}/${year} ${hours}h${minutes}`;
+  },
+
+
     router() {
       return router
+    },
+
+    fetchEventInfo() {
+      const config = {
+        headers: { Authorization: `Bearer ${sessionStorage.getItem("access_token")}` }
+      };
+      axios.get("http://localhost:3333/events/" + this.idEvent, config)
+        .then((response) => {
+          this.eventName = response.data.event.name;
+          this.eventDate = response.data.event.date;
+          this.organizerEmail = response.data.event.mail_orga;
+        })
+        .catch((error) => {
+          console.log(error);
+        });
     },
     sendComment() {
       console.log("sendComment")
@@ -65,7 +97,7 @@ export default {
     },
 
     // faire la même chose que les participant pour les com, mettre les comments dans la gateway
-    com(){
+    com() {
 
       const config = {
         headers: { Authorization: `Bearer ${sessionStorage.getItem("access_token")}` }
@@ -82,8 +114,9 @@ export default {
     },
   },
   mounted() {
-    this.attendee(),
-    this.com()
+    this.fetchEventInfo(),
+      this.attendee(),
+      this.com()
   },
 
   props: {},
@@ -94,6 +127,9 @@ export default {
       eventPosition: [48.8566, 2.3522],
       people: [],
       comments: [],
+      eventName: "",
+      eventDate: "",
+      organizerEmail: "",
 
     };
   }

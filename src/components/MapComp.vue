@@ -6,7 +6,7 @@
 </template>
 
 <script>
-
+import axios from "axios";
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
 import '../assets/style/mapComp.css';
@@ -19,7 +19,7 @@ export default {
 
   data() {
     return {
-
+      idEvent: this.$route.params.id,
       position: null,
       marker: null,
       events: [], // add an empty array for events
@@ -30,66 +30,73 @@ export default {
   },
   mounted() {
     // create a map and assign it to the data property
-    this.map = L.map('map').setView([48.8566, 2.3522], 13);
+    this.map = L.map('map').setView([48.69247152298754, 6.184081448030852], 13);
 
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
       attribution: '&copy; OpenStreetMap contributors'
     }).addTo(this.map);
 
-
     this.marker = L.marker(this.eventPos).addTo(this.map);
     console.log(this.eventPosLat, this.eventPosLng);
 
-
-
-
     this.map.on('click', (e) => {
-      const {lat, lng} = e.latlng;
+      const { lat, lng } = e.latlng;
       this.marker.setLatLng([lat, lng]);
       this.showEventForm = true;
     });
+
+    // Load the event data and display it on the map
+    this.loadEvent();
   },
   //Created SECTION
   created() {
     this.$getLocation()
-        .then((coordinates) => {
-          this.position = coordinates;
-          this.latU = coordinates.lat;
-          this.lngU = coordinates.lng;
+      .then((coordinates) => {
+        this.position = coordinates;
+        this.latU = coordinates.lat;
+        this.lngU = coordinates.lng;
 
-          this.marker = L.marker([this.latU, this.lngU]).addTo(this.map);
-          console.log(this.latU, this.lngU);
-
-
-          this.showEventsOnMap(this.marker);
-
-
+        this.marker = L.marker([this.latU, this.lngU]).addTo(this.map);
+        console.log(this.latU, this.lngU);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  },
+  //METHODS SECTION
+  methods: {
+    loadEvent() {
+      const config = {
+        headers: { Authorization: `Bearer ${sessionStorage.getItem("access_token")}` }
+      };
+      axios.get("http://localhost:3333/events/" + this.idEvent, config)
+        .then((response) => {
+          this.events = response.data;
+          this.showEventOnMap();
         })
         .catch((error) => {
           console.log(error);
         });
+    },
 
+    showEventOnMap() {
+      const event = this.events.event;
+      const { lat, lon, name: placeName, adress } = event.place;
+      const { name: eventName, description, date, name_orga } = event;
+      console.log(event.place);
+      const popupContent = `
+  <h2>${placeName}</h2>
+  <p>${adress}</p>
+  <p>${description}</p>
+  `;
+      const eventMarker = L.marker([lat, lon]).addTo(this.map);
+      eventMarker.bindPopup(popupContent).openPopup();
+    },
 
-  },
-  //METHODS SECTION
-  methods: {
-
-    showEventsOnMap(map) {
-      this.events.map(event => {
-        const {lat, lng, name, description, date} = event;
-        console.log(lat, lng, name, description, date);
-        const popupContent = `
-            <h2>${name}</h2>
-            <p>${description}</p>
-            <p>${date}</p>
-`;
-        const eventMarker = L.marker([lat, lng]).addTo(map);
-        eventMarker.bindPopup(popupContent);
-      });
-    }
   }
 }
 </script>
+
 
 <style>
 .map-container {
