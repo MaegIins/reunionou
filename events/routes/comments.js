@@ -79,7 +79,7 @@ router.post('/add', async (req, res, next) => {
                 console.log(userEmail)
                 console.log(req.body)
                 const date = new Date().toISOString().slice(0, 19).replace('T', ' ');
-                let result = await schema.validateAsync({ id_event: req.body.id_event, mail_attendee: userEmail, date: date, text: req.body.text });
+                let result = await schema.validateAsync({ id_event: req.body.id_event, mail_attendee: userEmail, text: req.body.text });
                 if (result) {
                     //regarde si l'utilisateur est asscoier au bon id_event
                     const attendee = await db.select("id").from("Attendee").where({ id_event: req.body.id_event, mail_user: userEmail });
