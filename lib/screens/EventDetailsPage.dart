@@ -1,8 +1,9 @@
+
 import 'package:flutter/material.dart';
 import '../models/event.dart';
 import 'ChatWidget.dart';
 import 'EventParticipantsPage.dart';
-
+import 'InvitePage.dart';
 class EventDetailsPage extends StatelessWidget {
   final event? eventDetails;
 
@@ -35,7 +36,9 @@ class EventDetailsPage extends StatelessWidget {
                   ),
                 ),
               ),
-              Row(
+              SingleChildScrollView(
+                scrollDirection: Axis.horizontal,
+                child: Row(
                 children: [
                   Icon(Icons.calendar_today),
                   SizedBox(width: 8.0),
@@ -45,8 +48,11 @@ class EventDetailsPage extends StatelessWidget {
                   ),
                 ],
               ),
+              ),
               SizedBox(height: 16),
-              Row(
+              SingleChildScrollView(
+                scrollDirection: Axis.horizontal,
+                child: Row(
                 children: [
                   Icon(Icons.person),
                   SizedBox(width: 8.0),
@@ -55,6 +61,7 @@ class EventDetailsPage extends StatelessWidget {
                     style: TextStyle(fontSize: 18.0),
                   ),
                 ],
+              ),
               ),
              SizedBox(height: 16),
               SingleChildScrollView(
@@ -85,16 +92,19 @@ class EventDetailsPage extends StatelessWidget {
                             ),
               ),
               SizedBox(height: 16),
-              Row(
-                children: [
-                  Icon(Icons.map),
-                  SizedBox(width: 8.0),
-                  Text(
-                    'Latitude: ${eventDetails?.lat ?? ''}, Longitude: ${eventDetails?.lon ?? ''}',
-                    style: TextStyle(fontSize: 18.0),
-                  ),
-                ],
-              ),
+              SingleChildScrollView(
+                scrollDirection: Axis.horizontal,
+                child : Row(
+                  children: [
+                    Icon(Icons.map),
+                    SizedBox(width: 8.0),
+                    Text(
+                      'Latitude: ${eventDetails?.lat ?? ''}, Longitude: ${eventDetails?.lon ?? ''}',
+                      style: TextStyle(fontSize: 18.0),
+                    ),
+                  ],
+                ),
+              ), 
               SizedBox(height: 16),
               Text(
                 'Description:',
@@ -132,6 +142,20 @@ class EventDetailsPage extends StatelessWidget {
       },
       child: Text('Voir les commentaires'),
     ),
+    SizedBox(height: 16),
+     ElevatedButton(
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) =>InvitePage(
+              eventDetails: eventDetails,
+            ),
+          ),
+        );
+      },
+      child: Text('Inviter une personne à cette evenement'),
+    )
   ],
 ),
         ),

@@ -1,11 +1,12 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:partouille/models/Invite.dart';
+import 'package:partouille/models/event.dart';
 
 class InvitesProvider {
 
 
-  Future<void> inviteAttendee(bearerToken , Invite Invite) async {
+  Future<void> inviteAttendee(bearerToken , event? eventInvite , String email) async {
     final url = 'http://localhost:3333/invites/user';
 
     final response = await http.post(
@@ -15,8 +16,8 @@ class InvitesProvider {
         'Content-Type': 'application/json',
       },
       body: jsonEncode({
-        'mail': Invite.email,
-        'event': Invite.id_event,
+        'mail': email,
+        'event': eventInvite?.id,
       }),
     );
 
@@ -41,9 +42,18 @@ class InvitesProvider {
     );
 
     if (response.statusCode == 200) {
-      final jsonBody = jsonDecode(response.body) as List<dynamic>;
-      final invites = jsonBody.map((json) => Invite.fromJson(json)).toList();
-
+      //print(response.body);
+      final invitesJsonMailUser = jsonDecode(response.body);
+      final List<dynamic> invitesJson = jsonDecode(response.body)['events'];
+      final List<Invite> invites = invitesJson.map((inviteJson) {
+        final inviteMap = inviteJson['event'];
+        final placeMap = inviteMap['place'];
+        return Invite(
+          email : invitesJsonMailUser['mail_user'],
+          name: placeMap['name'],
+          id_event: inviteMap['id_event'],
+        );
+      }).toList();
       return invites;
     } else {
       throw Exception('Erreur lors de la récupération de la liste d\'invitations : ${response.statusCode}');

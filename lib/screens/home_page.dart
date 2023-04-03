@@ -33,28 +33,31 @@ class _HomePageState extends State<HomePage> {
       body: Center(
         child: _widgetOptions.elementAt(_selectedIndex),
       ),
-      bottomNavigationBar: BottomNavigationBar(
-        items: const <BottomNavigationBarItem>[
-          BottomNavigationBarItem(
-            icon: Icon(Icons.map),
-            label: 'Carte',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.event),
-            label: 'Liste d\'événements',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.person),
-            label: 'Profil',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.login),
-            label: 'Login',
-          ),
-        ],
-        currentIndex: _selectedIndex,
-        onTap: _onItemTapped,
-      ),
+     bottomNavigationBar: BottomNavigationBar(
+  selectedItemColor: Colors.blue,
+  unselectedItemColor: Colors.grey,
+  items: const <BottomNavigationBarItem>[
+    BottomNavigationBarItem(
+      icon: Icon(Icons.map),
+      label: 'Carte',
+    ),
+    BottomNavigationBarItem(
+      icon: Icon(Icons.event),
+      label: 'Liste d\'événements',
+    ),
+    BottomNavigationBarItem(
+      icon: Icon(Icons.person),
+      label: 'Profil',
+    ),
+    BottomNavigationBarItem(
+      icon: Icon(Icons.login),
+      label: 'Login',
+    ),
+  ],
+  currentIndex: _selectedIndex,
+  onTap: _onItemTapped,
+),
+
     );
   }
 }
