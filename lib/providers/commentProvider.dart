@@ -20,10 +20,12 @@ class CommentProvider with ChangeNotifier {
     );
 
     if (response.statusCode == 200) {
-      final List<dynamic> messageJson =
-          jsonDecode(response.body) as List<dynamic>;
-      final List messages = messageJson.map((messageJson) {
-        return Message.jsondecode(messageJson);
+      final List<dynamic> messageJson = jsonDecode(response.body)['text'];
+      final List<Message> messages = messageJson.map((eventJson) {
+        final messageMap = eventJson['text'];
+        return Message(
+          text: messageMap['text'],
+        );
       }).toList();
       return messages;
     } else {

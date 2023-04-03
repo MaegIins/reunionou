@@ -30,6 +30,7 @@ class _EventParticipantsPageState extends State<EventParticipantsPage> {
     final bearerToken = "Bearer " + Auth().token;
     try {
       final attendees = await EventsProvider().getEventAttendees(bearerToken, widget.eventDetails!);
+      print(attendees);
       setState(() {
         _participantsList = attendees;
       });
@@ -61,9 +62,18 @@ class _EventParticipantsPageState extends State<EventParticipantsPage> {
                   itemCount: _participantsList.length,
                   itemBuilder: (context, index) {
                     final participant = _participantsList[index];
+                    String statusText = "";
+                    if (participant.status == 0) {
+                      statusText = "En attente de réponse";
+                    } else if (participant.status == 1) {
+                      statusText = "Accepté";
+                    } else if (participant.status == 2) {
+                      statusText = "Je ne viens pas";
+                    }
                     return ListTile(
                       title: Text(participant.nameUser ?? ''),
                       subtitle: Text(participant.mailUser ?? ''),
+                      trailing: Text(statusText),
                     );
                   },
                 ),
