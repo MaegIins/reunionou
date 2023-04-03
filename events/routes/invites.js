@@ -59,6 +59,28 @@ router.post('/confirm', async (req, res, next) => {
     }
 });
 
+// POST /invites/user for add a user to an event
+router.post('/user', async (req, res, next) => {
+    try {
+        const { event, attendee_name, attendee_mail } = req.body;
+        if(!event || !attendee_name || !attendee_mail){
+            res.status(400).json({ type: "error", error: 400, message: "bad request", details: "missing parameters" });
+        }
+        else {
+        const { error } = schema.validate({ key: event, name: attendee_name, mail: attendee_mail });
+        if (error) {
+            res.status(400).json({ type: "error", error: 400, message: "bad request", details: error.details });
+        } else {
+            await db('Attendee').insert({ id_event: event, name_user: attendee_name, mail_user: attendee_mail, status: 0 });
+            const newAttendee = await db('Attendee').where({ id_event: event, name_user: attendee_name, mail_user: attendee_mail }).first();
+            res.status(200).json({ type: "success", message: "INVITE SUCCESS USER", attendee: newAttendee });
+        }
+    }
+    } catch (error) {
+        res.status(500).json({ type: "error", error: 500, message: "server error", details: error });
+        next(error);
+    }
+});
 
 // get details of an event
 router.get('/details', async (req, res, next) => {
