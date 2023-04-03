@@ -116,3 +116,4 @@ Future<List<attendee>> getEventAttendees(String bearerToken, event eventId) asyn
   }
 }
 }
+// 0 on sait pas , 1 c'est ok, 2 c'est pas ok
