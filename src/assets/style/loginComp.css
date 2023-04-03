@@ -1,0 +1,52 @@
+@import url("https://fonts.googleapis.com/css2?family=Averia+Libre&family=Bungee&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Averia+Libre&family=Bungee&display=swap");
+#login {
+  background: radial-gradient(circle, rgb(17, 0, 119) 0%, rgb(11, 0, 77) 17%, rgb(10, 10, 10) 59%, rgb(10, 10, 10) 100%);
+  height: 100vh;
+  width: 100vw;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+}
+#login #error {
+  color: red;
+  font-size: 1.2rem;
+  font-family: "Bungee", cursive;
+  margin: 10px;
+}
+#login #good {
+  color: #fdfdfd;
+  font-size: 1.2rem;
+  font-family: "Bungee", cursive;
+  margin: 10px;
+}
+#login h1 {
+  color: #fdfdfd;
+  font-size: 3rem;
+  font-family: "Bungee", cursive;
+  margin: 10px;
+}
+#login button {
+  background-color: rgb(17, 0, 119);
+  font-family: "Bungee", cursive;
+  color: #fdfdfd;
+  border: none;
+  border-radius: 5px;
+  padding: 10px;
+  margin: 10px;
+  font-size: 1.2rem;
+  font-weight: bold;
+  cursor: pointer;
+}
+#login input {
+  background-color: #fdfdfd;
+  border: none;
+  border-radius: 5px;
+  padding: 10px;
+  margin: 10px;
+  font-size: 1.2rem;
+  font-weight: bold;
+}
+
+/*# sourceMappingURL=loginComp.css.map */

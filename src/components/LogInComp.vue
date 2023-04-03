@@ -1,20 +1,26 @@
 <template>
-  <div>
-    <h1>LogIn</h1>
-    <input v-model="email" placeholder="EMAIL"/>
-    <input v-model="password" placeholder="PASSWORD"/>
-    <button v-on:click="logIn">LOG IN</button>
+  <div id="login">
+    <router-link to="/accueil">Retour à l'accueil</router-link>
+    <h1>Connexion</h1>
+    <input ref="mail" v-model="email" placeholder="Adresse mail" @keydown.enter="setFocusOnPwd"/>
+    <input ref="pwd" v-model="password" placeholder="Mot de passe" @keydown.enter="logIn"/>
+    <button v-on:click="logIn">Se Connecter</button>
+    <router-link to="/signup">Pas encore de compte?</router-link>
 
-    <p v-if="showLoginError">{{ loginError }}</p>
-    <p v-if="showLoginSuccess">Login successful!</p>
+    <p id="error" v-if="showLoginError">{{ loginError }}</p>
+    <p id="good" v-if="showLoginSuccess">Login successful!</p>
   </div>
 </template>
 
 <script>
 import axios from "axios";
+import "../assets/style/loginComp.css"
 
 export default {
   name: "LogInComp",
+  mounted() {
+    this.setFocusOnMail();
+  },
   data() {
     return {
       email: "",
@@ -25,6 +31,12 @@ export default {
     };
   },
   methods: {
+    setFocusOnMail() {
+      this.$refs.mail.focus();
+    },
+    setFocusOnPwd() {
+      this.$refs.pwd.focus();
+    },
     logIn() {
       axios
         .post(

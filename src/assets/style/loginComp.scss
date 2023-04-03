@@ -1,0 +1,63 @@
+@import "font&colors";
+
+@import "font&colors";
+
+#login{
+  background: $background;
+  height: 100vh;
+  width: 100vw;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+
+  #error{
+
+      color: red;
+      font-size: 1.2rem;
+      font-family: "Bungee", cursive;
+      margin: 10px;
+
+
+  }
+
+  #good{
+
+      color: $white;
+      font-size: 1.2rem;
+      font-family: "Bungee", cursive;
+      margin: 10px;
+
+  }
+
+  h1{
+    color: $white;
+    font-size: 3rem;
+    font-family: "Bungee", cursive;
+    margin: 10px;
+  }
+
+  button{
+    background-color: $bluePrimary;
+    font-family:  "Bungee", cursive;
+    color: $white;
+    border: none;
+    border-radius: 5px;
+    padding: 10px;
+    margin: 10px;
+    font-size: 1.2rem;
+    font-weight: bold;
+    cursor: pointer;
+  }
+
+  input{
+    background-color: $white;
+    border: none;
+    border-radius: 5px;
+    padding: 10px;
+    margin: 10px;
+    font-size: 1.2rem;
+    font-weight: bold;
+
+  }
+}
