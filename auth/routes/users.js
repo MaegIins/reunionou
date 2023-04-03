@@ -23,7 +23,7 @@ router.post('/search', async (req, res, next) => {
         else {
             const user = await db('user').select('id', 'user_name', 'user_mail').where({ user_mail: mail }).first();
             if (!user) {
-                res.status(404).json({ type: "error", error: 404, message: "USER IS NOT EXIST" });
+                res.status(400).json({ type: "error", error: 400, message: "USER IS NOT EXIST" });
             } else {
                 res.status(200).json({ user_mail: user.user_mail, user_name: user.user_name});
             }

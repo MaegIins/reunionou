@@ -71,16 +71,23 @@ router.post('/user', async (req, res, next) => {
             if (error) {
                 res.status(400).json({ type: "error", error: 400, message: "bad request", details: error.details });
             } else {
-                // verif if attendee exist
+                // verif if attendee exist with id_event and mail_user
                 const attendee = await db('Attendee').where({ id_event: event, mail_user: attendee_mail }).first();
                 if (attendee) {
                     res.status(400).json({ type: "error", error: 400, message: "bad request", details: "attendee already exist" });
                 }
                 else {
-                    // add attendee
-                    await db('Attendee').insert({ id_event: event, name_user: attendee_name, mail_user: attendee_mail, status: 0 });
-                    const newAttendee = await db('Attendee').where({ id_event: event, name_user: attendee_name, mail_user: attendee_mail }).first();
-                    res.status(200).json({ type: "success", message: "INVITE SUCCESS USER", attendee: newAttendee });
+                    // verif if event exist
+                    const eventExist = await db('Event').where({ id: event }).first();
+                    if (!eventExist) {
+                        res.status(400).json({ type: "error", error: 400, message: "event " + event + " is no exist" });
+                    }
+                    else {
+                        // add attendee
+                        await db('Attendee').insert({ id_event: event, name_user: attendee_name, mail_user: attendee_mail, status: 0 });
+                        const newAttendee = await db('Attendee').where({ id_event: event, name_user: attendee_name, mail_user: attendee_mail }).first();
+                        res.status(200).json({ type: "success", message: "INVITE SUCCESS USER", attendee: newAttendee });
+                    }
                 }
             }
         }
