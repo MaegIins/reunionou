@@ -7,17 +7,17 @@ const api = axios.create({
 });
 
 api.interceptors.request.use(
-  (config) => {
-    const token = sessionStorage.getItem('access_token');
-    if (token) {
-      config.headers.Authorization = `Bearer ${token}`;
+    (config) => {
+      const token = sessionStorage.getItem('access_token');
+      if (token && config.url !== '/auth/refresh') {
+        config.headers.Authorization = `Bearer ${token}`;
+      }
+      return config;
+    },
+    (error) => {
+      return Promise.reject(error);
     }
-    return config;
-  },
-  (error) => {
-    return Promise.reject(error);
-  }
-);
+  );
 
 api.interceptors.response.use(
   (response) => {
@@ -26,6 +26,7 @@ api.interceptors.response.use(
   async (error) => {
     const originalRequest = error.config;
     const refreshToken = sessionStorage.getItem('refresh_token');
+    console.log('refreshToken', refreshToken)
 
     if (error.response.status === 401 && !originalRequest._retry && originalRequest.url !== '/auth/refresh') {
       originalRequest._retry = true;
@@ -39,7 +40,7 @@ api.interceptors.response.use(
 
           // Si le code d'état est 401, redirigez l'utilisateur vers la page de connexion.
           if (status === 401) {
-            window.location.href = '/login';
+           window.location.href = '/login?error=refresh3';
             return;
           }
 
@@ -51,11 +52,11 @@ api.interceptors.response.use(
         } catch (err) {
           // Gérer l'erreur de rafraîchissement du token (rediriger vers la page de connexion, par exemple)
           console.error('Error refreshing access token', err);
-          window.location.href = '/login';
+          window.location.href = '/login?error=refresh2';
         }
       } else {
         // Si le refreshToken n'est pas présent, redirigez l'utilisateur vers la page de connexion.
-        window.location.href = '/login';
+       window.location.href = '/login?error=refresh1';
       }
     }
 
