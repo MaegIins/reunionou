@@ -23,8 +23,9 @@ router.get('/list', async (req, res, next) => {
   try {
     await axios.get('http://auth:3000/validate', { headers: { 'Authorization': req.headers.authorization } })
       .then(async (response) => {
+        const { state } = req.query;
         const { mail: userMail } = response.data;
-        await axios.get('http://events:3000/invites', { headers: { 'user-mail': userMail } })
+        await axios.get('http://events:3000/invites', { headers: { 'user-mail': userMail }, params: { state } })
           .then((response) => {
             res.status(response.status).json(response.data);
           })
