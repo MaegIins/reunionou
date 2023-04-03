@@ -4,8 +4,8 @@
     <div id="everyPpl">
 
       <div class="people" id="organizer">
-        <p>{{ organizer }}</p>
-        <i class="bi bi-person-circle"></i>
+        <p>{{ organizer }} - {{ orgaMail }}</p>
+        <i class="bi bi-star-fill"></i>
       </div>
       <div v-for="person in listPpl" :key="person.id" id="pplin">
 
@@ -33,7 +33,7 @@
 import "./../assets/style/PresentComp.css";
 export default {
   name: "PresentComp",
-  props: ["listPpl", "organizer"],
+  props: ["listPpl", "organizer", "orgaMail"],
 }
 
 </script>

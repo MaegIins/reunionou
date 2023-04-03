@@ -4,9 +4,9 @@
     <div id="listComs">
 
 
-      <div v-for="comment in commentsSorted" :key="comment.id" id="comment">
+      <div v-for="comment in commentsSorted" :key="comment.id_attendee" id="comment">
         <div id="commentHeader">
-          <p id="name">{{ comment.id }}</p>
+          <p id="name">{{ comment.username }}</p>
           <p>{{ formatDate(comment.date) }}</p>
         </div>
         <div id="commentBody">

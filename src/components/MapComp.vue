@@ -24,47 +24,14 @@ export default {
       marker: null,
       events: [], // add an empty array for events
       map: null, // add a data property for the map object
-      eventPosLat: this.eventPos[0],
-      eventPosLng: this.eventPos[1],
     }
   },
   mounted() {
-    // create a map and assign it to the data property
-    this.map = L.map('map').setView([48.69247152298754, 6.184081448030852], 13);
-
-    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-      attribution: '&copy; OpenStreetMap contributors'
-    }).addTo(this.map);
-
-    this.marker = L.marker(this.eventPos).addTo(this.map);
-    console.log(this.eventPosLat, this.eventPosLng);
-
-    this.map.on('click', (e) => {
-      const { lat, lng } = e.latlng;
-      this.marker.setLatLng([lat, lng]);
-      this.showEventForm = true;
-    });
-
-    // Load the event data and display it on the map
     this.loadEvent();
   },
-  //Created SECTION
-  created() {
-    this.$getLocation()
-      .then((coordinates) => {
-        this.position = coordinates;
-        this.latU = coordinates.lat;
-        this.lngU = coordinates.lng;
-
-        this.marker = L.marker([this.latU, this.lngU]).addTo(this.map);
-        console.log(this.latU, this.lngU);
-      })
-      .catch((error) => {
-        console.log(error);
-      });
-  },
-  //METHODS SECTION
   methods: {
+    
+
     async loadEvent() {
       try {
         const response = await api.get('/events/' + this.idEvent);
@@ -85,6 +52,11 @@ export default {
   <p>${adress}</p>
   <p>${description}</p>
   `;
+      this.map = L.map('map').setView([lat, lon], 13);
+      L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+      }).addTo(this.map);
+
       const eventMarker = L.marker([lat, lon]).addTo(this.map);
       eventMarker.bindPopup(popupContent).openPopup();
     },

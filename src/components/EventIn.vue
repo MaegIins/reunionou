@@ -10,17 +10,17 @@
     </div>
 
 
-    <div id="boutons">
+    <!-- <div id="boutons">
       <div>
         <button>Je viens !</button>
         <button>Je ne viens pas</button>
       </div>
-    </div>
+    </div> -->
 
     <div id="elements">
 
 
-      <PresentComp :listPpl="people" :organizer="organizerEmail"></PresentComp>
+      <PresentComp :listPpl="people" :organizer="organizerName" :orgaMail="organizerEmail"></PresentComp>
       <CommentsComp :comments="comments" @send-comment="sendComment"></CommentsComp>
 
 
@@ -72,6 +72,7 @@ export default {
         this.eventName = response.data.event.name;
         this.eventDate = response.data.event.date;
         this.organizerEmail = response.data.event.mail_orga;
+        this.organizerName = response.data.event.name_orga;
       } catch (error) {
         console.log(error);
       }
@@ -118,7 +119,7 @@ export default {
     return {
       logged: false,
       idEvent: this.$route.params.id,
-      eventPosition: [48.8566, 2.3522],
+      eventPosition: [48.856614, 2.3522219],
       people: [],
       comments: [],
       eventName: "",
