@@ -67,8 +67,9 @@ router.post('/', async (req, res, next) => {
 router.get('/:id', async (req, res, next) => {
     try {
         await axios.get('http://auth:3000/validate', { headers: { 'Authorization': req.headers.authorization } })
-            .then(async (validateResponse) => {
-                await axios.get('http://events:3000/events/' + req.params.id)
+            .then(async (response) => {
+                const userEmail = response.data.mail;
+                await axios.get('http://events:3000/events/' + req.params.id, { headers: { 'user-email': userEmail } })
                     .then((response) => {
                         res.json(response.data);
                     }

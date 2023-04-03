@@ -82,63 +82,61 @@ router.get('/:id', async (req, res, next) => {
     try {
         const { id } = req.params;
         const userEmail = req.headers['user-email'];
-        
-        // Trouver les événements auxquels l'utilisateur participe
-        const attendingEvents = await db.select('id_event').from('Attendee').where({ mail_user: userEmail });
+        console.log("userEmail", userEmail);
 
-        // Extraire uniquement les ID d'événements
-        const eventIds = attendingEvents.map(event => event.id_event);
-
-        // Trouver les événements dont l'utilisateur est l'organisateur
-        const organizedEvents = await db.select('id').from('Event').where({ mail_orga: userEmail });
-
-        // Extraire uniquement les ID d'événements
-        const organizedEventIds = organizedEvents.map(event => event.id);
-
-        // Fusionner les tableaux d'ID d'événements
-        const combinedEventIds = [...new Set([...eventIds, ...organizedEventIds])];
-
-        // Vérifier si l'utilisateur a accès à cet événement
-        if (!combinedEventIds.includes(Number(id))) {
-            res.status(403).json({ type: "error", error: 403, message: "access denied" });
-            return;
-        }
-
-        const event = await db.select('id', 'name', 'description', 'date', 'name_orga', 'mail_orga', 'id_place').from('Event').where({ id }).first();
-        const id_place = event.id_place;
-
-        if (!event) {
-            res.status(404).json({ type: "error", error: 404, message: "event not found " + req.originalUrl });
-        } else {
-            if (id_place) {
-                const places = await db.select('id', 'name', 'adress', 'lat', 'lon').from('Place').where({ id: id_place });
-                const data = {
-                    event: {
-                        id_event: event.id,
-                        name: event.name,
-                        description: event.description,
-                        date: event.date,
-                        name_orga: event.name_orga,
-                        mail_orga: event.mail_orga,
-                        place: {
-                            id_place: places[0].id,
-                            name: places[0].name,
-                            adress: places[0].adress,
-                            lat: places[0].lat,
-                            lon: places[0].lon,
-                        },
-                    },
-                }
-                res.status(200).json(data);
+        // Si l'utilisateur participe à l'événement ou qu'il est l'organisateur
+        const attendingEvent = await db.select('id_event').from('Attendee').where({ mail_user: userEmail, id_event: id });
+        const organizedEvent = await db.select('id').from('Event').where({ mail_orga: userEmail, id: id });
+        if (attendingEvent.length > 0 || organizedEvent.length > 0) {
+            const event = await db.select('id', 'name', 'description', 'date', 'name_orga', 'mail_orga', 'id_place').from('Event').where({ id }).first();
+            const id_place = event.id_place;
+            if (!event) {
+                res.status(404).json({ type: "error", error: 404, message: "event not found " + req.originalUrl });
             } else {
-                res.status(200).json({ event: event });
+                if (id_place) {
+                    const places = await db.select('id', 'name', 'adress', 'lat', 'lon').from('Place').where({ id: id_place });
+                    res.status(200).json({
+                        event: {
+                            id_event: event.id,
+                            name: event.name,
+                            description: event.description,
+                            date: event.date,
+                            name_orga: event.name_orga,
+                            mail_orga: event.mail_orga,
+                            place: {
+                                id_place: places[0].id,
+                                name: places[0].name,
+                                adress: places[0].adress,
+                                lat: places[0].lat,
+                                lon: places[0].lon,
+                            }
+                        }
+                    });
+                    
+                } else {
+                    res.status(200).json({
+                        event: {
+                            id_event: event.id,
+                            name: event.name,
+                            description: event.description,
+                            date: event.date,
+                            name_orga: event.name_orga,
+                            mail_orga: event.mail_orga,
+                        }
+                    });
+
+
+                }
             }
+        } else {
+            res.status(403).json({ type: "error", error: 403, message: "access denied, user is not participating in this event" });
         }
     } catch (error) {
-        res.status(500).json({ type: "error", error: 500, message: "server error", details: error });
+        console.error(error);
         next(error);
     }
 });
+
 
 
 
