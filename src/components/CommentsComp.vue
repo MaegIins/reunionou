@@ -54,7 +54,7 @@ export default {
   computed: {
     commentsSorted() {
       return this.comments.sort((a, b) => {
-        return new Date(b.date) - new Date(a.date);
+        return new Date(a.date) - new Date(b.date);
       });
     },
   },
