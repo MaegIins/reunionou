@@ -34,7 +34,7 @@
 </template>
 
 <script>
-import axios from "axios";
+import api from '../api';
 import "./../assets/style/EventIn.css";
 import router from "@/router";
 import PresentComp from "@/components/PresentComp.vue";
@@ -67,71 +67,45 @@ export default {
       return router
     },
 
-    fetchEventInfo() {
-      const config = {
-        headers: { Authorization: `Bearer ${sessionStorage.getItem("access_token")}` }
-      };
-      axios.get("http://localhost:3333/events/" + this.idEvent, config)
-        .then((response) => {
-          this.eventName = response.data.event.name;
-          this.eventDate = response.data.event.date;
-          this.organizerEmail = response.data.event.mail_orga;
-        })
-        .catch((error) => {
-          console.log(error);
-        });
+    async fetchEventInfo() {
+      try {
+        const response = await api.get(`/events/${this.idEvent}`);
+        this.eventName = response.data.event.name;
+        this.eventDate = response.data.event.date;
+        this.organizerEmail = response.data.event.mail_orga;
+      } catch (error) {
+        console.log(error);
+      }
     },
-    sendComment(commentText) {
-      const commentData = {
-        id_event: this.idEvent,
-        text: commentText,
-      };
-
-      const config = {
-        headers: { Authorization: `Bearer ${sessionStorage.getItem("access_token")}` },
-      };
-
-      axios
-        .post("http://localhost:3333/comments/add", commentData, config)
-        .then((response) => {
-          this.comments.push(response.data);
-          console.log('aaa', response.data);
-        })
-        .catch((error) => {
-          console.log(error);
+    async sendComment(commentText) {
+      try {
+        const response = await api.post(`/comments/add`, {
+          id_event: this.idEvent,
+          text: commentText,
         });
+        this.comments.push(response.data);
+      } catch (error) {
+        console.log(error);
+      }
     },
 
-    attendee() {
-
-      const config = {
-        headers: { Authorization: `Bearer ${sessionStorage.getItem("access_token")}` }
-      };
-      axios.get("http://localhost:3333/events/" + this.idEvent + "/attendees", config)
-        .then((response) => {
-          this.people = response.data
-        })
-        .catch((error) => {
-          console.log(error)
-        });
-
+    async attendee() {
+      try {
+        const response = await api.get(`/events/${this.idEvent}/attendees`);
+        this.people = response.data;
+      } catch (error) {
+        console.log(error);
+      }
     },
 
     // faire la même chose que les participant pour les com, mettre les comments dans la gateway
-    com() {
-
-      const config = {
-        headers: { Authorization: `Bearer ${sessionStorage.getItem("access_token")}` }
-      };
-      axios.get("http://localhost:3333/comments/events/" + this.idEvent, config)
-        .then((response) => {
-          this.comments = response.data
-          console.log(response.data)
-        })
-        .catch((error) => {
-          console.log(error)
-        });
-
+    async com() {
+      try {
+        const response = await api.get(`/comments/events/${this.idEvent}`);
+        this.comments = response.data;
+      } catch (error) {
+        console.log(error);
+      }
     },
   },
   mounted() {

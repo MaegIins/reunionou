@@ -24,6 +24,7 @@
 </template>
 
 <script>
+import api from '../api';
 import axios from "axios";
 import "./../assets/style/ListEvents.css";
 
@@ -35,13 +36,7 @@ export default {
     }
   },
   mounted() {
-    const config = {
-      headers: {Authorization: `Bearer ${sessionStorage.getItem("access_token")}`}
-    };
-    axios.get("http://localhost:3333/events", config)
-        .then((response) => {
-          this.events = response.data;
-        })
+    this.getEvents();
   },
   computed: {
     eventsSorted() {
@@ -56,6 +51,15 @@ export default {
 
   },
   methods: {
+    async getEvents() {
+      try {
+        const response = await api.get('/events');
+        this.events = response.data;
+      } catch (error) {
+        console.log(error);
+      }
+    },
+
     displayCorrectDate(date) {
       const [jour, mois, annee] = date.split('/');
       return jour + '/' + mois + '/' + annee;

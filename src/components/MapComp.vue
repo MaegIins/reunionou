@@ -6,7 +6,7 @@
 </template>
 
 <script>
-import axios from "axios";
+import api from '../api';
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
 import '../assets/style/mapComp.css';
@@ -65,18 +65,14 @@ export default {
   },
   //METHODS SECTION
   methods: {
-    loadEvent() {
-      const config = {
-        headers: { Authorization: `Bearer ${sessionStorage.getItem("access_token")}` }
-      };
-      axios.get("http://localhost:3333/events/" + this.idEvent, config)
-        .then((response) => {
-          this.events = response.data;
-          this.showEventOnMap();
-        })
-        .catch((error) => {
-          console.log(error);
-        });
+    async loadEvent() {
+      try {
+        const response = await api.get('/events/' + this.idEvent);
+        this.events = response.data;
+        this.showEventOnMap();
+      } catch (error) {
+        console.log(error);
+      }
     },
 
     showEventOnMap() {
