@@ -36,9 +36,12 @@ router.get('/events/:id', async (req, res, next) => {
                 //sinon on interroge la base de données 
                 const attendee = await db.select("id_attendee", "text", "date").from('Comments').where({ id_event: id })
 
-                //on regarde si il y a des commentaires dans l'evenement
-                if (attendee.length !== 0) {//si oui on retourne les commentaires
-                    res.status(200).json(attendee)
+                if (attendee.length !== 0) {
+                    for (let i = 0; i < attendee.length; i++) {
+                        const user = await db.select("name_user").from('Attendee').where({ id: attendee[i].id_attendee })
+                        attendee[i].username = user[0].name_user
+                    }
+                    res.status(200).json(attendee);
                 } else { //sinon on renvoie une erreur
                     res.status(400).json({ type: "error", error: 404, message: "No comments" });
                 }
@@ -59,11 +62,6 @@ router.get('/events/:id', async (req, res, next) => {
  * Exemple de body remplir id_event et mail_attendee :
  * {
     "id_event":"",
-    "mail_attendee":"",
-    "date":{
-        "date":"2023-03-29",
-        "time":"16:56"
-    },
     "text":"Super evenement, j'espère pouvoir recommencer"
 }
  */
@@ -84,7 +82,7 @@ router.post('/add', async (req, res, next) => {
                     //regarde si l'utilisateur est asscoier au bon id_event
                     const attendee = await db.select("id").from("Attendee").where({ id_event: req.body.id_event, mail_user: userEmail });
                     //si oui alors on utilise son id pour créer le commentaires
-                    if (attendee[0] !== undefined) {
+                    if (attendee.length !== 0) {
                         const uuid = uuidv4();
 
                         await db('Comments').insert({
@@ -95,10 +93,10 @@ router.post('/add', async (req, res, next) => {
                             'date': date,
 
                         });
-                        res.status(201).set('Location', '/comments/events/' + req.body.id_event).json({ type: "sucess", error: 201, message: "CREATED" });
+                        res.status(201).set('Location', '/comments/events/' + req.body.id_event).json({ type: "sucess", message: "CREATED" });
                         // Retourne un code 201 (created) et Location sur /events/{id}
                     } else {
-                        res.status(404).json({ type: "error", error: "404", message: "Attendee not associate at this event" })
+                        res.status(403).json({ type: "error", error: "403", message: "Attendee not associate at this event" })
                     }
                 }
             } catch (error) {
