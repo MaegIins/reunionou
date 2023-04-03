@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
-
 import '../models/event.dart';
 import 'ChatWidget.dart';
-import 'EventDetailsPage.dart';
 import 'EventParticipantsPage.dart';
 
 class EventDetailsPage extends StatelessWidget {
@@ -58,27 +56,33 @@ class EventDetailsPage extends StatelessWidget {
                   ),
                 ],
               ),
-              SizedBox(height: 16),
-              Row(
-                children: [
-                  Icon(Icons.email),
-                  SizedBox(width: 8.0),
-                  Text(
-                    'Email organisateur: ${eventDetails?.mailOrga ?? ''}',
-                    style: TextStyle(fontSize: 18.0),
-                  ),
-                ],
+             SizedBox(height: 16),
+              SingleChildScrollView(
+                scrollDirection: Axis.horizontal,
+                child: Row(
+                  children: [
+                    Icon(Icons.email),
+                    SizedBox(width: 8.0),
+                    Text(
+                      'Email organisateur: ${eventDetails?.mailOrga ?? ''}',
+                      style: TextStyle(fontSize: 18.0),
+                    ),
+                  ],
+                ),
               ),
-              SizedBox(height: 16),
-              Row(
-                children: [
-                  Icon(Icons.location_on),
-                  SizedBox(width: 8.0),
-                  Text(
-                    'Adresse: ${eventDetails?.address ?? ''}',
-                    style: TextStyle(fontSize: 18.0),
-                  ),
-                ],
+                            SizedBox(height: 16),
+              SingleChildScrollView(
+                scrollDirection: Axis.horizontal,
+                            child : Row(
+                              children: [
+                                Icon(Icons.location_on),
+                                SizedBox(width: 8.0),
+                                Text(
+                                  'Adresse: ${eventDetails?.address ?? ''}',
+                                  style: TextStyle(fontSize: 18.0),
+                                ),
+                              ],
+                            ),
               ),
               SizedBox(height: 16),
               Row(
@@ -114,15 +118,22 @@ class EventDetailsPage extends StatelessWidget {
                 },
                 child: Text('Voir les participants'),
               ),
-              Column(
-                children: [
-                  ChatWidget(
-                    eventDetails: eventDetails,
-                  ),
-                ],
-              ),
-            ],
+              SizedBox(height: 16), // Ajouter un espace entre les boutons
+              ElevatedButton(
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) =>ChatWidget(
+              eventDetails: eventDetails,
+            ),
           ),
+        );
+      },
+      child: Text('Voir les commentaires'),
+    ),
+  ],
+),
         ),
       ),
     );

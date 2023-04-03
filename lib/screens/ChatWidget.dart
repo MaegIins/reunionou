@@ -23,27 +23,43 @@ class _ChatWidgetState extends State<ChatWidget> {
     super.dispose();
   }
 
-  void _sendMessage(BuildContext context) async {
-    final messageProvider =
-        Provider.of<CommentProvider>(context, listen: false);
-    final message = Message(
-      text: _messageController.text.trim(),
+Future<void> _sendMessage() async {
+  final bearerToken = "Bearer " + Auth().token;
+  final commentText = _messageController.text.trim();
+
+  if (commentText.isEmpty) {
+    final snackBar = SnackBar(
+      content: Text('Please enter a message.'),
+      duration: Duration(seconds: 2),
+      behavior: SnackBarBehavior.floating,
+      margin: EdgeInsets.all(10),
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(15),
+      ),
+      action: SnackBarAction(
+        label: 'OK',
+        onPressed: () {},
+      ),
     );
-    try {
-      await messageProvider.addMessage(message);
-      _messageController.clear();
-    } catch (error) {
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-        content: Text(error.toString()),
-      ));
-    }
+
+    ScaffoldMessenger.of(context).showSnackBar(snackBar);
+
+    return;
+  }
+
+  final message = Message(text: commentText);
+  await CommentProvider().addMessage(bearerToken, widget.eventDetails, message);
+  setState(() {});
+}
+  Future<List<Message>> getComment() async {
+    final bearerToken = "Bearer " + Auth().token;
+    return CommentProvider().getComment(bearerToken, widget.eventDetails);
   }
 
   @override
   Widget build(BuildContext context) {
-    final bearerToken = "Bearer " + Auth().token;
     return FutureBuilder<List<Message>>(
-      future: CommentProvider().getComment(bearerToken, widget.eventDetails),
+      future: getComment(),
       builder: (context, snapshot) {
         if (snapshot.hasData) {
           final messages = snapshot.data!;
@@ -76,7 +92,7 @@ class _ChatWidgetState extends State<ChatWidget> {
                       ),
                       IconButton(
                         icon: const Icon(Icons.send),
-                        onPressed: () => _sendMessage(context),
+                        onPressed: () => _sendMessage(),
                       ),
                     ],
                   ),
