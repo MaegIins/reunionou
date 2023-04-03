@@ -248,7 +248,7 @@ router.post('/', async (req, res, next) => {
 
                         //api qui recup les coordonnées gps a partie d'une adress
                         if (req.body.adress.street == "null" || req.body.adress.city == "null") {
-                            res.status(404).json({ type: "error", error: "404", message: "Adress incorrect" })
+                            res.status(400).json({ type: "error", error: "400", message: "Adress incorrect" })
                         } else {
                             const gps = await fetch('https://nominatim.openstreetmap.org/search?street=' + req.body.adress.street.replace(/\s+/g, '+') + '&city=' + req.body.adress.city + '&format=json')
                             const data = await gps.json()
@@ -276,7 +276,7 @@ router.post('/', async (req, res, next) => {
                                 // Retourne un code 201 (created) et Location sur /events/{id}
                                 res.status(201).set('Location', '/events/' + uuid).json({ type: "sucess", error: 201, message: "CREATED" });
                             } else {
-                                res.status(404).json({ type: "error", error: "404", message: "Adress not found" })
+                                res.status(400).json({ type: "error", error: "400", message: "Adress not found" })
                             }
                         }
                     }
