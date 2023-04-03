@@ -63,19 +63,27 @@ router.post('/confirm', async (req, res, next) => {
 router.post('/user', async (req, res, next) => {
     try {
         const { event, attendee_name, attendee_mail } = req.body;
-        if(!event || !attendee_name || !attendee_mail){
+        if (!event || !attendee_name || !attendee_mail) {
             res.status(400).json({ type: "error", error: 400, message: "bad request", details: "missing parameters" });
         }
         else {
-        const { error } = schema.validate({ key: event, name: attendee_name, mail: attendee_mail });
-        if (error) {
-            res.status(400).json({ type: "error", error: 400, message: "bad request", details: error.details });
-        } else {
-            await db('Attendee').insert({ id_event: event, name_user: attendee_name, mail_user: attendee_mail, status: 0 });
-            const newAttendee = await db('Attendee').where({ id_event: event, name_user: attendee_name, mail_user: attendee_mail }).first();
-            res.status(200).json({ type: "success", message: "INVITE SUCCESS USER", attendee: newAttendee });
+            const { error } = schema.validate({ key: event, name: attendee_name, mail: attendee_mail });
+            if (error) {
+                res.status(400).json({ type: "error", error: 400, message: "bad request", details: error.details });
+            } else {
+                // verif if attendee exist
+                const attendee = await db('Attendee').where({ id_event: event, mail_user: attendee_mail }).first();
+                if (attendee) {
+                    res.status(400).json({ type: "error", error: 400, message: "bad request", details: "attendee already exist" });
+                }
+                else {
+                    // add attendee
+                    await db('Attendee').insert({ id_event: event, name_user: attendee_name, mail_user: attendee_mail, status: 0 });
+                    const newAttendee = await db('Attendee').where({ id_event: event, name_user: attendee_name, mail_user: attendee_mail }).first();
+                    res.status(200).json({ type: "success", message: "INVITE SUCCESS USER", attendee: newAttendee });
+                }
+            }
         }
-    }
     } catch (error) {
         res.status(500).json({ type: "error", error: 500, message: "server error", details: error });
         next(error);
@@ -96,57 +104,57 @@ router.get('/details', async (req, res, next) => {
                 const place = await db.select('id', 'name', 'adress', 'lat', 'lon').from('Place').where({ id: id_place });
                 event.place = place;
                 const data = {
-                        id_event: event.id,
-                        name: event.name,
-                        description: event.description,
-                        date: event.date,
-                        name_orga: event.name_orga,
-                        mail_orga: event.mail_orga,
-                        place: {
-                            id_place: place[0].id,
-                            name: place[0].name,
-                            adress: place[0].adress,
-                            lat: place[0].lat,
-                            lon: place[0].lon,
-                        },
+                    id_event: event.id,
+                    name: event.name,
+                    description: event.description,
+                    date: event.date,
+                    name_orga: event.name_orga,
+                    mail_orga: event.mail_orga,
+                    place: {
+                        id_place: place[0].id,
+                        name: place[0].name,
+                        adress: place[0].adress,
+                        lat: place[0].lat,
+                        lon: place[0].lon,
+                    },
                 }
                 res.status(200).json({ type: "sucess", message: "INVITE OK", event: data });
 
             } else {
                 res.status(200).json({ type: "sucess", message: "INVITE OK", event: event });
+            }
         }
-    }
     } catch (error) {
         res.status(500).json({ type: "error", error: 500, message: "server error", details: error });
         next(error);
     }
 });
 
-                
-
-
-
-
-    // router.get('/', async (req, res, next) => {
-    //     try {
-    //         const { key } = req.query;
-    //         const decoded = jwt.verify(key, secretKey);
-    //         const event = await db.select('id', 'name', 'description', 'date', 'name_orga', 'mail_orga', 'id_place').from('Event').where({ id: decoded.id }).first();
-    //         if (!event) {
-    //             res.status(404).json({ type: "error", error: 404, message: "event not found " + req.originalUrl });
-    //         } else {
-    //             res.status(200).json({ type: "sucess", message: "INVITE OK", event: event });
-    //         }
-    //     } catch (error) {
-    //         res.status(500).json({ type: "error", error: 500, message: "server error", details: error });
-    //         next(error);
-    //     }
-    // });
 
 
 
 
 
+// router.get('/', async (req, res, next) => {
+//     try {
+//         const { key } = req.query;
+//         const decoded = jwt.verify(key, secretKey);
+//         const event = await db.select('id', 'name', 'description', 'date', 'name_orga', 'mail_orga', 'id_place').from('Event').where({ id: decoded.id }).first();
+//         if (!event) {
+//             res.status(404).json({ type: "error", error: 404, message: "event not found " + req.originalUrl });
+//         } else {
+//             res.status(200).json({ type: "sucess", message: "INVITE OK", event: event });
+//         }
+//     } catch (error) {
+//         res.status(500).json({ type: "error", error: 500, message: "server error", details: error });
+//         next(error);
+//     }
+// });
 
 
-    module.exports = router;
+
+
+
+
+
+module.exports = router;
