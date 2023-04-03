@@ -3,7 +3,7 @@
     <router-link to="/accueil">Retour à l'accueil</router-link>
     <h1>Connexion</h1>
     <input ref="mail" v-model="email" placeholder="Adresse mail" @keydown.enter="setFocusOnPwd"/>
-    <input ref="pwd" v-model="password" placeholder="Mot de passe" @keydown.enter="logIn"/>
+    <input ref="pwd" type="password" v-model="password" placeholder="Mot de passe" @keydown.enter="logIn"/>
     <button v-on:click="logIn">Se Connecter</button>
     <router-link to="/signup">Pas encore de compte?</router-link>
 
