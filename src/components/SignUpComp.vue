@@ -1,26 +1,40 @@
 <template>
-  <div>
-    <h1>SignUp</h1>
-    <input v-model="name" placeholder="USERNAME" />
-    <input v-model="email" placeholder="EMAIL">
-    <input v-model="password" placeholder="PASSWORD" />
-    <button v-on:click="signIn">SIGN IN</button>
 
-    <p v-if="showValidationErrors">{{ validationError }}</p>
-    <p v-if="showServerError">{{ serverError }}</p>
-    <p v-if="showConfirmMessage">{{ confirmMessage }}</p>
+
+  <div id="signup">
+    <router-link to="/accueil">Retour à l'accueil</router-link>
+    <h2>S'inscrire</h2>
+    <input ref="name" v-model="name" placeholder="Nom d'utilisateur" v-on:keydown.enter="setFocusOnMail" />
+    <input ref="mail" v-model="email" placeholder="Adresse mail" v-on:keydown.enter="setFocusOnPwd">
+    <input ref="pwd" type="password" v-model="password" placeholder="Mot de passe" v-on:keydown.enter="setFocusOnCpwd"/>
+    <input ref="cpwd" type="password" v-model="confirmPassword" placeholder="Confirmer le mot de passe" @keydown.enter="signIn"/>
+    <button v-on:click="signIn">S'inscrire!</button>
+    <router-link to="/login">Déjà un compte?</router-link>
+
+    <div id="error">
+      <p v-if="showValidationErrors">{{ validationError }}</p>
+      <p v-if="showServerError">{{ serverError }}</p>
+      <p v-if="showConfirmMessage">{{ confirmMessage }}</p>
+    </div>
+
+
   </div>
 </template>
 
 <script>
 import axios from "axios";
+import "../assets/style/signUp.css"
 export default {
   name: "SignUpComp",
+  mounted() {
+    this.setFocusOnName();
+  },
   data() {
     return {
       name: "",
       email: "",
       password: "",
+      confirmPassword: "",
       showValidationErrors: false,
       validationError: "",
       showServerError: false,
@@ -31,7 +45,27 @@ export default {
     };
   },
   methods: {
+    setFocusOnName() {
+      this.$refs.name.focus();
+    },
+    setFocusOnMail() {
+      this.$refs.mail.focus();
+    },
+    setFocusOnPwd() {
+      this.$refs.pwd.focus();
+    },
+    setFocusOnCpwd() {
+      this.$refs.cpwd.focus();
+    },
     signIn() {
+
+
+      if (this.password !== this.confirmPassword) {
+        this.validationError = "Les mots de passe ne correspondent pas.";
+        this.showValidationErrors = true;
+        return;
+      }
+
       axios
         .post("http://localhost:3333/auth/signup", {
           name: this.name,

@@ -1,0 +1,45 @@
+@import url("https://fonts.googleapis.com/css2?family=Averia+Libre&family=Bungee&display=swap");
+#signup {
+  background: radial-gradient(circle, rgb(17, 0, 119) 0%, rgb(11, 0, 77) 17%, rgb(10, 10, 10) 59%, rgb(10, 10, 10) 100%);
+  height: 100vh;
+  width: 100vw;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+}
+#signup #error p {
+  color: red;
+  font-size: 1.2rem;
+  font-family: "Bungee", cursive;
+  margin: 10px;
+}
+#signup h2 {
+  color: #fdfdfd;
+  font-size: 3rem;
+  font-family: "Bungee", cursive;
+  margin: 10px;
+}
+#signup button {
+  background-color: rgb(17, 0, 119);
+  font-family: "Bungee", cursive;
+  color: #fdfdfd;
+  border: none;
+  border-radius: 5px;
+  padding: 10px;
+  margin: 10px;
+  font-size: 1.2rem;
+  font-weight: bold;
+  cursor: pointer;
+}
+#signup input {
+  background-color: #fdfdfd;
+  border: none;
+  border-radius: 5px;
+  padding: 10px;
+  margin: 10px;
+  font-size: 1.2rem;
+  font-weight: bold;
+}
+
+/*# sourceMappingURL=signUp.css.map */
