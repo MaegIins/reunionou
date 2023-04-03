@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../models/event.dart';
+import 'ChatWidget.dart';
 import 'EventDetailsPage.dart';
 import 'EventParticipantsPage.dart';
 
@@ -41,7 +42,7 @@ class EventDetailsPage extends StatelessWidget {
                   Icon(Icons.calendar_today),
                   SizedBox(width: 8.0),
                   Text(
-                    eventDetails?.date.toString() ?? '',
+                    eventDetails?.date.toString().substring(0, 19) ?? '',
                     style: TextStyle(fontSize: 18.0),
                   ),
                 ],
@@ -112,6 +113,13 @@ class EventDetailsPage extends StatelessWidget {
                   );
                 },
                 child: Text('Voir les participants'),
+              ),
+              Column(
+                children: [
+                  ChatWidget(
+                    eventDetails: eventDetails,
+                  ),
+                ],
               ),
             ],
           ),

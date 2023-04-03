@@ -5,6 +5,7 @@ import 'package:partouille/Singleton/Auth.dart';
 import 'package:partouille/models/event.dart';
 import 'package:partouille/models/eventAdress.dart';
 import 'package:partouille/models/attendee.dart';
+
 /**
  * EventsProvider
  * 
@@ -54,9 +55,6 @@ class EventsProvider {
  */
   Future<void> addEvent(String bearerToken, EventAdress eventAdress) async {
     final String apiUrl1 = 'http://localhost:3333/events';
-
-    print(eventAdress.address.city);
-    print(bearerToken);
     final response = await http.post(
       Uri.parse(apiUrl1),
       headers: <String, String>{
@@ -78,41 +76,44 @@ class EventsProvider {
       }),
     );
 
-  if (response.statusCode != 201 && response.statusCode != 302 && response.statusCode != 200) {
-    throw Exception('Failed to add event');
+    if (response.statusCode != 201 &&
+        response.statusCode != 302 &&
+        response.statusCode != 200) {
+      throw Exception('Failed to add event');
+    }
   }
-}
+
 /**
  * getEventAttendees
  * this function is used to fetch attendees data from the API
  */
-Future<List<attendee>> getEventAttendees(String bearerToken, event eventId) async {
-  final eventUrl = eventId.id.toString();
-  
-  final String apiUrl2 = 'http://localhost:3333/events/$eventUrl/attendees';
-  print(apiUrl2);
-  final response = await http.get(
-    Uri.parse(apiUrl2),
-    headers: <String, String>{
-      'Authorization': bearerToken,
-      'Content-Type': 'application/json',
-    },
-  );
+  Future<List<attendee>> getEventAttendees(
+      String bearerToken, event eventId) async {
+    final eventUrl = eventId.id.toString();
 
-  if (response.statusCode == 200) {
-    final List<dynamic> attendeesJson = jsonDecode(response.body);
-    print(attendeesJson);
-    final List<attendee> attendees = attendeesJson.map((attendeeJson) {
-      return attendee(
-        
-        nameUser: attendeeJson['name_user'],
-        mailUser: attendeeJson['mail_user'],
-        status: attendeeJson['status'],
-      );
-    }).toList();
-    return attendees;
-  } else {
-    throw Exception('Failed to load attendees data');
+    final String apiUrl2 = 'http://localhost:3333/events/$eventUrl/attendees';
+    print(apiUrl2);
+    final response = await http.get(
+      Uri.parse(apiUrl2),
+      headers: <String, String>{
+        'Authorization': bearerToken,
+        'Content-Type': 'application/json',
+      },
+    );
+
+    if (response.statusCode == 200) {
+      final List<dynamic> attendeesJson = jsonDecode(response.body);
+      print(attendeesJson);
+      final List<attendee> attendees = attendeesJson.map((attendeeJson) {
+        return attendee(
+          nameUser: attendeeJson['name_user'],
+          mailUser: attendeeJson['mail_user'],
+          status: attendeeJson['status'],
+        );
+      }).toList();
+      return attendees;
+    } else {
+      throw Exception('Failed to load attendees data');
+    }
   }
-}
 }
