@@ -81,12 +81,34 @@ router.get('/', async (req, res, next) => {
 router.get('/:id', async (req, res, next) => {
     try {
         const { id } = req.params;
+        const userEmail = req.headers['user-email'];
+        
+        // Trouver les événements auxquels l'utilisateur participe
+        const attendingEvents = await db.select('id_event').from('Attendee').where({ mail_user: userEmail });
+
+        // Extraire uniquement les ID d'événements
+        const eventIds = attendingEvents.map(event => event.id_event);
+
+        // Trouver les événements dont l'utilisateur est l'organisateur
+        const organizedEvents = await db.select('id').from('Event').where({ mail_orga: userEmail });
+
+        // Extraire uniquement les ID d'événements
+        const organizedEventIds = organizedEvents.map(event => event.id);
+
+        // Fusionner les tableaux d'ID d'événements
+        const combinedEventIds = [...new Set([...eventIds, ...organizedEventIds])];
+
+        // Vérifier si l'utilisateur a accès à cet événement
+        if (!combinedEventIds.includes(Number(id))) {
+            res.status(403).json({ type: "error", error: 403, message: "access denied" });
+            return;
+        }
+
         const event = await db.select('id', 'name', 'description', 'date', 'name_orga', 'mail_orga', 'id_place').from('Event').where({ id }).first();
         const id_place = event.id_place;
 
         if (!event) {
             res.status(404).json({ type: "error", error: 404, message: "event not found " + req.originalUrl });
-            // affiche lien de la ressource
         } else {
             if (id_place) {
                 const places = await db.select('id', 'name', 'adress', 'lat', 'lon').from('Place').where({ id: id_place });
@@ -108,7 +130,6 @@ router.get('/:id', async (req, res, next) => {
                     },
                 }
                 res.status(200).json(data);
-
             } else {
                 res.status(200).json({ event: event });
             }
