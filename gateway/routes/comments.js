@@ -8,7 +8,8 @@ router.get('/events/:id', async (req, res, next) => {
     try {
         await axios.get('http://auth:3000/validate', { headers: { 'Authorization': req.headers.authorization } })
             .then(async (validateResponse) => {
-                await axios.get('http://events:3000/comments/events/'+ req.params.id)
+                const { mail: userEmail } = validateResponse.data;
+                await axios.get('http://events:3000/comments/events/'+ req.params.id, { headers: { 'user-mail': userEmail } })
                     .then((response) => {
                         res.status(response.status).json(response.data);
                     })

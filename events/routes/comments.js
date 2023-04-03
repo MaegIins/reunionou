@@ -33,17 +33,25 @@ router.get('/events/:id', async (req, res, next) => {
                 //si non valide on renvoie une erreur
                 res.status(404).json({ type: "error", error: 404, message: "Event not found : " + id });
             } else {
-                //sinon on interroge la base de données 
-                const attendee = await db.select("id_attendee", "text", "date").from('Comments').where({ id_event: id })
+                // vérifie si l'utilisateur est bien inscrit à l'événement ou si il est l'organisateur
+                const userEmail = req.headers['user-mail'];
+                const user = await db('Attendee').where({ id_event: id, mail_user: userEmail });
+                const organizer = await db('Event').where({ id: id, mail_orga: userEmail });
+                if (user.length === 0 && organizer.length === 0) {
+                    res.status(403).json({ type: "error", error: "403", message: "Attendee not associate at this event" })
+                } else {
+                    //sinon on interroge la base de données 
+                    const attendee = await db.select("id_attendee", "text", "date").from('Comments').where({ id_event: id })
 
-                if (attendee.length !== 0) {
-                    for (let i = 0; i < attendee.length; i++) {
-                        const user = await db.select("name_user").from('Attendee').where({ id: attendee[i].id_attendee })
-                        attendee[i].username = user[0].name_user
+                    if (attendee.length !== 0) {
+                        for (let i = 0; i < attendee.length; i++) {
+                            const user = await db.select("name_user").from('Attendee').where({ id: attendee[i].id_attendee })
+                            attendee[i].username = user[0].name_user
+                        }
+                        res.status(200).json(attendee);
+                    } else { //sinon on renvoie une erreur
+                        res.status(400).json({ type: "error", error: 404, message: "No comments" });
                     }
-                    res.status(200).json(attendee);
-                } else { //sinon on renvoie une erreur
-                    res.status(400).json({ type: "error", error: 404, message: "No comments" });
                 }
             }
         } else {//l'id n'est pas renseigné
