@@ -5,11 +5,11 @@
     <div id="main">
       <h1>REUNIONOU.app</h1>
       <div v-if="logged">
-        <button>NOUVELLE RÉUNION</button>
-        <button>MES RÉUNIONS</button>
+        <button @click="this.$router.push('/newreunion')">NOUVELLE RÉUNION</button>
+        <button @click="this.$router.push('/liste/')">MES RÉUNIONS</button>
       </div>
       <div v-else>
-        <button>NOUVELLE RÉUNION</button>
+        <button @click="this.$router.push('/login')">NOUVELLE RÉUNION</button>
       </div>
 
     </div>
@@ -17,12 +17,12 @@
 
     <div class="login">
       <div v-if="logged">
-        <a href="#">SE DÉCONNECTER</a>
+        <a @click="this.$router.push('#')">SE DÉCONNECTER</a>
       </div>
       <div v-else>
-        <a href="#">SE CONNECTER</a>
+        <a @click="this.$router.push('/login')">SE CONNECTER</a>
         <p>|</p>
-        <a href="#">S'INSCRIRE</a>
+        <a @click="this.$router.push('/signup')">S'INSCRIRE</a>
       </div>
     </div>
 
@@ -32,8 +32,14 @@
 
 <script>
 import "./../assets/style/accueil.css";
+import router from "@/router";
 export default {
   name: "AccueilApp",
+  methods: {
+    router() {
+      return router
+    }
+  },
   components: {},
   props: {},
   data() {
