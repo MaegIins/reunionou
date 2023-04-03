@@ -59,7 +59,7 @@ export default {
 
             sessionStorage.setItem("access_token", response.data.access_token);
             sessionStorage.setItem("refresh_token", response.data.refresh_token);
-            // this.$router.push("/");
+            this.$router.push("/accueil");
           } else {
             this.showLoginSuccess = false;
             this.showLoginError = true;

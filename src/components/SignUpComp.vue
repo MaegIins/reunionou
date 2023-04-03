@@ -76,6 +76,7 @@ export default {
           if (response.status === 200 || response.status === 201) {
             this.confirmMessage = "Votre compte a bien été créé.";
             this.showConfirmMessage = true;
+            this.$router.push("/accueil");
           } else {
             this.serverError = "Merci de renseigner tous les champs correctement.";
             this.showServerError = true;
