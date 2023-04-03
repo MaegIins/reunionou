@@ -41,7 +41,7 @@ router.post('/user', async (req, res, next) => {
   try {
     await axios.get('http://auth:3000/validate', { headers: { 'Authorization': req.headers.authorization } })
       .then(async (response) => {
-        const { event, attendee_mail, attendee_name } = req.body;
+        const { event, mail } = req.body;
         if (!event || !mail) {
           res.status(400).json({ type: "error", error: 400, message: "missing event or mail parameter" });
         }
