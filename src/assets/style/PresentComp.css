@@ -42,11 +42,7 @@
   color: rgb(17, 0, 119);
   background: #fdfdfd;
 }
-#pplList #pplin {
-  display: flex;
-  flex-direction: column;
-}
-#pplList #pplin .people {
+#pplList .people {
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -54,6 +50,15 @@
   font-size: 1.5rem;
   border-radius: 20px;
   color: #fdfdfd;
+}
+#pplList #organizer {
+  border: 2px solid #FFD700;
+  background: #fdfdfd;
+  color: rgb(17, 0, 119);
+}
+#pplList #pplin {
+  display: flex;
+  flex-direction: column;
 }
 #pplList #pplin #coming {
   background: linear-gradient(156deg, rgb(78, 255, 0) 0%, rgb(39, 152, 0) 100%);

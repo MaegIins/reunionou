@@ -7,7 +7,6 @@
     <div id="event-details">
       <h2>{{ eventName }}</h2>
       <h2>{{ formatDate(eventDate) }}</h2>
-      <p>Organisateur : {{ organizerEmail }}</p>
     </div>
 
 
@@ -21,7 +20,7 @@
     <div id="elements">
 
 
-      <PresentComp :listPpl="people"></PresentComp>
+      <PresentComp :listPpl="people" :organizer="organizerEmail"></PresentComp>
       <CommentsComp :comments="comments" @send-comment="sendComment"></CommentsComp>
 
 

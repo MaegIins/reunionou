@@ -2,6 +2,11 @@
   <div id="pplList">
     <h2>Participants</h2>
     <div id="everyPpl">
+
+      <div class="people" id="organizer">
+        <p>{{ organizer }}</p>
+        <i class="bi bi-person-circle"></i>
+      </div>
       <div v-for="person in listPpl" :key="person.id" id="pplin">
 
         <div v-if="person.status === 0" class="people" id="maybe">
@@ -28,7 +33,7 @@
 import "./../assets/style/PresentComp.css";
 export default {
   name: "PresentComp",
-  props: ["listPpl"],
+  props: ["listPpl", "organizer"],
 }
 
 </script>

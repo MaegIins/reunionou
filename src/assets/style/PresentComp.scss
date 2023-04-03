@@ -50,20 +50,28 @@
     }
   }
 
+  .people {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 20px;
+    font-size: 1.5rem;
+    border-radius: 20px;
+    color: $white;
+
+  }
+
+  #organizer{
+    border : 2px solid $gold;
+    background: $white;
+    color: $bluePrimary;
+  }
+
   #pplin {
     display: flex;
     flex-direction: column;
 
-    .people {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding: 20px;
-      font-size: 1.5rem;
-      border-radius: 20px;
-      color: $white;
 
-    }
     #coming {
       background: linear-gradient(156deg, rgba(78, 255, 0, 1) 0%, rgba(39, 152, 0, 1) 100%);
     }
