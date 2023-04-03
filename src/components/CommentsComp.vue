@@ -4,7 +4,7 @@
     <div id="listComs">
 
 
-      <div v-for="comment in comments" :key="comment.id" id="comment">
+      <div v-for="comment in commentsSorted" :key="comment.id" id="comment">
         <div id="commentHeader">
           <p id="name">{{ comment.id }}</p>
           <p>{{ formatDate(comment.date) }}</p>
@@ -49,6 +49,13 @@ export default {
     sendComment() {
       this.$emit("send-comment", this.newCommentText);
       this.newCommentText = "";
+    },
+  },
+  computed: {
+    commentsSorted() {
+      return this.comments.sort((a, b) => {
+        return new Date(b.date) - new Date(a.date);
+      });
     },
   },
 
