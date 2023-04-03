@@ -63,6 +63,7 @@ router.post('/confirm', async (req, res, next) => {
 router.post('/user', async (req, res, next) => {
     try {
         const { event, attendee_name, attendee_mail } = req.body;
+        const userEmail = req.headers['user-mail'];
         if (!event || !attendee_name || !attendee_mail) {
             res.status(400).json({ type: "error", error: 400, message: "bad request", details: "missing parameters" });
         }
@@ -71,22 +72,29 @@ router.post('/user', async (req, res, next) => {
             if (error) {
                 res.status(400).json({ type: "error", error: 400, message: "bad request", details: error.details });
             } else {
-                // verif if attendee exist with id_event and mail_user
-                const attendee = await db('Attendee').where({ id_event: event, mail_user: attendee_mail }).first();
-                if (attendee) {
-                    res.status(400).json({ type: "error", error: 400, message: "bad request", details: "attendee already exist" });
+                const userIsOrga = await db('Event').where({ id: event, mail_orga: userEmail }).first();
+                if (!userIsOrga) {
+                    res.status(400).json({ type: "error", error: 400, message: "user " + userEmail + " is not orga of event " + event });
                 }
                 else {
-                    // verif if event exist
-                    const eventExist = await db('Event').where({ id: event }).first();
-                    if (!eventExist) {
-                        res.status(400).json({ type: "error", error: 400, message: "event " + event + " is no exist" });
+                    // verif if attendee exist with id_event and mail_user
+                    const attendee = await db('Attendee').where({ id_event: event, mail_user: attendee_mail }).first();
+                    if (attendee) {
+                        res.status(400).json({ type: "error", error: 400, message: "bad request", details: "attendee already exist" });
                     }
                     else {
-                        // add attendee
-                        await db('Attendee').insert({ id_event: event, name_user: attendee_name, mail_user: attendee_mail, status: 0 });
-                        const newAttendee = await db('Attendee').where({ id_event: event, name_user: attendee_name, mail_user: attendee_mail }).first();
-                        res.status(200).json({ type: "success", message: "INVITE SUCCESS USER", attendee: newAttendee });
+                        // verif if event exist
+                        const eventExist = await db('Event').where({ id: event }).first();
+                        if (!eventExist) {
+                            res.status(400).json({ type: "error", error: 400, message: "event " + event + " is no exist" });
+                        }
+                        else {
+                            // add attendee
+                            await db('Attendee').insert({ id_event: event, name_user: attendee_name, mail_user: attendee_mail, status: 0 });
+                            const newAttendee = await db('Attendee').where({ id_event: event, name_user: attendee_name, mail_user: attendee_mail }).first();
+                            res.status(200).json({ type: "success", message: "INVITE SUCCESS USER", attendee: newAttendee });
+
+                        }
                     }
                 }
             }
@@ -137,7 +145,51 @@ router.get('/details', async (req, res, next) => {
     }
 });
 
-
+// get invite on waiting for user logged
+router.get('/', async (req, res, next) => {
+    try {
+        const userEmail = req.headers['user-mail'];
+        const userInvites = await db.select('id_event', 'name_user', 'mail_user', 'status').from('Attendee').where({ mail_user: userEmail, status: 0 });
+        if (!userInvites) {
+            res.status(404).json({ type: "error", error: 404, message: "user " + userEmail + " don't have any invite" });
+        } else {
+            const eventDetails = await db.select('id', 'name', 'date', 'id_place').from('Event').whereIn('id', userInvites.map(invite => invite.id_event));
+            const eventDetailsWithPlace = await Promise.all(eventDetails.map(async (event) => {
+                const id_place = event.id_place;
+                if (id_place) {
+                    const place = await db.select('id', 'name', 'adress', 'lat', 'lon').from('Place').where({ id: id_place });
+                    event.place = place;
+                    const data = {
+                        id_event: event.id,
+                        name: event.name,
+                        date: event.date,
+                        place: {
+                            id_place: place[0].id,
+                            name: place[0].name,
+                            adress: place[0].adress,
+                            lat: place[0].lat,
+                            lon: place[0].lon,
+                        },
+                    }
+                    return data;
+                } else {
+                    return event;
+                }
+            }));
+            const data = userInvites.map((invite) => {
+                const event = eventDetailsWithPlace.find(event => event.id_event === invite.id_event);
+                return {
+                    status: invite.status,
+                    event,
+                }
+            });
+            res.status(200).json({mail_user: userEmail, events: data});
+        }
+    } catch (error) {
+        res.status(500).json({ type: "error", error: 500, message: "server error", details: error });
+        next(error);
+    }
+});
 
 
 

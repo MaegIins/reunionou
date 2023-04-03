@@ -126,7 +126,7 @@ const validUuid = Joi.string().guid().required();
 const schema = Joi.object({
     title: Joi.string().max(100),
     description: Joi.string().max(256),
-    date: Joi.date().format('YYYY-MM-DD').utc(),
+    date: Joi.date().format('YYYY-MM-DD').utc().greater('now'),
     name_orga: Joi.string().max(30),
     name_place: Joi.string().max(100),
     mail_orga: Joi.string().max(35).email(),
