@@ -89,8 +89,12 @@ router.post('/add', async (req, res, next) => {
                 if (result) {
                     //regarde si l'utilisateur est asscoier au bon id_event
                     const attendee = await db.select("id").from("Attendee").where({ id_event: req.body.id_event, mail_user: userEmail });
+
+                    // ou alors qu'il est l'organisateur de l'evenement
+                    const organizer = await db.select("id").from("Event").where({ id: req.body.id_event, mail_orga: userEmail });
+
                     //si oui alors on utilise son id pour créer le commentaires
-                    if (attendee.length !== 0) {
+                    if (attendee.length !== 0 || organizer.length !== 0) {
                         const uuid = uuidv4();
 
                         await db('Comments').insert({
