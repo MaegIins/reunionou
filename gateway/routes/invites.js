@@ -19,6 +19,29 @@ router.post('/confirm', async (req, res, next) => {
   }
 });
 
+// confirm user auth invite
+router.post('/confirm/user', async (req, res, next) => {
+  try {
+    await axios.get('http://auth:3000/validate', { headers: { 'Authorization': req.headers.authorization } })
+      .then(async (response) => {
+        const { mail: userMail, name: userName } = response.data;
+        await axios.post('http://events:3000/invites/confirm/user', { ...req.body }, { headers: { 'user-mail': userMail, 'user-name': userName } })
+          .then((response) => {
+            res.status(response.status).json(response.data);
+          })
+          .catch((error) => {
+            res.status(error.response.status).json(error.response.data);
+          });
+      })
+      .catch((error) => {
+        res.status(error.response.status).json(error.response.data);
+      });
+  }
+  catch (error) {
+    res.status(500).json(error);
+  }
+});
+
 router.get('/list', async (req, res, next) => {
   try {
     await axios.get('http://auth:3000/validate', { headers: { 'Authorization': req.headers.authorization } })

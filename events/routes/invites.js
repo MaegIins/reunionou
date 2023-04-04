@@ -59,6 +59,51 @@ router.post('/confirm', async (req, res, next) => {
     }
 });
 
+// POST /invites/confirm/user
+router.post('/confirm/user', async (req, res, next) => {
+    try {
+        const { event, status, comment } = req.body;
+        const userName = req.headers['user-name'];
+        const userEmail = req.headers['user-mail'];
+        console.log(event, userName, userEmail, status, comment)
+        if (!event || status == undefined || !userName || !userEmail) {
+            res.status(400).json({ type: "error", error: 400, message: "bad request", details: "missing parameters" });
+        }
+        else {
+            const { error } = schema.validate({ key: event, name: userName, mail: userEmail, status: status, comment: comment });
+            if (error) {
+                res.status(400).json({ type: "error", error: 400, message: "bad request", details: error.details });
+            } else {
+                const eventExist = await db('Event').where({ id: event }).first();
+                if (!eventExist) {
+                    res.status(400).json({ type: "error", error: 400, message: "event " + event + " is no exist" });
+                }
+                else {
+                    let participate;
+                    if (status == true) {
+                        participate = 2;
+                    } else {
+                        participate = 1;
+                    }
+                    // verify if attendee exist for this event
+                    const attendee = await db('Attendee').where({ id_event: event, mail_user: userEmail }).first();
+                    if (!attendee) {
+                        res.status(400).json({ type: "error", error: 400, message: "bad request", details: "attendee not exist for this event" });
+                    }
+                    else {
+                        await db('Attendee').where({ id_event: event, mail_user: userEmail }).update({ status: participate, details: comment });
+                        const newAttendee = await db('Attendee').where({ id_event: event, mail_user: userEmail }).first();
+                        res.status(200).json({ type: "success", message: "INVITE OK", attendee: newAttendee });
+                    }
+                }
+            }
+        }
+    } catch (error) {
+        res.status(500).json({ type: "error", error: 500, message: "server error", details: error });
+        next(error);
+    }
+});
+
 // POST /invites/user for add a user to an event
 router.post('/user', async (req, res, next) => {
     try {
