@@ -58,7 +58,6 @@ export default {
       try {
         const response = await api.get('/events');
         this.events = response.data.events;
-        console.log(this.events)
       } catch (error) {
         console.log(error);
       }
