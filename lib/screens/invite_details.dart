@@ -8,7 +8,8 @@ import 'invitation_list.dart';
 class InviteDetailsPage extends StatefulWidget {
   final Invite inviteDetails;
 
-  const InviteDetailsPage({Key? key, required this.inviteDetails}) : super(key: key);
+  const InviteDetailsPage({Key? key, required this.inviteDetails})
+      : super(key: key);
 
   @override
   _InviteDetailsPageState createState() => _InviteDetailsPageState();
@@ -77,12 +78,14 @@ ElevatedButton(
               onPressed: () {
                 if (_selectedOption != null) {
                   final bearerToken = "Bearer " + Auth().token;
+                  final bearerToken = "Bearer " + Auth().token;
                   final InviteConfirm = inviteConfirm(
                     idEvent: widget.inviteDetails.id_event,
                     status: _selectedOption!,
                     comment: _comment ?? '',
                   );
-                  InvitesProvider().reponseInvitation(bearerToken, InviteConfirm);
+                  InvitesProvider()
+                      .reponseInvitation(bearerToken, InviteConfirm);
 
                   // Afficher un message contextuel sur la page de redirection
                   ScaffoldMessenger.of(context).showSnackBar(

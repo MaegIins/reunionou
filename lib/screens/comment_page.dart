@@ -23,34 +23,36 @@ class _ChatWidgetState extends State<ChatWidget> {
     super.dispose();
   }
 
-Future<void> _sendMessage() async {
-  final bearerToken = "Bearer " + Auth().token;
-  final commentText = _messageController.text.trim();
+  Future<void> _sendMessage() async {
+    final bearerToken = "Bearer " + Auth().token;
+    final commentText = _messageController.text.trim();
 
-  if (commentText.isEmpty) {
-    final snackBar = SnackBar(
-      content: Text('Please enter a message.'),
-      duration: Duration(seconds: 2),
-      behavior: SnackBarBehavior.floating,
-      margin: EdgeInsets.all(10),
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(15),
-      ),
-      action: SnackBarAction(
-        label: 'OK',
-        onPressed: () {},
-      ),
-    );
+    if (commentText.isEmpty) {
+      final snackBar = SnackBar(
+        content: Text('Please enter a message.'),
+        duration: Duration(seconds: 2),
+        behavior: SnackBarBehavior.floating,
+        margin: EdgeInsets.all(10),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(15),
+        ),
+        action: SnackBarAction(
+          label: 'OK',
+          onPressed: () {},
+        ),
+      );
 
-    ScaffoldMessenger.of(context).showSnackBar(snackBar);
+      ScaffoldMessenger.of(context).showSnackBar(snackBar);
 
-    return;
+      return;
+    }
+
+    final message = Message(text: commentText);
+    await CommentProvider()
+        .addMessage(bearerToken, widget.eventDetails, message);
+    setState(() {});
   }
 
-  final message = Message(text: commentText);
-  await CommentProvider().addMessage(bearerToken, widget.eventDetails, message);
-  setState(() {});
-}
   Future<List<Message>> getComment() async {
     final bearerToken = "Bearer " + Auth().token;
     return CommentProvider().getComment(bearerToken, widget.eventDetails);
@@ -61,7 +63,9 @@ Future<void> _sendMessage() async {
     return FutureBuilder<List<Message>>(
       future: getComment(),
       builder: (context, snapshot) {
-        if (snapshot.hasData) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return CircularProgressIndicator();
+        } else if (snapshot.hasData) {
           final messages = snapshot.data!;
           return Scaffold(
             appBar: AppBar(title: Text('Chat')),
@@ -101,9 +105,14 @@ Future<void> _sendMessage() async {
             ),
           );
         } else if (snapshot.hasError) {
-          return Center(child: Text('Error: ${snapshot.error}'));
+          return Text('Erreur : ${snapshot.error}');
         } else {
-          return Center(child: CircularProgressIndicator());
+          return Scaffold(
+            appBar: AppBar(title: Text('Chat')),
+            body: Center(
+              child: Text('Aucun commentaire trouvé'),
+            ),
+          );
         }
       },
     );

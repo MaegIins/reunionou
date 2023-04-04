@@ -68,6 +68,7 @@ class _LoginPageState extends State<LoginPage> {
   void _logout() {
     setState(() {
       Auth().token = "";
+      Auth().email = "";
     });
   }
 
