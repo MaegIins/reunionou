@@ -24,9 +24,23 @@
 
       </div>
     </div>
-    <div v-if="sharedLink">
-      <p>Lien d'invitation: <a :href="sharedLink" target="_blank">{{ sharedLink }}</a></p>
-      <button @click="copyToClipboard"><i class="bi bi-clipboard"></i></button>
+    <div v-if="sharedLink" class="modal" tabindex="-1" role="dialog">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title">Lien d'invitation</h5>
+            <button type="button" class="close" @click="closeModal">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+  <p class="link-container"><a :href="sharedLink" target="_blank">{{ sharedLink }}</a></p>
+</div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-primary" @click="copyToClipboard"><i class="bi bi-clipboard"></i></button>
+          </div>
+        </div>
+      </div>
     </div>
 
     <button v-if="userEmail === orgaMail" @click="createInvitation"><i class="bi bi-plus"></i></button>
@@ -55,6 +69,9 @@ export default {
         console.error("Erreur lors de la copie du lien :", error);
       });
     },
+    closeModal() {
+      this.sharedLink = "";
+    },
   },
 
   data() {
@@ -67,4 +84,40 @@ export default {
 
 </script>
 
-<style scoped></style>
+<style scoped>
+
+.modal-title {
+  color: black;
+}
+.modal {
+  display: block;
+  position: fixed;
+  z-index: 1;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+}
+
+.modal-dialog {
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+}
+
+.modal-content {
+  background-color: white;
+  padding: 20px;
+  border-radius: 4px;
+  width: 90%;
+  max-width: 500px;
+}
+
+.link-container {
+  word-break: break-all;
+  overflow-wrap: break-word;
+}
+</style>
