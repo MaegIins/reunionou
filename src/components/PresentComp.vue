@@ -34,16 +34,26 @@
             </button>
           </div>
           <div class="modal-body">
-  <p class="link-container"><a :href="sharedLink" target="_blank">{{ sharedLink }}</a></p>
-</div>
+            <p class="link-container"><a :href="sharedLink" target="_blank">{{ sharedLink }}</a></p>
+          </div>
           <div class="modal-footer">
-            <button type="button" class="btn btn-primary" @click="copyToClipboard"><i class="bi bi-clipboard"></i></button>
+            <button type="button" class="btn btn-primary" @click="copyToClipboard"><i
+                class="bi bi-clipboard"></i></button>
           </div>
         </div>
       </div>
     </div>
 
-    <button v-if="userEmail === orgaMail" @click="createInvitation"><i class="bi bi-plus"></i></button>
+    <button v-if="userEmail === orgaMail" @click="createInvitation"><i class="bi bi-share"></i></button>
+
+    <div v-if="userEmail === orgaMail" id="invite-user-form">
+      <input v-model="inviteEmail" type="email" placeholder="Inviter un utilisateur existant" />
+      <button @click="inviteExistingUser"><i class="bi bi-person-fill-add"></i></button>
+    </div>
+
+    <div v-if="errorMessage" class="error-message">{{ errorMessage }}</div>
+    <div v-if="confirmMessage" class="success-message">{{ confirmMessage }}</div>
+
   </div>
 </template>
 
@@ -54,6 +64,39 @@ export default {
   name: "PresentComp",
   props: ["listPpl", "organizer", "orgaMail", "userEmail"],
   methods: {
+
+    async inviteExistingUser() {
+      this.errorMessage = ""; // Réinitialise le message d'erreur
+
+      if (!this.inviteEmail) {
+        this.errorMessage = "Veuillez entrer une adresse e-mail.";
+        return;
+      }
+
+      try {
+        const response = await api.post("/invites/user", {
+          mail: this.inviteEmail,
+          event: this.$route.params.id,
+        });
+
+        if (response.data.type === "success") {
+          this.listPpl.push(response.data.attendee);
+          this.inviteEmail = "";
+          this.confirmMessage = "L'utilisateur " + response.data.attendee.name_user + " a été invité à l'événement.";
+        }
+      } catch (error) {
+        console.log(error);
+        if (error.response.data.details === "attendee already exist") {
+          this.errorMessage = "Le participant est déjà invité à cet événement.";
+        } else if (error.response.data.message.includes("is not orga of event")) {
+          this.errorMessage = "Vous n'êtes pas l'organisateur de cet événement.";
+        } else if (error.response.data.message === "USER IS NOT EXIST") {
+          this.errorMessage = "L'utilisateur n'existe pas.";
+        } else {
+          this.errorMessage = "Erreur lors de l'invitation de l'utilisateur.";
+        }
+      }
+    },
     async createInvitation() {
       try {
         const response = await api.get(`/events/${this.$route.params.id}/share`);
@@ -77,6 +120,9 @@ export default {
   data() {
     return {
       sharedLink: "",
+      inviteEmail: "",
+      errorMessage: "",
+      successMessage: "",
     };
   }
 
@@ -85,10 +131,10 @@ export default {
 </script>
 
 <style scoped>
-
 .modal-title {
   color: black;
 }
+
 .modal {
   display: block;
   position: fixed;
@@ -119,5 +165,15 @@ export default {
 .link-container {
   word-break: break-all;
   overflow-wrap: break-word;
+}
+
+.error-message {
+  color: red;
+  margin-top: 1rem;
+}
+
+.success-message {
+  color: green;
+  margin-top: 1rem;
 }
 </style>
