@@ -2,7 +2,7 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:partouille/models/Invite.dart';
 import 'package:partouille/models/event.dart';
-
+import 'package:partouille/models/inviteConfirm.dart';
 class InvitesProvider {
 
 
@@ -59,5 +59,31 @@ class InvitesProvider {
       throw Exception('Erreur lors de la récupération de la liste d\'invitations : ${response.statusCode}');
     }
   }
+
+
+  Future<void> reponseInvitation(String bearerToken, inviteConfirm inviteConfirm) async {
+    final url = 'http://localhost:3333/invites/confirm/user';
+    print(inviteConfirm.status);
+    final response = await http.post(
+      Uri.parse(url),
+      headers: {
+        'Authorization': bearerToken,
+        'Content-Type': 'application/json',
+      },
+      body: jsonEncode({
+        'event': inviteConfirm.idEvent,
+        'status': inviteConfirm.status,
+        'comment': inviteConfirm.comment,
+      }),
+    );
+
+    if (response.statusCode == 200) {
+      print('Réponse envoyée avec succès !');
+    } else {
+      print('Erreur lors de l\'envoi de la réponse : ${response.statusCode}');
+    }
+  }
 }
+
+
 
