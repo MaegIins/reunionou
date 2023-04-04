@@ -25,7 +25,7 @@
 
 
       <div>
-        <MapComp :eventPos="eventPosition"></MapComp>
+        <MapComp :eventPos="eventPosition"/>
       </div>
     </div>
 
