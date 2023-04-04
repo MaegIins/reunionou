@@ -6,7 +6,7 @@
 
       <div v-for="comment in commentsSorted" :key="comment.id_attendee" id="comment">
         <div id="commentHeader">
-          <p id="name">{{ comment.username }}</p>
+          <p>{{ comment.username }}</p>
           <p>{{ formatDate(comment.date) }}</p>
         </div>
         <div id="commentBody">

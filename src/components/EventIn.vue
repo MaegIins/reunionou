@@ -4,30 +4,32 @@
     <router-link to="/accueil">
       <h1>REUNIONOU.APP</h1>
     </router-link>
-    <div id="event-details">
-      <h2>{{ eventName }}</h2>
-      <h2>{{ formatDate(eventDate) }}</h2>
-    </div>
-
-
     <!-- <div id="boutons">
       <div>
         <button>Je viens !</button>
         <button>Je ne viens pas</button>
       </div>
     </div> -->
+    <div v-if="errorMessage">
+      <p>{{ errorMessage }}</p>
+    </div>
+    <div v-else id="content">
 
-    <div id="elements">
+      <div id="event-details">
+        <h2>{{ eventName }}</h2>
+        <h3>{{ formatDate(eventDate) }}</h3>
+      </div>
+      <div id="elements">
+        <PresentComp :listPpl="people" :organizer="organizerName" :orgaMail="organizerEmail" :userEmail="userEmail">
+        </PresentComp>
+        <CommentsComp :comments="comments" @send-comment="sendComment"></CommentsComp>
 
-
-      <PresentComp :listPpl="people" :organizer="organizerName" :orgaMail="organizerEmail" :userEmail="userEmail"></PresentComp>
-      <CommentsComp :comments="comments" @send-comment="sendComment"></CommentsComp>
-
-
-      <div>
-        <MapComp :eventPos="eventPosition"></MapComp>
+        <div>
+          <MapComp :eventPos="eventPosition"></MapComp>
+        </div>
       </div>
     </div>
+
 
   </div>
 </template>
@@ -73,6 +75,8 @@ export default {
         this.userEmail = response.data.mail;
       } catch (error) {
         console.log(error);
+        this.errorMessage = "Erreur lors de la récupération des informations utilisateur.";
+
       }
     },
 
@@ -85,6 +89,8 @@ export default {
         this.organizerName = response.data.event.name_orga;
       } catch (error) {
         console.log(error);
+        this.errorMessage = "Erreur lors de la récupération des informations de l'événement.";
+
       }
     },
     async sendComment(commentText) {
@@ -96,6 +102,8 @@ export default {
         this.comments.push(response.data);
       } catch (error) {
         console.log(error);
+        this.errorMessage = "Erreur lors de l'envoi du commentaire.";
+
       }
     },
 
@@ -105,6 +113,7 @@ export default {
         this.people = response.data;
       } catch (error) {
         console.log(error);
+
       }
     },
 
@@ -115,6 +124,7 @@ export default {
         this.comments = response.data;
       } catch (error) {
         console.log(error);
+        this.errorMessage = "Erreur lors de la récupération de la liste des commentaires.";
       }
     },
   },
@@ -138,6 +148,8 @@ export default {
       eventName: "",
       eventDate: "",
       organizerEmail: "",
+      organizerName: "",
+      errorMessage: "",
 
     };
   }
