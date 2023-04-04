@@ -36,6 +36,9 @@ import router from "@/router";
 export default {
   name: "AccueilApp",
   methods: {
+    /**
+     * Logout the user
+     */
     logout() {
       sessionStorage.removeItem("access_token");
       sessionStorage.removeItem("refresh_token");
