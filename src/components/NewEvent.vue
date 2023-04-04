@@ -28,6 +28,7 @@
       <p v-if="createEvent" class="ok">Evenement créé !</p>
       <p v-if="requestInvalid" class="error">Tout les champs doivent être renseignés</p>
       <p v-if="adressNotFound" class="error">Adresse introuvable</p>
+      <p v-if="dateLower" class="error">La date ne doit pas être dans le passé</p>
     </div>
 
   </div>
@@ -51,6 +52,7 @@ export default {
       createEvent: false,
       requestInvalid: false,
       adressNotFound: false,
+      dateLower: false,
       currentDate: new Date().toISOString().substr(0, 10)
     };
   },
@@ -75,6 +77,7 @@ export default {
       this.createEvent = false
       this.requestInvalid = false
       this.requestInvalid = false
+      this.dateLower = false
 
 
       if (this.selectOptions === "newPlace") {
@@ -97,6 +100,8 @@ export default {
             this.requestInvalid = true
           } else if (error.request.status === 404) {
             this.adressNotFound = true
+          }else if(error.request.status === 409){
+            this.dateLower = true
           }
         }
 
@@ -120,6 +125,8 @@ export default {
             this.requestInvalid = true
           } else if (error.request.status === 404) {
             this.adressNotFound = true
+          }else if(error.request.status === 409){
+            this.dateLower = true
           }
         }
       }
@@ -127,11 +134,6 @@ export default {
 
 
       this.name_place = ""
-      if (error.request.status === 400 || error.request.status === 500) {
-        this.requestInvalid = true
-      } else if (error.request.status === 404) {
-        this.adressNotFound = true
-      }
     }
   },
   mounted() {
