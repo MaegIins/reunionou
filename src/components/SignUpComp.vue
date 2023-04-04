@@ -22,7 +22,7 @@
 </template>
 
 <script>
-import axios from "axios";
+import api from "../api";
 import "../assets/style/signUp.css"
 export default {
   name: "SignUpComp",
@@ -66,8 +66,8 @@ export default {
         return;
       }
 
-      axios
-        .post("http://localhost:3333/auth/signup", {
+      api
+        .post("auth/signup", {
           name: this.name,
           mail: this.email,
           password: this.password,

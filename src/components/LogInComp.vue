@@ -13,7 +13,7 @@
 </template>
 
 <script>
-import axios from "axios";
+import api from "../api";
 import "../assets/style/loginComp.css"
 
 export default {
@@ -38,9 +38,9 @@ export default {
       this.$refs.pwd.focus();
     },
     logIn() {
-      axios
+      api
         .post(
-          "http://localhost:3333/auth/signin",
+          "auth/signin",
           {
             email: this.email,
             password: this.password,
