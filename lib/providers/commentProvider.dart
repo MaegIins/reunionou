@@ -41,7 +41,7 @@ class CommentProvider with ChangeNotifier {
       "Authorization": bearerToken
     });
 
-    if (response.statusCode == 200) {
+    if (response.statusCode == 201 || response.statusCode == 302) {
       // Fetch the updated message list from the server
 
       final updatedMessages = await getComment(bearerToken, idevent);
