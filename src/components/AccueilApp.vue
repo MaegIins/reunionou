@@ -17,7 +17,7 @@
 
     <div class="login">
       <div v-if="logged">
-        <a @click="this.$router.push('#')">SE DÉCONNECTER</a>
+        <a @click="logout()">SE DÉCONNECTER</a>
       </div>
       <div v-else>
         <a @click="this.$router.push('/login')">SE CONNECTER</a>
@@ -36,6 +36,11 @@ import router from "@/router";
 export default {
   name: "AccueilApp",
   methods: {
+    logout() {
+      sessionStorage.removeItem("access_token");
+      sessionStorage.removeItem("refresh_token");
+      this.$router.push('/login');
+    },
     router() {
       return router
     }

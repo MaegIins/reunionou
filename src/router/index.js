@@ -14,6 +14,7 @@ import NewEvent from "@/components/NewEvent.vue";
 import ErrorFourOFour from "@/components/ErrorFourOFour.vue";
 import InviteComp from "@/components/InviteComp.vue";
 
+
 const routes = [
     {name: 'Main', path: '/', component: AccueilApp},
     {name: 'AccueilApp', path: '/accueil', component: AccueilApp},
@@ -23,6 +24,7 @@ const routes = [
     {name: 'ListEvents', path: '/liste', component: ListEvents},
     {name: 'NewReunion', path: '/newreunion', component: NewEvent},
     {name: 'invite', path: '/invites', component: InviteComp},
+
 
 
     // Always leave this as last one,
