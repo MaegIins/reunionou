@@ -1,20 +1,37 @@
 <template>
     <div id="inviteComp">
         <h1 @click="this.$router.push('/accueil')">REUNIONOU.APP</h1>
+        <div v-if="errorMessage">
+            <h2>{{ errorMessage }}</h2>
+        </div>
+        <div v-else>
 
-        <div>
             <h2>Vous êtes invité à un évènement</h2>
             <h3>{{ eventName }}</h3>
-            <h4>{{ formatDate(eventDate) }}</h4>
+            <p>Organisé par {{ organizerName }} ({{ organizerEmail }})</p>
+            <h4>Le {{ formatDate(eventDate) }}</h4>
 
-            <p>{{ description }}</p>
+            <p>Description : {{ description }}</p>
 
-            <div id="boutons">
-                <div>
-                    <button @click="">Je viens !</button>
-                    <button @click="">Je ne viens pas</button>
-                </div>
+            <div v-if="!showForm">
+                <button @click="showConfirmationForm(true)">Je confirme ma présence</button>
+                <button @click="showConfirmationForm(false)">Je ne viens pas</button>
             </div>
+
+            <form v-if="showForm" @submit.prevent>
+                <label for="name">Nom :</label>
+                <input type="text" id="name" v-model="name" required />
+
+                <label for="mail">E-mail :</label>
+                <input type="email" id="mail" v-model="mail" required />
+
+                <label for="comment">Détails :</label>
+                <textarea id="comment" v-model="comment" required></textarea>
+
+                <button type="submit" @click="confirm">Envoyer</button>
+            </form>
+
+            <div v-if="responseMessage">{{ responseMessage }}</div>
 
             <div class="map-container">
                 <h2>Lieu de la réunion</h2>
@@ -44,6 +61,13 @@ export default {
             namePlace: "",
             adressPlace: "",
             map: null,
+            name: "",
+            mail: "",
+            comment: "",
+            showForm: false,
+            attending: false,
+            responseMessage: "",
+            errorMessage: "",
         };
     },
     methods: {
@@ -81,6 +105,11 @@ export default {
                 })
                 .catch((error) => {
                     console.log(error);
+                    if (error.response) {
+                        this.errorMessage = "L'invitation est expirée ou invalide.";
+                    } else {
+                        this.errorMessage = "Une erreur est survenue. Veuillez réessayer.";
+                    }
                 });
         },
 
@@ -95,6 +124,34 @@ export default {
             eventMarker
                 .bindPopup(`<h2>${this.namePlace}</h2><p>${this.adressPlace}</p>`)
                 .openPopup();
+        },
+        showConfirmationForm(attending) {
+            this.showForm = true;
+            this.attending = attending;
+        },
+
+        async confirm() {
+            try {
+                const response = await api.post("/invites/confirm", {
+                    key: this.key,
+                    status: this.attending,
+                    name: this.name,
+                    mail: this.mail,
+                    comment: this.comment,
+                });
+
+                if (response.status >= 400) {
+                    this.responseMessage = "Une erreur est survenue. Veuillez réessayer.";
+                } else if (response.data.type === "success") {
+                    this.responseMessage = `Confirmation ${this.attending ? "de présence" : "d'absence"
+                        } envoyée avec succès.`;
+                } else {
+                    this.responseMessage = "Une erreur est survenue. Veuillez réessayer.";
+                }
+            } catch (error) {
+                console.log(error);
+                this.responseMessage = "Une erreur est survenue. Veuillez réessayer.";
+            }
         },
     },
     computed: {
