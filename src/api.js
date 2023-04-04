@@ -45,6 +45,7 @@ api.interceptors.response.use(
           }
 
           sessionStorage.setItem('access_token', data.access_token);
+          sessionStorage.setItem('refresh_token', data.refresh_token);
           originalRequest.headers.Authorization = `Bearer ${data.access_token}`;
 
           // Réessayez la requête originale avec le nouveau access token.
@@ -56,7 +57,7 @@ api.interceptors.response.use(
         }
       } else {
         // Si le refreshToken n'est pas présent, redirigez l'utilisateur vers la page de connexion.
-       window.location.href = '/login?error=refresh1';
+      window.location.href = '/login?error=refresh1';
       }
     }
 
