@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:partouille/Singleton/Auth.dart';
-import 'package:partouille/models/AuthCheck.dart';
 import '../models/event.dart';
-import '../providers/auth_provider.dart';
 import 'ChatWidget.dart';
 import 'EventParticipantsPage.dart';
 import 'InvitePage.dart';
