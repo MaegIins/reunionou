@@ -12,6 +12,7 @@ import SignUpComp from "@/components/SignUpComp.vue";
 import ListEvents from "@/components/ListEvents.vue";
 import NewEvent from "@/components/NewEvent.vue";
 import ErrorFourOFour from "@/components/ErrorFourOFour.vue";
+import InviteComp from "@/components/InviteComp.vue";
 
 const routes = [
     {name: 'Main', path: '/', component: AccueilApp},
@@ -21,9 +22,10 @@ const routes = [
     {name: 'SignUp', path: '/signup', component: SignUpComp},
     {name: 'ListEvents', path: '/liste/:idUser', component: ListEvents},
     {name: 'NewReunion', path: '/newreunion', component: NewEvent},
+    {name: 'invite', path: '/invites', component: InviteComp},
 
 
-
+    // Always leave this as last one,
     {name: 'Error404', path: '/:pathMatch(.*)*', component: ErrorFourOFour}
 ]
 
