@@ -9,7 +9,8 @@ import 'home_Page.dart';
 class InviteDetailsPage extends StatefulWidget {
   final Invite inviteDetails;
 
-  const InviteDetailsPage({Key? key, required this.inviteDetails}) : super(key: key);
+  const InviteDetailsPage({Key? key, required this.inviteDetails})
+      : super(key: key);
 
   @override
   _InviteDetailsPageState createState() => _InviteDetailsPageState();
@@ -34,31 +35,35 @@ class _InviteDetailsPageState extends State<InviteDetailsPage> {
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-               ElevatedButton(
-  onPressed: () {
-    setState(() {
-      _selectedOption = true;
-    });
-  },
-  style: ElevatedButton.styleFrom(
-    primary: _selectedOption == true ? Colors.green.shade800 : Colors.green,
-    padding: EdgeInsets.symmetric(horizontal: 50, vertical: 20),
-  ),
-  child: Text('Je viens'),
-),
-SizedBox(width: 20),
-ElevatedButton(
-  onPressed: () {
-    setState(() {
-      _selectedOption = false;
-    });
-  },
-  style: ElevatedButton.styleFrom(
-    primary: _selectedOption == false ? Colors.red.shade800 : Colors.red,
-    padding: EdgeInsets.symmetric(horizontal: 50, vertical: 20),
-  ),
-  child: Text('Je ne viens pas'),
-),
+                ElevatedButton(
+                  onPressed: () {
+                    setState(() {
+                      _selectedOption = true;
+                    });
+                  },
+                  style: ElevatedButton.styleFrom(
+                    primary: _selectedOption == true
+                        ? Colors.green.shade800
+                        : Colors.green,
+                    padding: EdgeInsets.symmetric(horizontal: 50, vertical: 20),
+                  ),
+                  child: Text('Je viens'),
+                ),
+                SizedBox(width: 20),
+                ElevatedButton(
+                  onPressed: () {
+                    setState(() {
+                      _selectedOption = false;
+                    });
+                  },
+                  style: ElevatedButton.styleFrom(
+                    primary: _selectedOption == false
+                        ? Colors.red.shade800
+                        : Colors.red,
+                    padding: EdgeInsets.symmetric(horizontal: 50, vertical: 20),
+                  ),
+                  child: Text('Je ne viens pas'),
+                ),
               ],
             ),
             SizedBox(height: 20),
@@ -83,7 +88,8 @@ ElevatedButton(
                     status: _selectedOption!,
                     comment: _comment ?? '',
                   );
-                  InvitesProvider().reponseInvitation(bearerToken, InviteConfirm);
+                  InvitesProvider()
+                      .reponseInvitation(bearerToken, InviteConfirm);
 
                   // Afficher un message contextuel sur la page de redirection
                   ScaffoldMessenger.of(context).showSnackBar(

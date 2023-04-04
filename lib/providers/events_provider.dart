@@ -45,7 +45,8 @@ class EventsProvider {
       }).toList();
       return events;
     } else {
-      throw Exception('Failed to load events data');
+      final List<event> events = [];
+      return events;
     }
   }
 

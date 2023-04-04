@@ -1,7 +1,9 @@
 import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
-import 'package:partouille/Singleton/Auth.dart';
+
+import '../Singleton/Auth.dart';
 
 // Endpoint du serveur Node.js pour générer les tokens
 const String tokenEndpoint = "http://localhost:3333/auth/signin";
@@ -16,9 +18,6 @@ class _LoginPageState extends State<LoginPage> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   final TextEditingController _usernameController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
-
-  // Le token d'authentification généré par le serveur Node.js
-  //late String _token = "";
 
   // La fonction de connexion qui envoie les informations d'identification au serveur Node.js pour vérification
   Future<void> _login() async {
@@ -37,34 +36,27 @@ class _LoginPageState extends State<LoginPage> {
     // Si les informations d'identification sont valides, stockez le token d'authentification localement
     if (response.statusCode == 200) {
       final Map<String, dynamic> data = json.decode(response.body);
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text("Connexion réussie !"),
+          backgroundColor: Colors.green,
+        ),
+      );
       setState(() {
         Auth().token = data["access_token"];
         Auth().email = username;
       });
     } else {
       // Si les informations d'identification ne sont pas valides, afficher un message d'erreur
-      // ignore: use_build_context_synchronously
-      showDialog(
-        context: context,
-        builder: (BuildContext context) {
-          return AlertDialog(
-            title: Text("Erreur de connexion"),
-            content: Text("Nom d'utilisateur ou mot de passe incorrect."),
-            actions: <Widget>[
-              ElevatedButton(
-                child: Text("OK"),
-                onPressed: () {
-                  Navigator.of(context).pop();
-                },
-              ),
-            ],
-          );
-        },
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text("Nom d'utilisateur ou mot de passe incorrect."),
+          backgroundColor: Colors.red,
+        ),
       );
     }
   }
 
-  // La fonction de déconnexion qui supprime le token d'authentification stocké localement
   void _logout() {
     setState(() {
       Auth().token = "";
@@ -74,74 +66,99 @@ class _LoginPageState extends State<LoginPage> {
 
   @override
   Widget build(BuildContext context) {
-    // Si l'utilisateur est déjà connecté, afficher une page de bienvenue
-    if (Auth().token != "") {
-      return Scaffold(
-        appBar: AppBar(
-          title: Text("Bienvenue"),
-          actions: <Widget>[
-            IconButton(
-              icon: Icon(Icons.logout),
-              onPressed: () {
-                _logout();
-              },
+    return Scaffold(
+      appBar: Auth().token != ""
+          ? AppBar(
+              title: const Text("Bienvenue"),
+              actions: <Widget>[
+                IconButton(
+                  icon: const Icon(Icons.logout),
+                  onPressed: () {
+                    _logout();
+                  },
+                ),
+              ],
+            )
+          : AppBar(
+              title: const Text("Page de connexion"),
             ),
-          ],
-        ),
-        body: Center(
-          child: Text("Vous êtes connecté !"),
-        ),
-      );
-    } else {
-      // Si l'utilisateur n'est pas encore connecté, afficher la page de connexion
-      return Scaffold(
-        appBar: AppBar(
-          title: Text("Page de connexion"),
-        ),
-        body: SingleChildScrollView(
-          child: Padding(
-            padding: EdgeInsets.all(16.0),
-            child: Form(
-              key: _formKey,
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                children: <Widget>[
-                  TextFormField(
-                    controller: _usernameController,
-                    decoration: InputDecoration(labelText: "Nom d'utilisateur"),
-                    validator: (value) {
-                      if (value?.isEmpty ?? true) {
-                        return "Veuillez entrer un message";
-                      }
-                      return null;
-                    },
-                  ),
-                  TextFormField(
-                    controller: _passwordController,
-                    obscureText: true,
-                    decoration: InputDecoration(labelText: "Mot de passe"),
-                    validator: (value) {
-                      if (value?.isEmpty ?? true) {
-                        return "Veuillez entrer un mot de passe";
-                      }
-                      return null;
-                    },
-                  ),
-                  SizedBox(height: 20),
-                  ElevatedButton(
-                    onPressed: () {
-                      if (_formKey.currentState!.validate()) {
-                        _login();
-                      }
-                    },
-                    child: Text("Se connecter"),
-                  ),
-                ],
+      body: SafeArea(
+        child: Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              const Text(
+                "Page de connexion",
+                style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                  fontSize: 28.0,
+                ),
               ),
-            ),
+              const SizedBox(height: 32.0),
+              Auth().token != ""
+                  ? Expanded(
+                      child: Center(
+                        child: const Text(
+                          "Vous êtes connecté",
+                          style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            fontSize: 28.0,
+                          ),
+                        ),
+                      ),
+                    )
+                  : Form(
+                      key: _formKey,
+                      child: Column(
+                        children: [
+                          TextFormField(
+                            controller: _usernameController,
+                            decoration: const InputDecoration(
+                              labelText: "Nom d'utilisateur",
+                              border: OutlineInputBorder(),
+                            ),
+                            validator: (value) {
+                              if (value?.isEmpty ?? true) {
+                                return "Veuillez entrer un nom d'utilisateur";
+                              }
+                              return null;
+                            },
+                          ),
+                          const SizedBox(height: 16.0),
+                          TextFormField(
+                            controller: _passwordController,
+                            obscureText: true,
+                            decoration: const InputDecoration(
+                              labelText: "Mot de passe",
+                              border: OutlineInputBorder(),
+                            ),
+                            validator: (value) {
+                              if (value?.isEmpty ?? true) {
+                                return "Veuillez entrer un mot de passe";
+                              }
+                              return null;
+                            },
+                          ),
+                          const SizedBox(height: 32.0),
+                          SizedBox(
+                            width: double.infinity,
+                            child: ElevatedButton(
+                              onPressed: () {
+                                if (_formKey.currentState!.validate()) {
+                                  _login();
+                                }
+                              },
+                              child: const Text("Se connecter"),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+            ],
           ),
         ),
-      );
-    }
+      ),
+    );
   }
 }
