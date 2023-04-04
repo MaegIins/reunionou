@@ -44,7 +44,7 @@ export default {
   props: {},
   data() {
     return {
-      logged : false,
+      logged : true,
     };
   },
 }

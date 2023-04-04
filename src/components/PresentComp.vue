@@ -4,7 +4,7 @@
     <div id="everyPpl">
 
       <div class="people" id="organizer">
-        <p>{{ organizer }} - {{ orgaMail }}</p>
+        <p>{{ organizer }}</p>
         <i class="bi bi-star-fill"></i>
       </div>
       <div v-for="person in listPpl" :key="person.id" id="pplin">
