@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import '../models/Invite.dart';
 import '../Singleton/Auth.dart';
-import 'package:partouille/providers/invites_provider.dart';
+import '../providers/invites_provider.dart';
 import '../models/inviteConfirm.dart';
 import 'invitation_list.dart';
 
