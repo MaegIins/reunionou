@@ -17,10 +17,10 @@ import InviteComp from "@/components/InviteComp.vue";
 const routes = [
     {name: 'Main', path: '/', component: AccueilApp},
     {name: 'AccueilApp', path: '/accueil', component: AccueilApp},
-    {name: 'InsideEvent', path: '/reunion/:id', component: EventIn},
+    {name: 'InsideEvent', path: '/events/:id', component: EventIn},
     {name: 'LogIn', path: '/login', component: LogInComp},
     {name: 'SignUp', path: '/signup', component: SignUpComp},
-    {name: 'ListEvents', path: '/liste/:idUser', component: ListEvents},
+    {name: 'ListEvents', path: '/liste', component: ListEvents},
     {name: 'NewReunion', path: '/newreunion', component: NewEvent},
     {name: 'invite', path: '/invites', component: InviteComp},
 

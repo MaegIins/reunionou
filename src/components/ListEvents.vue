@@ -1,26 +1,29 @@
 <template>
   <div id="ListEvents">
-    <router-link class="router" to="/accueil/"><h1>REUNIONOU.APP</h1></router-link>
-    <button>Nouvelle réunion</button>
+    <router-link class="router" to="/accueil/">
+      <h1>REUNIONOU.APP</h1>
+    </router-link>
+    <router-link class="router" to="/newreunion/">
+      <button>Nouvelle réunion</button>
+    </router-link>
 
     <div id="events">
       <div v-for="event in eventsSorted">
-        <router-link class="router" :to="'/reunion/'+event.idEvent">
-          <div class="event" v-if="isDatePassed(event.date)">
-            <h2>{{ event.name }}</h2>
-            <p>{{ event.description }}</p>
-            <p>{{ displayCorrectDate(event.date) }}</p>
+        <router-link class="router" :to="event.links.self.href">
+          <div class="event" v-if="isDatePassed(event.event.date)">
+            <h2>{{ event.event.name }}</h2>
+            <p>{{ event.event.description }}</p>
+            <p>{{ displayCorrectDate(event.event.date) }}</p>
           </div>
           <div class="event" id="oldEvent" v-else>
-            <h2>{{ event.name }} c</h2>
-            <p>{{ event.description }}</p>
-            <p>{{ displayCorrectDate(event.date) }}</p>
+            <h2>{{ event.event.name }}</h2>
+            <p>{{ event.event.description }}</p>
+            <p>{{ displayCorrectDate(event.event.date) }}</p>
           </div>
         </router-link>
       </div>
     </div>
   </div>
-
 </template>
 
 <script>
@@ -38,23 +41,24 @@ export default {
   mounted() {
     this.getEvents();
   },
+
   computed: {
     eventsSorted() {
       return this.events.sort((a, b) => {
-        const [jourA, moisA, anneeA] = a.date.split('/');
-        const [jourB, moisB, anneeB] = b.date.split('/');
+        const [jourA, moisA, anneeA] = a.event.date.split('/');
+        const [jourB, moisB, anneeB] = b.event.date.split('/');
         const dateA = new Date(parseInt(anneeA), parseInt(moisA) - 1, parseInt(jourA));
         const dateB = new Date(parseInt(anneeB), parseInt(moisB) - 1, parseInt(jourB));
         return dateA - dateB;
       });
     },
-
   },
   methods: {
     async getEvents() {
       try {
         const response = await api.get('/events');
-        this.events = response.data;
+        this.events = response.data.events;
+        console.log(this.events)
       } catch (error) {
         console.log(error);
       }
@@ -73,10 +77,8 @@ export default {
       const today = new Date();
       return dateToCheck > today;
     }
-  }
+  },
 }
 </script>
 
-<style scoped>
-
-</style>
+<style scoped></style>
