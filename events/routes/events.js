@@ -111,7 +111,7 @@ router.get('/:id', async (req, res, next) => {
                             }
                         }
                     });
-                    
+
                 } else {
                     res.status(200).json({
                         event: {
@@ -265,6 +265,17 @@ router.post('/', async (req, res, next) => {
                             'mail_orga': mailOrga,
                             'id_place': place[0].id
                         });
+                        try {
+                            await db('Attendee').insert({
+                                'id_event': uuid,
+                                'name_user': nameOrga,
+                                'mail_user': mailOrga,
+                                'status': 3,
+                            });
+                        } catch (error) {
+                            res.status(500).json({ type: "error", error: 500, message: "server error", details: error });
+                            next(error);
+                        }
                         // Retourne un code 201 (created) et Location sur /events/{id}
                         res.status(201).set('Location', '/events/' + uuid).json({ type: "sucess", error: 201, message: "CREATED" });
                     } else {
@@ -296,7 +307,15 @@ router.post('/', async (req, res, next) => {
                                     'name_orga': nameOrga,
                                     'mail_orga': mailOrga,
                                     'id_place': uuidPlace
+                                })
+                                
+                                await db('Attendee').insert({
+                                    'id_event': uuid,
+                                    'name_user': nameOrga,
+                                    'mail_user': mailOrga,
+                                    'status': 3,
                                 });
+    
                                 // Retourne un code 201 (created) et Location sur /events/{id}
                                 res.status(201).set('Location', '/events/' + uuid).json({ type: "sucess", error: 201, message: "CREATED" });
                             } else {
