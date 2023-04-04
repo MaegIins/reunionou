@@ -1,26 +1,24 @@
 <template>
-  <div id="inviteComp">
+    <div id="inviteComp">
 
-      <h1 @click="this.$router.push('/accueil')">REUNIONOU.APP</h1>
+        <h1 @click="this.$router.push('/accueil')">REUNIONOU.APP</h1>
 
-      <div>
-          <h2>{{ eventName }}</h2>
-          <h2>{{ formatDate(eventDate) }}</h2>
+        <div>
+            <h2>{{ eventName }}</h2>
+            <h2>{{ formatDate(eventDate) }}</h2>
 
-          <p>{{description}}</p>
-
-
-          <div id="boutons">
-              <div>
-                  <button @click="">Je viens !</button>
-                  <button @click="">Je ne viens pas</button>
-              </div>
-          </div>
-
-          <MapComp :eventPos="eventPosition"></MapComp>
-      </div>
+            <p>{{ description }}</p>
 
 
+            <div id="boutons">
+                <div>
+                    <button @click="">Je viens !</button>
+                    <button @click="">Je ne viens pas</button>
+                </div>
+            </div>
+
+            <MapComp :eventPos="eventPosition"></MapComp>
+        </div>
 
 
 
@@ -32,21 +30,15 @@
 
 
 
-  </div>
-
-
-
-
-
-
+    </div>
 </template>
 
 <script>
 import MapComp from "@/components/MapComp.vue";
 export default {
     name: "InviteComp",
-    components: {MapComp},
-    data(){
+    components: { MapComp },
+    data() {
         return {
             idEvent: this.$route.params.id,
             eventName: "",
@@ -60,12 +52,24 @@ export default {
 
         }
     },
-    methods:{
-        formatDate(date){
+    methods: {
+        formatDate(date) {
             return date;
 
         }
     },
+    computed: {
+        key() {
+            // Accéder au paramètre de requête key
+            return this.$route.query.key;
+        }
+
+    },
+    mounted() {
+
+        console.log("La clé est :", this.key);
+
+    }
 }
 </script>
 
@@ -74,5 +78,4 @@ MapComp {
     height: 500px;
     width: 500px;
 }
-
 </style>
