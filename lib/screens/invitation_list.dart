@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:partouille/providers/invites_provider.dart';
 import 'package:partouille/models/Invite.dart';
 import '../Singleton/Auth.dart';
+import 'invite_details.dart';
 
 class InvitationListPage extends StatefulWidget {
   const InvitationListPage({Key? key}) : super(key: key);
@@ -37,9 +38,17 @@ class _InvitationListPageState extends State<InvitationListPage> {
                 itemCount: invites.length,
                 itemBuilder: (BuildContext context, int index) {
                   final invite = invites[index];
-                  return ListTile(
-                    title: Text(invite.name!),
-                    subtitle: Text('repondre à cette invitation '),
+                  return GestureDetector(
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) => InviteDetailsPage( inviteDetails : invite)),
+                      );
+                    },
+                    child: ListTile(
+                      title: Text(invite.name ?? ''),
+                      subtitle: Text('répondre à cette invitation'),
+                    ),
                   );
                 },
                 separatorBuilder: (BuildContext context, int index) => Divider(color: Colors.transparent),

@@ -4,6 +4,8 @@ import '../models/event.dart';
 import 'ChatWidget.dart';
 import 'EventParticipantsPage.dart';
 import 'InvitePage.dart';
+import '../providers/auth_provider.dart';
+
 class EventDetailsPage extends StatelessWidget {
   final event? eventDetails;
 
@@ -142,7 +144,7 @@ class EventDetailsPage extends StatelessWidget {
       },
       child: Text('Voir les commentaires'),
     ),
-    SizedBox(height: 16),
+      SizedBox(height: 16),
      ElevatedButton(
                 onPressed: () {
                   Navigator.push(

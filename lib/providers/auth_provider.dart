@@ -1,9 +1,10 @@
+
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 import '../models/auth.dart';
 
 class AuthProvider {
-  Future<Auth> get(String bearerToken) async {
+  Future<AuthCheck> getAuth(String bearerToken) async {
     final url = Uri.parse('http://localhost:3333/auth/validate');
     final response = await http.get(
       url,
@@ -15,7 +16,7 @@ class AuthProvider {
     }
 
     final jsonData = jsonDecode(response.body);
-    return Auth(
+    return AuthCheck(
       userId: jsonData['userId'],
       email: jsonData['email'],
       name: jsonData['name'],
