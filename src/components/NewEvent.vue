@@ -29,16 +29,18 @@
       <p v-if="requestInvalid" class="error">Tout les champs doivent être renseignés</p>
       <p v-if="adressNotFound" class="error">Adresse introuvable</p>
     </div>
-
+<LogoutComp/>
   </div>
 </template>
 
 <script>
 import api from '../api';
 import "./../assets/style/NewEvent.css";
+import LogoutComp from "@/components/LogoutComp.vue";
 
 export default {
   name: "NewEvent",
+    components: {LogoutComp},
   data() {
     return {
       selectOptions: '',

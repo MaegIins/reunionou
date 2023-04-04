@@ -29,6 +29,8 @@
       </div>
     </div>
 
+      <LogoutComp/>
+
   </div>
 </template>
 
@@ -38,6 +40,7 @@ import "./../assets/style/EventIn.css";
 import router from "@/router";
 import PresentComp from "@/components/PresentComp.vue";
 import CommentsComp from "@/components/CommentsComp.vue";
+import LogoutComp from "@/components/LogoutComp.vue";
 
 
 import MapComp from "@/components/MapComp.vue";
@@ -45,7 +48,7 @@ import MapComp from "@/components/MapComp.vue";
 
 export default {
   name: "EventIn",
-  components: { CommentsComp, PresentComp, MapComp, Map },
+  components: {LogoutComp, CommentsComp, PresentComp, MapComp, Map },
   methods: {
     formatDate(dateString) {
       const date = new Date(dateString);

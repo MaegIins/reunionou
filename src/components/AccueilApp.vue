@@ -4,6 +4,8 @@
 
     <div id="main">
       <h1>REUNIONOU.app</h1>
+        <h2>Reunionou.app est une application qui permet à des groupes de personnes (famille, amis,
+            groupe de collègues) de se fixer un rendez-vous en un lieu déterminé et d'organiser ce rendez-vous.</h2>
       <div v-if="logged">
         <button @click="this.$router.push('/newreunion')">NOUVELLE RÉUNION</button>
         <button @click="this.$router.push('/liste/')">MES RÉUNIONS</button>

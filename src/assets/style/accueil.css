@@ -25,6 +25,15 @@
   margin: 0;
   padding: 0;
 }
+.accueil #main h2 {
+  font-size: 1.5rem;
+  font-family: "Arial", sans-serif;
+  color: #fdfdfd;
+  text-align: center;
+  margin-bottom: 10px;
+  padding: 0;
+  width: 70%;
+}
 .accueil #main div {
   display: flex;
   flex-direction: column;
@@ -71,4 +80,6 @@
 }
 .accueil .login * {
   color: #fdfdfd;
-}/*# sourceMappingURL=accueil.css.map */
+}
+
+/*# sourceMappingURL=accueil.css.map */
