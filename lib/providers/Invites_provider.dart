@@ -22,9 +22,10 @@ class InvitesProvider {
     );
 
     if (response.statusCode == 200) {
+      print(response.statusCode);
       print('Invitation envoyée avec succès !');
     } else {
-      print('Erreur lors de l\'envoi de l\'invitation : ${response.statusCode}');
+      throw Exception('Erreur lors de l\'envoi de l\'invitation : ${response.statusCode}');
     }
   }
 
