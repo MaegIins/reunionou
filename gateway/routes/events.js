@@ -92,8 +92,9 @@ router.get('/:id/attendees', async (req, res, next) => {
     try {
         await axios.get('http://auth:3000/validate', { headers: { 'Authorization': req.headers.authorization } })
             .then(async (response) => {
+                const userEmail = response.data.mail;
                 try {
-                    await axios.get('http://events:3000/events/' + req.params.id + '/attendees')
+                    await axios.get('http://events:3000/events/' + req.params.id + '/attendees', { headers: { 'user-email': userEmail } })
                         .then((response) => {
                             res.json(response.data);
                         })

@@ -82,7 +82,6 @@ router.get('/:id', async (req, res, next) => {
     try {
         const { id } = req.params;
         const userEmail = req.headers['user-email'];
-        console.log("userEmail", userEmail);
 
         // Si l'utilisateur participe à l'événement ou qu'il est l'organisateur
         const attendingEvent = await db.select('id_event').from('Attendee').where({ mail_user: userEmail, id_event: id });
@@ -197,8 +196,9 @@ router.get('/:id/share', async (req, res, next) => {
 router.get('/:id/attendees', async (req, res, next) => {
     try {
         const { id } = req.params;
+        const userEmail = req.headers['user-email'];
 
-        //verifie que l'utilisateur a renseigner un id d'event
+        //verifie que l'utilisateur a renseigné un id d'event
         if (id !== undefined) {
             const result = validUuid.validate(id)
             //on regarde si id saisie est un uuid valide
@@ -206,17 +206,22 @@ router.get('/:id/attendees', async (req, res, next) => {
                 //si non valide on renvoie une erreur
                 res.status(404).json({ type: "error", error: 404, message: "Event not found : " + id });
             } else {
-                //sinon on interroge la base de données 
-                const attendee = await db.select("name_user", "mail_user", "status").from('Attendee').where({ id_event: id })
+                const attendingEvent = await db.select('id_event').from('Attendee').where({ mail_user: userEmail, id_event: id });
+                const organizedEvent = await db.select('id').from('Event').where({ mail_orga: userEmail, id: id });
 
-                //on regarde si il y a des participant dans l'evenement
-                if (attendee.length !== 0) {//si oui on retourne les participants
-                    res.status(200).json(attendee)
-                } else { //sinon on renvoie une erreur
-                    res.status(400).json({ type: "error", error: 404, message: "No attendee" });
+                if (attendingEvent.length > 0 || organizedEvent.length > 0) {
+                    const attendee = await db.select("name_user", "mail_user", "status").from('Attendee').where({ id_event: id })
+                    if (attendee.length !== 0) {
+                        res.status(200).json(attendee)
+                    } else {
+                        res.status(400).json({ type: "error", error: 404, message: "No attendee" });
+                    }
+                } else {
+                    res.status(403).json({ type: "error", error: 403, message: "access denied, user is not participating in this event" });
                 }
             }
-        } else {//l'id n'est pas renseigné
+        }
+        else {
             res.status(400).json({ type: "error", error: 400, message: "The request is invalid" });
         }
     } catch (error) {
@@ -228,7 +233,7 @@ router.get('/:id/attendees', async (req, res, next) => {
 /**
  * Route qui permet de créer un event
  * Les champs doivent etre rensigné obligatoirement : title, description, date/time, name_place, adress:street/city
- * Renseigné tjr une adresse meme si le lieu existe deja
+ * Renseigner tjrs une adresse meme si le lieu existe deja
  */
 router.post('/', async (req, res, next) => {
     try {
