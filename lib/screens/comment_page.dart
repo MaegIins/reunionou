@@ -55,11 +55,9 @@ class _ChatWidgetState extends State<ChatWidget> {
 
   Future<List<Message>> getComment() async {
     final bearerToken = "Bearer " + Auth().token;
-    print(CommentProvider().getComment(bearerToken, widget.eventDetails));
     return CommentProvider().getComment(bearerToken, widget.eventDetails);
   }
 
-  @override
   @override
   Widget build(BuildContext context) {
     return FutureBuilder<List<Message>>(

@@ -19,32 +19,35 @@ class CommentProvider with ChangeNotifier {
 
     if (response.statusCode == 200) {
       final List<dynamic> messageJson = jsonDecode(response.body);
-      final List<Message> messages = messageJson.map((json) => Message.fromJson(json)).toList();
+      final List<Message> messages =
+          messageJson.map((json) => Message.fromJson(json)).toList();
       _messages = messages;
       notifyListeners();
       return messages;
     } else {
-      throw Exception('Failed to load events data');
+      return [];
     }
   }
 
-Future<void> addMessage(String bearerToken, event? idevent, Message message) async {
-  final url = 'http://localhost:3333/comments/add';
-  final response = await http.post(Uri.parse(url), body: {
-    'id_event': idevent?.id,
-    'text': message.text,
-  }, headers: <String, String>{"Authorization": bearerToken});
+  Future<void> addMessage(
+      String bearerToken, event? idevent, Message message) async {
+    final url = 'http://localhost:3333/comments/add';
+    final response = await http.post(Uri.parse(url), body: {
+      'id_event': idevent?.id,
+      'text': message.text,
+    }, headers: <String, String>{
+      "Authorization": bearerToken
+    });
 
-  if (response.statusCode == 200) {
-    // Fetch the updated message list from the server
-    final updatedMessages = await getComment(bearerToken, idevent);
+    if (response.statusCode == 200) {
+      // Fetch the updated message list from the server
+      final updatedMessages = await getComment(bearerToken, idevent);
 
-    // Update the local list and notify listeners
-    _messages = updatedMessages;
-    notifyListeners();
-  } else {
-    throw Exception('Failed to add message');
+      // Update the local list and notify listeners
+      _messages = updatedMessages;
+      notifyListeners();
+    } else {
+      throw Exception('Failed to add message');
+    }
   }
-}
-
 }
