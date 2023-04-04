@@ -24,10 +24,17 @@ class EventListPage extends StatelessWidget {
             );
           } else if (snapshot.hasData) {
             final events = snapshot.data;
-            return ListView.builder(
-              itemCount: events?.length,
+            return ListView.separated(
+              padding: EdgeInsets.all(16.0),
+              itemCount: events?.length ?? 0,
+              separatorBuilder: (BuildContext context, int index) {
+                return Divider(
+                  height: 16.0,
+                  color: Colors.grey,
+                );
+              },
               itemBuilder: (BuildContext context, int index) {
-                final event = events?[index];
+                final event = events![index];
                 return GestureDetector(
                   onTap: () {
                     Navigator.push(
@@ -38,9 +45,39 @@ class EventListPage extends StatelessWidget {
                       ),
                     );
                   },
-                  child: ListTile(
-                    title: Text(event?.name ?? ''),
-                    subtitle: Text(event?.description ?? ''),
+                  child: Container(
+                    padding: EdgeInsets.all(16.0),
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(16.0),
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.grey.withOpacity(0.5),
+                          spreadRadius: 2,
+                          blurRadius: 5,
+                          offset: Offset(0, 3),
+                        ),
+                      ],
+                    ),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          event.name ?? '',
+                          style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            fontSize: 20.0,
+                          ),
+                        ),
+                        SizedBox(height: 8.0),
+                        Text(
+                          event.description ?? '',
+                          style: TextStyle(
+                            fontSize: 16.0,
+                          ),
+                        ),
+                      ],
+                    ),
                   ),
                 );
               },
