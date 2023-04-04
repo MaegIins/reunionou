@@ -25,7 +25,9 @@ class CommentProvider with ChangeNotifier {
       notifyListeners();
       return messages;
     } else {
-      return [];
+      List<Message> messages = [];
+      _messages = messages;
+      return messages;
     }
   }
 
@@ -41,8 +43,9 @@ class CommentProvider with ChangeNotifier {
 
     if (response.statusCode == 200) {
       // Fetch the updated message list from the server
-      final updatedMessages = await getComment(bearerToken, idevent);
 
+      final updatedMessages = await getComment(bearerToken, idevent);
+      print(updatedMessages);
       // Update the local list and notify listeners
       _messages = updatedMessages;
       notifyListeners();
