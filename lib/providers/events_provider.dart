@@ -1,7 +1,7 @@
 import 'dart:convert';
-import 'dart:html';
+
 import 'package:http/http.dart' as http;
-import 'package:partouille/Singleton/Auth.dart';
+
 import 'package:partouille/models/event.dart';
 import 'package:partouille/models/eventAdress.dart';
 import 'package:partouille/models/attendee.dart';
