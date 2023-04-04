@@ -77,7 +77,8 @@ class _ChatWidgetState extends State<ChatWidget> {
                     itemBuilder: (context, index) {
                       final message = messages[index];
                       return ListTile(
-                        subtitle: Text(message.text),
+                        title: Text(message.text),
+                        subtitle: Text(message.username.toString()),
                       );
                     },
                   ),

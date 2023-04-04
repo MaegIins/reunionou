@@ -10,7 +10,7 @@ class EventListPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final bearerToken = "Bearer " + Auth().token;
-
+    final bool isConnected = Auth().token != "";
     return Scaffold(
       appBar: AppBar(
         title: Text("Liste des événements"),
@@ -24,9 +24,14 @@ class EventListPage extends StatelessWidget {
             );
           } else if (snapshot.hasData) {
             final events = snapshot.data;
+            if (events == null || events.isEmpty) {
+              return Center(
+                child: Text("Il n'y a pas d'événement"),
+              );
+            }
             return ListView.separated(
               padding: EdgeInsets.all(16.0),
-              itemCount: events?.length ?? 0,
+              itemCount: events.length,
               separatorBuilder: (BuildContext context, int index) {
                 return Divider(
                   height: 16.0,
@@ -34,7 +39,7 @@ class EventListPage extends StatelessWidget {
                 );
               },
               itemBuilder: (BuildContext context, int index) {
-                final event = events![index];
+                final event = events[index];
                 return GestureDetector(
                   onTap: () {
                     Navigator.push(
@@ -82,11 +87,14 @@ class EventListPage extends StatelessWidget {
                 );
               },
             );
-          } else if (snapshot.hasError) {
+          } else if (isConnected) {
             return Center(
-              child: Text('Erreur : ${snapshot.error}'),
+              child: Text('Vous n\'êtes pas connecté',
+              style: TextStyle(
+                            fontSize: 18.0),
+            ),
             );
-          } else {
+          } else { 
             return Center(
               child: CircularProgressIndicator(),
             );
