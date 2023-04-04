@@ -3,7 +3,8 @@ import '../models/Invite.dart';
 import '../Singleton/Auth.dart';
 import '../providers/invites_provider.dart';
 import '../models/inviteConfirm.dart';
-import 'invitation_list.dart';
+
+import 'home_Page.dart';
 
 class InviteDetailsPage extends StatefulWidget {
   final Invite inviteDetails;
@@ -97,7 +98,7 @@ class _InviteDetailsPageState extends State<InviteDetailsPage> {
 
                   Navigator.of(context).pushReplacement(
                     MaterialPageRoute(
-                      builder: (context) => InvitationListPage(),
+                      builder: (context) => HomePage(),
                     ),
                   );
                 }
