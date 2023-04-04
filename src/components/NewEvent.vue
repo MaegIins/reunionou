@@ -14,7 +14,7 @@
             <input type="text" id="name" name="name" v-model="title" placeholder="Nom de la réunion">
             <input type="text" id="description" name="description" v-model="descr" placeholder="Description">
             <div id="time">
-                <input type="date" id="date" name="date" v-model="date.date">
+                <input type="date" id="date" name="date" v-model="date.date" v-bind:min="currentDate">
                 <input type="time" id="time" name="time" v-model="date.time">
             </div>
             <div id="adrs" v-if="selectOptions === 'newPlace'">
@@ -50,8 +50,9 @@ export default {
             adress: {street: "", city: ""},
             createEvent: false,
             requestInvalid: false,
-            adressNotFound: false
-        };
+            adressNotFound: false,
+            currentDate: new Date().toISOString().substr(0,10)
+          };
     },
     methods: {
         async getPlace() {
