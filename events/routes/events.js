@@ -144,13 +144,14 @@ const validUuid = Joi.string().guid().required();
 const schema = Joi.object({
     title: Joi.string().max(100),
     description: Joi.string().max(256),
-    date: Joi.date().format('YYYY-MM-DD').utc().greater('now'),
     name_orga: Joi.string().max(30),
     name_place: Joi.string().max(100),
     mail_orga: Joi.string().max(35).email(),
     street: Joi.string().max(100),
     city: Joi.string().max(50),
 });
+
+const dateJ = Joi.object({ date: Joi.date().format('YYYY-MM-DD').utc().greater('now') })
 
 router.put('/:id', async (req, res, next) => {
     try {
@@ -243,94 +244,97 @@ router.post('/', async (req, res, next) => {
         } else {
             try {
                 const uuid = uuidv4();
-
                 const date = new Date(req.body.date.date + "T" + req.body.date.time + ":00.000Z");
+                const resdate = dateJ.validate({ date: date })
                 // Permet la validation des valeurs présentes dans le body
-                const result = await schema.validateAsync({ title: req.body.title, description: req.body.description, date: date, name_place: req.body.name_place, street: req.body.adress.street, city: req.body.adress.city });
+                const result = await schema.validateAsync({ title: req.body.title, description: req.body.description, name_place: req.body.name_place, street: req.body.adress.street, city: req.body.adress.city });
 
                 const mailOrga = req.headers['user-mail'];
                 const nameOrga = req.headers['user-name'];
 
-                if (result.error === undefined) {
-                    //regarde si le lieu existe deja
-                    const place = await db.select("id").from("Place").where({ name: req.body.name_place });
-                    //si oui alors on utilise son id pour créer l'evenement
-                    if (place[0] !== undefined) {
-                        await db('Event').insert({
-                            'id': uuid,
-                            'name': req.body.title,
-                            'description': req.body.description,
-                            'date': date,
-                            'name_orga': nameOrga,
-                            'mail_orga': mailOrga,
-                            'id_place': place[0].id
-                        });
-                        try {
-                            await db('Attendee').insert({
-                                'id_event': uuid,
-                                'name_user': nameOrga,
-                                'mail_user': mailOrga,
-                                'status': 3,
+                if (resdate.error === undefined) {
+                    if (result.error === undefined) {
+                        //regarde si le lieu existe deja
+                        const place = await db.select("id").from("Place").where({ name: req.body.name_place });
+                        //si oui alors on utilise son id pour créer l'evenement
+                        if (place[0] !== undefined) {
+                            await db('Event').insert({
+                                'id': uuid,
+                                'name': req.body.title,
+                                'description': req.body.description,
+                                'date': date,
+                                'name_orga': nameOrga,
+                                'mail_orga': mailOrga,
+                                'id_place': place[0].id
                             });
-                        } catch (error) {
-                            res.status(500).json({ type: "error", error: 500, message: "server error", details: error });
-                            next(error);
-                        }
-                        // Retourne un code 201 (created) et Location sur /events/{id}
-                        res.status(201).set('Location', '/events/' + uuid).json({ type: "sucess", error: 201, message: "CREATED" });
-                    } else {
-                        // sinon on créer le lieu et on le ratache a l'événement
-
-                        //api qui recup les coordonnées gps a partie d'une adress
-                        if (req.body.adress.street == "null" || req.body.adress.city == "null") {
-                            res.status(404).json({ type: "error", error: "404", message: "Adress incorrect" })
-                        } else {
-                            const gps = await fetch('https://nominatim.openstreetmap.org/search?street=' + req.body.adress.street.replace(/\s+/g, '+') + '&city=' + req.body.adress.city + '&format=json')
-                            const data = await gps.json()
-                            if (data.length !== 0) {
-                                let uuidPlace = uuidv4();
-
-                                //insertion du lieu
-                                await db('Place').insert({
-                                    'id': uuidPlace,
-                                    'name': req.body.name_place,
-                                    'adress': req.body.adress.street + ", " + req.body.adress.city,
-                                    'lat': data[0].lat,
-                                    'lon': data[0].lon,
-                                })
-                                //insertion de l'evenement
-                                await db('Event').insert({
-                                    'id': uuid,
-                                    'name': req.body.title,
-                                    'description': req.body.description,
-                                    'date': date,
-                                    'name_orga': nameOrga,
-                                    'mail_orga': mailOrga,
-                                    'id_place': uuidPlace
-                                })
-                                
+                            try {
                                 await db('Attendee').insert({
                                     'id_event': uuid,
                                     'name_user': nameOrga,
                                     'mail_user': mailOrga,
                                     'status': 3,
                                 });
-    
-                                // Retourne un code 201 (created) et Location sur /events/{id}
-                                res.status(201).set('Location', '/events/' + uuid).json({ type: "sucess", error: 201, message: "CREATED" });
+                            } catch (error) {
+                                res.status(500).json({ type: "error", error: 500, message: "server error", details: error });
+                                next(error);
+                            }
+                            // Retourne un code 201 (created) et Location sur /events/{id}
+                            res.status(201).set('Location', '/events/' + uuid).json({ type: "sucess", error: 201, message: "CREATED" });
+                        } else {
+                            // sinon on créer le lieu et on le ratache a l'événement
+
+                            //api qui recup les coordonnées gps a partie d'une adress
+                            if (req.body.adress.street == "null" || req.body.adress.city == "null") {
+                                res.status(404).json({ type: "error", error: "404", message: "Adress incorrect" })
                             } else {
-                                res.status(404).json({ type: "error", error: "404", message: "Adress not found" })
+                                const gps = await fetch('https://nominatim.openstreetmap.org/search?street=' + req.body.adress.street.replace(/\s+/g, '+') + '&city=' + req.body.adress.city + '&format=json')
+                                const data = await gps.json()
+                                if (data.length !== 0) {
+                                    let uuidPlace = uuidv4();
+
+                                    //insertion du lieu
+                                    await db('Place').insert({
+                                        'id': uuidPlace,
+                                        'name': req.body.name_place,
+                                        'adress': req.body.adress.street + ", " + req.body.adress.city,
+                                        'lat': data[0].lat,
+                                        'lon': data[0].lon,
+                                    })
+                                    //insertion de l'evenement
+                                    await db('Event').insert({
+                                        'id': uuid,
+                                        'name': req.body.title,
+                                        'description': req.body.description,
+                                        'date': date,
+                                        'name_orga': nameOrga,
+                                        'mail_orga': mailOrga,
+                                        'id_place': uuidPlace
+                                    })
+
+                                    await db('Attendee').insert({
+                                        'id_event': uuid,
+                                        'name_user': nameOrga,
+                                        'mail_user': mailOrga,
+                                        'status': 3,
+                                    });
+
+                                    // Retourne un code 201 (created) et Location sur /events/{id}
+                                    res.status(201).set('Location', '/events/' + uuid).json({ type: "sucess", error: 201, message: "CREATED" });
+                                } else {
+                                    res.status(404).json({ type: "error", error: "404", message: "Adress not found" })
+                                }
                             }
                         }
+                    } else {
+                        res.status(400).json({ type: "error", error: "400", message: "Non-compliant data" })
                     }
                 } else {
-                    res.status(400).json({ type: "error", error: "400", message: "Non-compliant data" })
+                    res.status(409).json({ type: "error", error: "409", message: "Passed date" })
                 }
             }
             catch (err) {
                 console.log(err)
                 res.status(500).json(err);
-
             };
         }
     } catch (error) {
