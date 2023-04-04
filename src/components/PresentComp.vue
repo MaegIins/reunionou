@@ -35,6 +35,7 @@
           </div>
           <div class="modal-body">
             <p class="link-container"><a :href="sharedLink" target="_blank">{{ sharedLink }}</a></p>
+            // 
           </div>
           <div class="modal-footer">
             <button type="button" class="btn btn-primary" @click="copyToClipboard"><i

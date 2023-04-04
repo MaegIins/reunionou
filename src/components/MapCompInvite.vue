@@ -1,6 +1,6 @@
 <template>
   <div class="map-container">
-    <h2>Lieu de la réunion</h2>
+    <h2>Lieu de l'évènement</h2>
     <div id="map"></div>
   </div>
 </template>

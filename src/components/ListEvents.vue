@@ -4,7 +4,7 @@
       <h1>REUNIONOU.APP</h1>
     </router-link>
     <router-link class="router" to="/newreunion/">
-      <button>Nouvelle réunion</button>
+      <button>Créer un évènement</button>
     </router-link>
 
     <div id="events">

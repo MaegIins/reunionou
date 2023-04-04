@@ -5,11 +5,11 @@
     <div id="main">
       <h1>REUNIONOU.app</h1>
       <div v-if="logged">
-        <button @click="this.$router.push('/newreunion')">NOUVELLE RÉUNION</button>
-        <button @click="this.$router.push('/liste/')">MES RÉUNIONS</button>
+        <button @click="this.$router.push('/newreunion')">Nouvel évènement</button>
+        <button @click="this.$router.push('/liste')">Mes Évènements</button>
       </div>
       <div v-else>
-        <button @click="this.$router.push('/login')">NOUVELLE RÉUNION</button>
+        <button @click="this.$router.push('/login')">Nouvel évènement</button>
       </div>
 
     </div>

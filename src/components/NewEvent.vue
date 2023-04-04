@@ -4,7 +4,7 @@
       <h2>REUNIONOU.APP</h2>
     </router-link>
     <div class="newEventForm">
-      <h1>Créer une réunion</h1>
+      <h1>Créer un évènement</h1>
 
       <select v-model="selectOptions" id="my-select">
         <option disabled value="">Choisissez une option</option>
@@ -22,7 +22,9 @@
         <input type="text" id="city" name="city" v-model="adress.city" placeholder="Ville">
         <input type="text" id="name_place" name="name_place" v-model="name_place" placeholder="Nom du lieu">
       </div>
-      <button @click="postEvent">Créer la réunion</button>
+      <button @click="postEvent">Créer l'évènement</button>
+
+      <!-- Mettre le bouton d'annulation en une autre couleur et les boutons moins large -->
       <button @click="this.$router.push('/accueil')">Retour à l'accueil</button>
 
       <p v-if="createEvent" class="ok">Evenement créé !</p>
