@@ -37,9 +37,9 @@ router.post('/confirm', async (req, res, next) => {
                 let participate;
                 console.log(status);
                 if (status == true) {
-                    participate = 2;
-                } else {
                     participate = 1;
+                } else {
+                    participate = 2;
                 }
                 const attendee = await db('Attendee').where({ id_event: decoded.id, mail_user: mail }).first();
                 if (!attendee) {
@@ -81,9 +81,9 @@ router.post('/confirm/user', async (req, res, next) => {
                 else {
                     let participate;
                     if (status == true) {
-                        participate = 2;
-                    } else {
                         participate = 1;
+                    } else {
+                        participate = 2;
                     }
                     // verify if attendee exist for this event
                     const attendee = await db('Attendee').where({ id_event: event, mail_user: userEmail }).first();
