@@ -20,7 +20,7 @@
     <div id="elements">
 
 
-      <PresentComp :listPpl="people" :organizer="organizerName" :orgaMail="organizerEmail"></PresentComp>
+      <PresentComp :listPpl="people" :organizer="organizerName" :orgaMail="organizerEmail" :userEmail="userEmail"></PresentComp>
       <CommentsComp :comments="comments" @send-comment="sendComment"></CommentsComp>
 
 
@@ -66,6 +66,16 @@ export default {
       return router
     },
 
+    async userInfo() {
+      try {
+        const response = await api.get(`/auth/validate`);
+        this.userName = response.data.name;
+        this.userEmail = response.data.mail;
+      } catch (error) {
+        console.log(error);
+      }
+    },
+
     async fetchEventInfo() {
       try {
         const response = await api.get(`/events/${this.idEvent}`);
@@ -109,6 +119,7 @@ export default {
     },
   },
   mounted() {
+    this.userInfo();
     this.fetchEventInfo(),
       this.attendee(),
       this.com()
@@ -117,6 +128,8 @@ export default {
   props: {},
   data() {
     return {
+      userName: "",
+      userEmail: "",
       logged: false,
       idEvent: this.$route.params.id,
       eventPosition: [48.856614, 2.3522219],
