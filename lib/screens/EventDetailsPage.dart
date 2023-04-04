@@ -1,10 +1,11 @@
-
 import 'package:flutter/material.dart';
+import 'package:partouille/Singleton/Auth.dart';
+import 'package:partouille/models/AuthCheck.dart';
 import '../models/event.dart';
+import '../providers/auth_provider.dart';
 import 'ChatWidget.dart';
 import 'EventParticipantsPage.dart';
 import 'InvitePage.dart';
-import '../providers/auth_provider.dart';
 
 class EventDetailsPage extends StatelessWidget {
   final event? eventDetails;
@@ -41,31 +42,31 @@ class EventDetailsPage extends StatelessWidget {
               SingleChildScrollView(
                 scrollDirection: Axis.horizontal,
                 child: Row(
-                children: [
-                  Icon(Icons.calendar_today),
-                  SizedBox(width: 8.0),
-                  Text(
-                    eventDetails?.date.toString().substring(0, 19) ?? '',
-                    style: TextStyle(fontSize: 18.0),
-                  ),
-                ],
-              ),
+                  children: [
+                    Icon(Icons.calendar_today),
+                    SizedBox(width: 8.0),
+                    Text(
+                      eventDetails?.date.toString().substring(0, 19) ?? '',
+                      style: TextStyle(fontSize: 18.0),
+                    ),
+                  ],
+                ),
               ),
               SizedBox(height: 16),
               SingleChildScrollView(
                 scrollDirection: Axis.horizontal,
                 child: Row(
-                children: [
-                  Icon(Icons.person),
-                  SizedBox(width: 8.0),
-                  Text(
-                    'Organisateur: ${eventDetails?.nameOrga ?? ''}',
-                    style: TextStyle(fontSize: 18.0),
-                  ),
-                ],
+                  children: [
+                    Icon(Icons.person),
+                    SizedBox(width: 8.0),
+                    Text(
+                      'Organisateur: ${eventDetails?.nameOrga ?? ''}',
+                      style: TextStyle(fontSize: 18.0),
+                    ),
+                  ],
+                ),
               ),
-              ),
-             SizedBox(height: 16),
+              SizedBox(height: 16),
               SingleChildScrollView(
                 scrollDirection: Axis.horizontal,
                 child: Row(
@@ -79,24 +80,24 @@ class EventDetailsPage extends StatelessWidget {
                   ],
                 ),
               ),
-                            SizedBox(height: 16),
+              SizedBox(height: 16),
               SingleChildScrollView(
                 scrollDirection: Axis.horizontal,
-                            child : Row(
-                              children: [
-                                Icon(Icons.location_on),
-                                SizedBox(width: 8.0),
-                                Text(
-                                  'Adresse: ${eventDetails?.address ?? ''}',
-                                  style: TextStyle(fontSize: 18.0),
-                                ),
-                              ],
-                            ),
+                child: Row(
+                  children: [
+                    Icon(Icons.location_on),
+                    SizedBox(width: 8.0),
+                    Text(
+                      'Adresse: ${eventDetails?.address ?? ''}',
+                      style: TextStyle(fontSize: 18.0),
+                    ),
+                  ],
+                ),
               ),
               SizedBox(height: 16),
               SingleChildScrollView(
                 scrollDirection: Axis.horizontal,
-                child : Row(
+                child: Row(
                   children: [
                     Icon(Icons.map),
                     SizedBox(width: 8.0),
@@ -106,7 +107,7 @@ class EventDetailsPage extends StatelessWidget {
                     ),
                   ],
                 ),
-              ), 
+              ),
               SizedBox(height: 16),
               Text(
                 'Description:',
@@ -136,30 +137,32 @@ class EventDetailsPage extends StatelessWidget {
                   Navigator.push(
                     context,
                     MaterialPageRoute(
-                      builder: (context) =>ChatWidget(
-              eventDetails: eventDetails,
-            ),
+                      builder: (context) => ChatWidget(
+                        eventDetails: eventDetails,
+                      ),
+                    ),
+                  );
+                },
+                child: Text('Voir les commentaires'),
+              ),
+              SizedBox(height: 16),
+
+              if (eventDetails?.mailOrga == Auth().email)
+                ElevatedButton(
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => InvitePage(
+                          eventDetails: eventDetails,
+                        ),
+                      ),
+                    );
+                  },
+                  child: Text('Inviter une personne à cette événement'),
+                ),
+            ],
           ),
-        );
-      },
-      child: Text('Voir les commentaires'),
-    ),
-      SizedBox(height: 16),
-     ElevatedButton(
-                onPressed: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) =>InvitePage(
-              eventDetails: eventDetails,
-            ),
-          ),
-        );
-      },
-      child: Text('Inviter une personne à cette evenement'),
-    )
-  ],
-),
         ),
       ),
     );

@@ -39,6 +39,7 @@ class _LoginPageState extends State<LoginPage> {
       final Map<String, dynamic> data = json.decode(response.body);
       setState(() {
         Auth().token = data["access_token"];
+        Auth().email = username;
       });
     } else {
       // Si les informations d'identification ne sont pas valides, afficher un message d'erreur
