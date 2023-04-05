@@ -57,7 +57,11 @@ class _LoginPageState extends State<LoginPage> {
       );
     }
   }
-
+/**
+ * _logout
+ * this function is used to logout the user
+ * delete the token and the email
+ */
   void _logout() {
     setState(() {
       Auth().token = "";

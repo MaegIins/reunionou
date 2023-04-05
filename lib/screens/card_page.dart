@@ -22,7 +22,9 @@ class _CardPageState extends State<CardPage> {
     super.initState();
     _eventsFuture = _loadEvents();
   }
-
+/**
+ * function to reload the events when a new one is added
+ */
    Future<void> _reloadEvents() async {
     setState(() {
       _eventsFuture = _loadEvents();
@@ -37,7 +39,9 @@ class _CardPageState extends State<CardPage> {
       builder: (context, snapshot) {
         if (snapshot.hasData) {
           final events = snapshot.data as List<event>;
-
+/**
+ * map the events to markers
+ */
           final markers = events.map((event) {
             return Marker(
               width: 80.0,
@@ -61,7 +65,10 @@ class _CardPageState extends State<CardPage> {
               ),
             );
           }).toList();
-
+/**
+ * display the map with the markers
+ * if the user is connected, display the button to add an event
+ */
           return Center(
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
@@ -109,10 +116,15 @@ class _CardPageState extends State<CardPage> {
       },
     );
   }
-
+/**
+ * function to load the events
+ * if the user is not connected, return an empty list
+ */
   Future<List<event>> _loadEvents() async {
     final auth = Auth();
-
+/**
+ * if the user is not connected, return an empty list
+ */
     if (!auth.isAuthenticated) {
       return Future.value([]);
     }

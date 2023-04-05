@@ -87,6 +87,7 @@ class EventsProvider {
 /**
  * getEventAttendees
  * this function is used to fetch attendees data from the API
+ * returns a list of attendees
  */
   Future<List<attendee>> getEventAttendees(
       String bearerToken, event eventId) async {
@@ -119,4 +120,3 @@ class EventsProvider {
     }
   }
 }
-// 0 on sait pas , 1 c'est ok, 2 c'est pas ok

@@ -29,7 +29,11 @@ class InvitesProvider {
           'Erreur lors de l\'envoi de l\'invitation : ${response.statusCode}');
     }
   }
-
+/**
+ * getInvitesList
+ * this function is used to fetch invites data from the API
+ * returns a list of invites for the user connected to the app , 
+ */
   Future<List<Invite>> getInvitesList(String bearerToken) async {
     final url =
         'http://docketu.iutnc.univ-lorraine.fr:20005/invites/list?state=0';
@@ -63,7 +67,11 @@ class InvitesProvider {
           'Erreur lors de la récupération de la liste d\'invitations : ${response.statusCode}');
     }
   }
-
+/**
+ * reponseInvitation
+ * this function is used to send a response to an organizer
+ * 1 ok 2 no 3 maybe
+ */
   Future<void> reponseInvitation(
       String bearerToken, inviteConfirm inviteConfirm) async {
     final url =

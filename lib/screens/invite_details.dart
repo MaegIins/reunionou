@@ -5,7 +5,9 @@ import '../providers/invites_provider.dart';
 import '../models/inviteConfirm.dart';
 
 import 'home_Page.dart';
-
+/**
+ * page to display the details of an invite
+ */
 class InviteDetailsPage extends StatefulWidget {
   final Invite inviteDetails;
 

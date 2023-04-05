@@ -5,7 +5,10 @@ import '../Singleton/Auth.dart';
 import '../models/Message.dart';
 import '../models/event.dart';
 import '../providers/commentProvider.dart';
-
+/**
+ * Widget to display the Comments of an event
+ * 
+ */
 class ChatWidget extends StatefulWidget {
   final event? eventDetails;
   const ChatWidget({Key? key, required this.eventDetails}) : super(key: key);
@@ -22,7 +25,11 @@ class _ChatWidgetState extends State<ChatWidget> {
     _messageController.dispose();
     super.dispose();
   }
-
+/**
+ * function to send a message
+ * return a snackbar if the message is empty
+ * 
+ */
   Future<void> _sendMessage() async {
     final bearerToken = "Bearer " + Auth().token;
     final commentText = _messageController.text.trim();
@@ -46,7 +53,10 @@ class _ChatWidgetState extends State<ChatWidget> {
 
       return;
     }
-
+/**
+ * add the message to the database
+ * 
+ */
     final message = Message(text: commentText);
     await CommentProvider()
         .addMessage(bearerToken, widget.eventDetails, message);

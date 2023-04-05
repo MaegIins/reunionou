@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:intl/intl.dart';
 import 'package:partouille/models/eventAdress.dart';
 import '../providers/events_provider.dart';
@@ -48,39 +47,48 @@ class _EventFormState extends State<EventForm> {
     _cityController.dispose();
     super.dispose();
   }
+/**
+ * function to add an event
+ * display a snackbar if the event is added or not
+ */Future<void> _submitForm() async {
+  if (_formKey.currentState!.validate()) {
+    final bearerToken = "Bearer " + Auth().token;
+    print(bearerToken);
 
-  Future<void> _submitForm() async {
-    if (_formKey.currentState!.validate()) {
-      final bearerToken = "Bearer " + Auth().token;
+    final eventAdress = EventAdress(
+      name: _nameController.text,
+      description: _descriptionController.text,
+      date: DateTime.parse(_dateController.text),
+      namePlace: _namePlaceController.text,
+      address: Address(
+        street: _streetController.text,
+        city: _cityController.text,
+      ),
+    );
+    try {
+      print(eventAdress.name);
       print(bearerToken);
-
-      final eventAdress = EventAdress(
-        name: _nameController.text,
-        description: _descriptionController.text,
-        date: DateTime.parse(_dateController.text),
-        namePlace: _namePlaceController.text,
-        address: Address(
-          street: _streetController.text,
-          city: _cityController.text,
+      await EventsProvider().addEvent(bearerToken, eventAdress);
+      widget.reloadEvents(); // call the callback function to reload events
+      Navigator.of(context).pop();
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Event added successfully'),
+          backgroundColor: Colors.green,
         ),
       );
-      try {
-        print(eventAdress.name);
-        print(bearerToken);
-        await EventsProvider().addEvent(bearerToken, eventAdress);
-        widget.reloadEvents(); // call the callback function to reload events
-        Navigator.of(context).pop();
-      } catch (error) {
-        print(error);
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text('Failed to add event'),
-            backgroundColor: Colors.red,
-          ),
-        );
-      }
+    } catch (error) {
+      print(error);
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Failed to add event'),
+          backgroundColor: Colors.red,
+        ),
+      );
     }
   }
+}
+
 
   @override
   Widget build(BuildContext context) {

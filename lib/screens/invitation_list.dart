@@ -3,7 +3,9 @@ import 'package:partouille/providers/invites_provider.dart';
 import 'package:partouille/models/Invite.dart';
 import '../Singleton/Auth.dart';
 import 'invite_details.dart';
-
+/**
+ * page to display the list of invitations of the user for accepted and pending invitations
+ */
 class InvitationListPage extends StatefulWidget {
   const InvitationListPage({Key? key}) : super(key: key);
 

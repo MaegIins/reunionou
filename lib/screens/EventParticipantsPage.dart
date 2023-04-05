@@ -6,7 +6,9 @@ import 'package:partouille/models/attendee.dart';
 import 'package:partouille/providers/events_provider.dart';
 import 'package:partouille/Singleton/Auth.dart';
 import 'package:partouille/models/attendee.dart';
-
+/**
+ * Widget to display the participants of an event
+ */
 class EventParticipantsPage extends StatefulWidget {
   final event? eventDetails;
 
@@ -25,7 +27,9 @@ class _EventParticipantsPageState extends State<EventParticipantsPage> {
     super.initState();
     getParticipants();
   }
-
+/**
+ * function to get the participants of an event
+ */
   Future<void> getParticipants() async {
     final bearerToken = "Bearer " + Auth().token;
     try {

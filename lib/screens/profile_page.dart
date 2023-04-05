@@ -3,7 +3,13 @@ import 'package:provider/provider.dart';
 
 import '../Singleton/Auth.dart';
 import 'invitation_list.dart';
-
+/**
+ * page to display the profile of the user
+ * if the user is connected, the email is displayed
+ * if the user is not connected, a message is displayed
+ * if the user is connected, a button is displayed to access the invitation list
+ */
+ 
 class ProfilePage extends StatelessWidget {
   const ProfilePage({Key? key}) : super(key: key);
 

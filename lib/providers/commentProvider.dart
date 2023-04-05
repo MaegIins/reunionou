@@ -9,6 +9,11 @@ class CommentProvider with ChangeNotifier {
 
   List<Message> get messages => [..._messages];
 
+/**
+ * getComment
+ * this function is used to get all the comments of an event
+ * return a list of messages
+ */
   Future<List<Message>> getComment(
       String bearerToken, event? eventDetails) async {
     final eventUrl = eventDetails?.id.toString();
@@ -32,6 +37,11 @@ class CommentProvider with ChangeNotifier {
     }
   }
 
+/**
+ * addMessage
+ * this function is used to add a message to an event
+ * return a list of messages updated
+ */
   Future<void> addMessage(
       String bearerToken, event? idevent, Message message) async {
     final url = 'http://docketu.iutnc.univ-lorraine.fr:20005/comments/add';

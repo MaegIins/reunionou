@@ -6,7 +6,9 @@ import '../models/event.dart';
 import 'comment_page.dart';
 import 'EventParticipantsPage.dart';
 import 'InvitePage.dart';
-
+/**
+ * class to display the details of an event
+ */
 class EventDetailsPage extends StatelessWidget {
   final event? eventDetails;
 

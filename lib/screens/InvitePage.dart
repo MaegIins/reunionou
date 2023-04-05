@@ -3,7 +3,11 @@ import 'package:flutter/material.dart';
 import 'package:partouille/providers/invites_Provider.dart';
 import '../Singleton/Auth.dart';
 import '../models/event.dart';
-
+/**
+ * invite page to invite an user to an event
+ * display a snackbar if the invitation is sent or not
+ * invite user by email
+ */
 class InvitePage extends StatefulWidget {
     final event? eventDetails;
 
@@ -68,7 +72,9 @@ class _InvitePageState extends State<InvitePage> {
       ),
     );
   }
-
+/**
+ * send invitation to an user by email
+ */
   Future<void> _sendInvitation() async {
     if (_formKey.currentState?.validate() ?? false) {
       setState(() {

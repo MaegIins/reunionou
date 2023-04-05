@@ -1,3 +1,7 @@
+
+/**
+ * This is a singleton class that will be used to store the user's authentication token.
+ */
 class Auth {
   String _token = "";
   String _email = "";

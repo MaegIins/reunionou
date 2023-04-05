@@ -3,7 +3,9 @@ import '../providers/events_provider.dart';
 import '../Singleton/Auth.dart';
 import '../models/event.dart';
 import 'EventDetailsPage.dart';
-
+/**
+ * class to display the list of events
+ */
 class EventListPage extends StatelessWidget {
   const EventListPage({Key? key}) : super(key: key);
 
