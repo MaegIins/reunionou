@@ -10,8 +10,6 @@ const String tokenEndpoint =
     "http://docketu.iutnc.univ-lorraine.fr:20005/auth/signin";
 
 class LoginPage extends StatefulWidget {
- 
-
   @override
   _LoginPageState createState() => _LoginPageState();
 }
@@ -47,7 +45,7 @@ class _LoginPageState extends State<LoginPage> {
       );
       setState(() {
         Auth().token = data["access_token"];
-        Auth().email = username;
+        Auth().email = username.toLowerCase();
       });
     } else {
       // Si les informations d'identification ne sont pas valides, afficher un message d'erreur
