@@ -26,14 +26,22 @@ class _InviteDetailsPageState extends State<InviteDetailsPage> {
       appBar: AppBar(
         title: Text(widget.inviteDetails.name ?? ''),
       ),
-      body: Center(
+      body: Padding(
+        padding: const EdgeInsets.all(16.0),
         child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            Text('Détails de l\'invitation'),
-            SizedBox(height: 20),
+            Text(
+              'Détails de l\'invitation',
+              style: TextStyle(
+                fontSize: 24.0,
+                fontWeight: FontWeight.bold,
+              ),
+              textAlign: TextAlign.center,
+            ),
+            SizedBox(height: 24.0),
             Row(
-              mainAxisAlignment: MainAxisAlignment.center,
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
                 ElevatedButton(
                   onPressed: () {
@@ -45,11 +53,20 @@ class _InviteDetailsPageState extends State<InviteDetailsPage> {
                     primary: _selectedOption == true
                         ? Colors.green.shade800
                         : Colors.green,
-                    padding: EdgeInsets.symmetric(horizontal: 50, vertical: 20),
+                    padding:
+                        EdgeInsets.symmetric(horizontal: 32.0, vertical: 16.0),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(16.0),
+                    ),
                   ),
-                  child: Text('Je viens'),
+                  child: Text(
+                    'Je viens',
+                    style: TextStyle(
+                      fontSize: 16.0,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
                 ),
-                SizedBox(width: 20),
                 ElevatedButton(
                   onPressed: () {
                     setState(() {
@@ -60,13 +77,23 @@ class _InviteDetailsPageState extends State<InviteDetailsPage> {
                     primary: _selectedOption == false
                         ? Colors.red.shade800
                         : Colors.red,
-                    padding: EdgeInsets.symmetric(horizontal: 50, vertical: 20),
+                    padding:
+                        EdgeInsets.symmetric(horizontal: 32.0, vertical: 16.0),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(16.0),
+                    ),
                   ),
-                  child: Text('Je ne viens pas'),
+                  child: Text(
+                    'Je ne viens pas',
+                    style: TextStyle(
+                      fontSize: 16.0,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
                 ),
               ],
             ),
-            SizedBox(height: 20),
+            SizedBox(height: 24.0),
             TextField(
               onChanged: (value) {
                 setState(() {
@@ -75,10 +102,12 @@ class _InviteDetailsPageState extends State<InviteDetailsPage> {
               },
               decoration: InputDecoration(
                 hintText: 'Ajouter un commentaire (optionnel)',
-                border: OutlineInputBorder(),
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(16.0),
+                ),
               ),
             ),
-            SizedBox(height: 20),
+            SizedBox(height: 24.0),
             ElevatedButton(
               onPressed: () {
                 if (_selectedOption != null) {
@@ -96,14 +125,27 @@ class _InviteDetailsPageState extends State<InviteDetailsPage> {
                     SnackBar(content: Text("Votre réponse a été enregistrée")),
                   );
 
-                  Navigator.of(context).pushReplacement(
-                    MaterialPageRoute(
-                      builder: (context) => HomePage(),
-                    ),
+                  // Rediriger vers la page d'accueil et supprimer toutes les routes de la pile
+                  Navigator.of(context).pushAndRemoveUntil(
+                    MaterialPageRoute(builder: (context) => HomePage()),
+                    (route) => false,
                   );
                 }
               },
-              child: Text('Envoyer la réponse'),
+              style: ElevatedButton.styleFrom(
+                primary: Colors.blue,
+                padding: EdgeInsets.symmetric(vertical: 16.0),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(16.0),
+                ),
+              ),
+              child: Text(
+                'Envoyer la réponse',
+                style: TextStyle(
+                  fontSize: 18.0,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
             ),
           ],
         ),

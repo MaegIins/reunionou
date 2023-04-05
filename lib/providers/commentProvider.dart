@@ -13,7 +13,8 @@ class CommentProvider with ChangeNotifier {
       String bearerToken, event? eventDetails) async {
     final eventUrl = eventDetails?.id.toString();
     final response = await http.get(
-      Uri.parse("http://localhost:3333/comments/events/$eventUrl"),
+      Uri.parse(
+          "http://docketu.iutnc.univ-lorraine.fr:20005/comments/events/$eventUrl"),
       headers: <String, String>{"Authorization": bearerToken},
     );
 
@@ -33,7 +34,7 @@ class CommentProvider with ChangeNotifier {
 
   Future<void> addMessage(
       String bearerToken, event? idevent, Message message) async {
-    final url = 'http://localhost:3333/comments/add';
+    final url = 'http://docketu.iutnc.univ-lorraine.fr:20005/comments/add';
     final response = await http.post(Uri.parse(url), body: {
       'id_event': idevent?.id,
       'text': message.text,
@@ -41,7 +42,9 @@ class CommentProvider with ChangeNotifier {
       "Authorization": bearerToken
     });
 
-    if (response.statusCode == 201 || response.statusCode == 302 || response.statusCode == 200) {
+    if (response.statusCode == 201 ||
+        response.statusCode == 302 ||
+        response.statusCode == 200) {
       // Fetch the updated message list from the server
 
       final updatedMessages = await getComment(bearerToken, idevent);

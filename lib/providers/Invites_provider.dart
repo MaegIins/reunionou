@@ -3,16 +3,16 @@ import 'package:http/http.dart' as http;
 import 'package:partouille/models/Invite.dart';
 import 'package:partouille/models/event.dart';
 import 'package:partouille/models/inviteConfirm.dart';
+
 class InvitesProvider {
-
-
-  Future<void> inviteAttendee(bearerToken , event? eventInvite , String email) async {
-    final url = 'http://localhost:3333/invites/user';
+  Future<void> inviteAttendee(
+      bearerToken, event? eventInvite, String email) async {
+    final url = 'http://docketu.iutnc.univ-lorraine.fr:20005/invites/user';
 
     final response = await http.post(
       Uri.parse(url),
       headers: {
-      'Authorization': bearerToken,
+        'Authorization': bearerToken,
         'Content-Type': 'application/json',
       },
       body: jsonEncode({
@@ -25,14 +25,14 @@ class InvitesProvider {
       print(response.statusCode);
       print('Invitation envoyée avec succès !');
     } else {
-      throw Exception('Erreur lors de l\'envoi de l\'invitation : ${response.statusCode}');
+      throw Exception(
+          'Erreur lors de l\'envoi de l\'invitation : ${response.statusCode}');
     }
   }
 
-
-   
   Future<List<Invite>> getInvitesList(String bearerToken) async {
-    final url = 'http://localhost:3333/invites/list?state=0';
+    final url =
+        'http://docketu.iutnc.univ-lorraine.fr:20005/invites/list?state=0';
 
     final response = await http.get(
       Uri.parse(url),
@@ -50,20 +50,22 @@ class InvitesProvider {
         final inviteMap = inviteJson['event'];
         final placeMap = inviteMap['place'];
         return Invite(
-          email : invitesJsonMailUser['mail_user'],
+          email: invitesJsonMailUser['mail_user'],
           name: placeMap['name'],
           id_event: inviteMap['id_event'],
         );
       }).toList();
       return invites;
     } else {
-      throw Exception('Erreur lors de la récupération de la liste d\'invitations : ${response.statusCode}');
+      throw Exception(
+          'Erreur lors de la récupération de la liste d\'invitations : ${response.statusCode}');
     }
   }
 
-
-  Future<void> reponseInvitation(String bearerToken, inviteConfirm inviteConfirm) async {
-    final url = 'http://localhost:3333/invites/confirm/user';
+  Future<void> reponseInvitation(
+      String bearerToken, inviteConfirm inviteConfirm) async {
+    final url =
+        'http://docketu.iutnc.univ-lorraine.fr:20005/invites/confirm/user';
     print(inviteConfirm.status);
     final response = await http.post(
       Uri.parse(url),
@@ -85,6 +87,3 @@ class InvitesProvider {
     }
   }
 }
-
-
-

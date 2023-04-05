@@ -6,7 +6,8 @@ import 'package:http/http.dart' as http;
 import '../Singleton/Auth.dart';
 
 // Endpoint du serveur Node.js pour générer les tokens
-const String tokenEndpoint = "http://localhost:3333/auth/signin";
+const String tokenEndpoint =
+    "http://docketu.iutnc.univ-lorraine.fr:20005/auth/signin";
 
 class LoginPage extends StatefulWidget {
   @override
