@@ -45,7 +45,7 @@ class _LoginPageState extends State<LoginPage> {
       );
       setState(() {
         Auth().token = data["access_token"];
-        Auth().email = username;
+        Auth().email = username.toLowerCase();
       });
     } else {
       // Si les informations d'identification ne sont pas valides, afficher un message d'erreur

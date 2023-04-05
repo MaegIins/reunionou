@@ -29,7 +29,8 @@ class _EventParticipantsPageState extends State<EventParticipantsPage> {
   Future<void> getParticipants() async {
     final bearerToken = "Bearer " + Auth().token;
     try {
-      final attendees = await EventsProvider().getEventAttendees(bearerToken, widget.eventDetails!);
+      final attendees = await EventsProvider()
+          .getEventAttendees(bearerToken, widget.eventDetails!);
       print(attendees);
       setState(() {
         _participantsList = attendees;
@@ -69,6 +70,8 @@ class _EventParticipantsPageState extends State<EventParticipantsPage> {
                       statusText = "Accepté";
                     } else if (participant.status == 2) {
                       statusText = "Je ne viens pas";
+                    } else if (participant.status == 3) {
+                      statusText = "Organisateur";
                     }
                     return ListTile(
                       title: Text(participant.nameUser ?? ''),
