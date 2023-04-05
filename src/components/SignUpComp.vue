@@ -6,9 +6,9 @@
         <h2>S'inscrire</h2>
         <input ref="name" v-model="name" placeholder="Nom d'utilisateur" v-on:keydown.enter="setFocusOnMail"/>
         <input ref="mail" v-model="email" placeholder="Adresse mail" v-on:keydown.enter="setFocusOnPwd">
-        <input ref="pwd" type="password" v-model="password" placeholder="Mot de passe"
+        <input ref="pwd" type="password" v-model="password" placeholder="Mot de passe (8 caractères minimum)"
                v-on:keydown.enter="setFocusOnCpwd"/>
-        <input ref="cpwd" type="password" v-model="confirmPassword" placeholder="Confirmer le mot de passe"
+        <input ref="cpwd" type="password" v-model="confirmPassword" placeholder="Confirmer le mot de passe  (8 caractères minimum))"
                @keydown.enter="signIn"/>
         <button v-on:click="signIn">S'inscrire !</button>
         <p @click="this.$router.push('/login')" class="link">Déjà un compte ?</p>
