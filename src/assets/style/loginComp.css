@@ -47,4 +47,13 @@
   margin: 10px;
   font-size: 1.2rem;
   font-weight: bold;
-}/*# sourceMappingURL=loginComp.css.map */
+}
+#login .link {
+  color: #fdfdfd;
+  font-size: 1.2rem;
+  margin: 10px;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+/*# sourceMappingURL=loginComp.css.map */

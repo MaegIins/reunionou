@@ -1,11 +1,11 @@
 <template>
   <div id="login">
-    <router-link to="/accueil">Retour à l'accueil</router-link>
+      <p @click="this.$router.push('/accueil')" class="link"><i class="bi bi-chevron-left"/>Retour à l'accueil</p>
     <h1>Connexion</h1>
     <input ref="mail" v-model="email" placeholder="Adresse mail" @keydown.enter="setFocusOnPwd"/>
     <input ref="pwd" type="password" v-model="password" placeholder="Mot de passe" @keydown.enter="logIn"/>
     <button v-on:click="logIn">Se Connecter</button>
-    <router-link to="/signup">Pas encore de compte?</router-link>
+    <p @click="this.$router.push('/signup')" class="link">Pas encore de compte?</p>
 
     <p id="error" v-if="showLoginError">{{ loginError }}</p>
     <p id="good" v-if="showLoginSuccess">Login successful!</p>
