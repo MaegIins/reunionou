@@ -155,6 +155,7 @@ export default {
                 } else if (response.data.type === "success") {
                     this.responseMessage = `Confirmation ${this.attending ? "de présence" : "d'absence"
                     } envoyée avec succès.`;
+                    this.showForm = false;
                 } else {
                     this.responseMessage = "Une erreur est survenue. Veuillez réessayer.";
                 }
