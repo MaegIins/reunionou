@@ -16,4 +16,4 @@ version mobile (smartphones, tablettes).
 
 ## Répartition du projet
 
-Le projet est répartis en 3 parties : La partie [backend](https://github.com/MaegIins/reunionou/tree/BACKEND), la partie [VueJS](https://github.com/MaegIins/reunionou/tree/VUE) et la partie [Flutter](https://github.com/MaegIins/reunionou/tree/FLUTTER), chacun réparties dans leur branche.
+Le projet est répartis en 3 parties : La partie [backend](https://github.com/MaegIins/reunionou/tree/BACKEND), la partie [VueJS](https://github.com/MaegIins/reunionou/tree/VUE) et la partie [Flutter](https://github.com/MaegIins/reunionou/tree/Flutter_Master), chacun réparties dans leur branche.
