@@ -22,10 +22,15 @@
         <input type="text" id="city" name="city" v-model="adress.city" placeholder="Ville">
         <input type="text" id="name_place" name="name_place" v-model="name_place" placeholder="Nom du lieu">
       </div>
+<<<<<<< Updated upstream
       <button @click="postEvent">Créer l'évènement</button>
 
       <!-- Mettre le bouton d'annulation en une autre couleur et les boutons moins large -->
       <button @click="this.$router.push('/accueil')">Retour à l'accueil</button>
+=======
+      <button @click="postEvent">Créer la réunion</button>
+      <button @click="this.$router.push('/accueil')">Annuler</button>
+>>>>>>> Stashed changes
 
       <p v-if="createEvent" class="ok">Evenement créé !</p>
       <p v-if="requestInvalid" class="error">Tout les champs doivent être renseignés</p>
