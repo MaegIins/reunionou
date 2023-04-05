@@ -4,6 +4,7 @@
 #ListEvents {
   background: $background;
   min-height: 100vh;
+  padding: 7px;
 
   h1 {
     font-size: 2.5em;
@@ -67,7 +68,7 @@
     #eventsDiv {
       padding: 10px 20px 0 20px;
       display: grid;
-      grid-template-columns: repeat(3, 1fr); /* Crée 3 colonnes égales */
+      grid-template-columns: repeat(4, 1fr); /* Crée 3 colonnes égales */
       grid-gap: 20px; /* Ajoute un espace de 20px entre les divs */
     }
 
@@ -192,6 +193,19 @@
 
     }
   }
+
+  #mapCont{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+
+    #map{
+      width: 80%
+    }
+  }
+
 
 
 }

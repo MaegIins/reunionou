@@ -40,8 +40,10 @@
                 <button @click="this.$router.push('/newreunion')"><i class="bi bi-plus" /></button>
             </div>
 
+<div id="mapCont">
 
-            <div id="map"></div>
+    <div id="map"></div>
+</div>
 
             <div id="eventsDiv">
 
@@ -51,11 +53,15 @@
                             <h2>{{ event.event.name }}</h2>
                             <p>{{ event.event.description }}</p>
                             <p>{{ displayCorrectDate(event.event.date) }} {{ displayCorrectTime(event.event.date) }}</p>
+                            <p>{{ event.event.place.adress }}</p>
+
                         </div>
                         <div class="event" id="oldEvent" v-else>
                             <h2>{{ event.event.name }}</h2>
                             <p>{{ event.event.description }}</p>
                             <p>{{ displayCorrectDate(event.event.date) }} {{ displayCorrectTime(event.event.date) }}</p>
+                            <p>{{ event.event.place.adress }}</p>
+
                         </div>
                     </router-link>
                     <div v-if="event.status === 0" class="invitation-actions">
@@ -235,8 +241,12 @@ export default {
                 const eventName = event.event.name;
 
                 const marker = L.marker([lat, lon]).addTo(map);
-                marker.bindPopup(`<b>${eventName}</b>`);
+                marker.bindPopup(`<a href="/events/`+event.event.id_event +`"><b>${eventName}</b></a>`);
             });
+        },
+        toPage(page) {
+            this.$router.push(page);
+            console.log('caca');
         },
     },
 };

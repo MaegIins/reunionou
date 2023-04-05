@@ -3,6 +3,7 @@
   background: radial-gradient(circle, rgb(17, 0, 119) 0%, rgb(11, 0, 77) 17%, rgb(10, 10, 10) 59%, rgb(10, 10, 10) 100%);
   min-height: 100vh;
   color: #fdfdfd;
+  padding: 7px;
 }
 #inviteComp h1 {
   font-size: 3rem;

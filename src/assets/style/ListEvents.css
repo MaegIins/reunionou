@@ -3,6 +3,7 @@
 #ListEvents {
   background: radial-gradient(circle, rgb(17, 0, 119) 0%, rgb(11, 0, 77) 17%, rgb(10, 10, 10) 59%, rgb(10, 10, 10) 100%);
   min-height: 100vh;
+  padding: 7px;
 }
 #ListEvents h1 {
   font-size: 2.5em;
@@ -54,7 +55,7 @@
 #ListEvents #events #eventsDiv {
   padding: 10px 20px 0 20px;
   display: grid;
-  grid-template-columns: repeat(3, 1fr); /* Crée 3 colonnes égales */
+  grid-template-columns: repeat(4, 1fr); /* Crée 3 colonnes égales */
   grid-gap: 20px; /* Ajoute un espace de 20px entre les divs */
 }
 #ListEvents #events .event {
@@ -152,6 +153,16 @@
 #ListEvents #pending-invitations #listInvit .eventPending .invitation-actions #noButton {
   background: red;
   color: #fdfdfd;
+}
+#ListEvents #mapCont {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+}
+#ListEvents #mapCont #map {
+  width: 80%;
 }
 
 /*# sourceMappingURL=ListEvents.css.map */

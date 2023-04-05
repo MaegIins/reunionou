@@ -2,6 +2,7 @@
 #NewEvent {
   background: radial-gradient(circle, rgb(17, 0, 119) 0%, rgb(11, 0, 77) 17%, rgb(10, 10, 10) 59%, rgb(10, 10, 10) 100%);
   min-height: 100vh;
+  padding: 7px;
 }
 #NewEvent .router {
   text-decoration: none;
