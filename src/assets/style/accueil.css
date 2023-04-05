@@ -25,6 +25,14 @@
   margin: 0;
   padding: 0;
 }
+.accueil #main h2 {
+  font-size: 1.3rem;
+  text-align: center;
+  font-weight: 700;
+  color: #fdfdfd;
+  margin: 0;
+  padding: 0;
+}
 .accueil #main div {
   display: flex;
   flex-direction: column;
