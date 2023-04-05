@@ -13,7 +13,7 @@
 
                 <p>Description : {{ description }}</p>
 
-                <div v-if="!showForm" id="buttons-primary">
+                <div v-if="!showForm && !haveAnswerd" id="buttons-primary">
                     <button @click="showConfirmationForm(true)">Je confirme ma présence</button>
                     <button id="noButton" @click="showConfirmationForm(false)">Je ne viens pas</button>
                 </div>
@@ -78,6 +78,7 @@ export default {
             attending: false,
             responseMessage: "",
             errorMessage: "",
+            haveAnswerd: false
         };
     },
     methods: {
@@ -179,6 +180,7 @@ export default {
                     this.responseMessage = `Confirmation ${this.attending ? "de présence" : "d'absence"
                     } envoyée avec succès.`;
                     this.showForm = false;
+                    this.haveAnswerd = true;
                 } else {
                     this.responseMessage = "Une erreur est survenue. Veuillez réessayer.";
                 }

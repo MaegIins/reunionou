@@ -13,7 +13,7 @@
             <div id="event-details">
                 <div>
                     <p @click="this.$router.push('/liste')" class="link"><i class="bi bi-chevron-left"/>Retour aux
-                        réunions</p>
+                        évènements</p>
                     <h2>{{ eventName }}</h2>
                 </div>
                 <h3>{{ formatDate(eventDate) }}</h3>

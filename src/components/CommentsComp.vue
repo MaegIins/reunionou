@@ -2,6 +2,9 @@
   <div id="comments">
     <h2>Commentaires</h2>
     <div id="listComs">
+      <div v-if = "comments.length === 0">
+        <p>Aucun commentaire</p>
+      </div>
 
 
       <div v-for="comment in commentsSorted" :key="comment.id_attendee" id="comment">
