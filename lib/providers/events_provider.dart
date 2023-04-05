@@ -92,7 +92,8 @@ class EventsProvider {
       String bearerToken, event eventId) async {
     final eventUrl = eventId.id.toString();
 
-    final String apiUrl2 = 'http://docketu.iutnc.univ-lorraine.fr:20005/events/$eventUrl/attendees';
+    final String apiUrl2 =
+        'http://docketu.iutnc.univ-lorraine.fr:20005/events/$eventUrl/attendees';
     print(apiUrl2);
     final response = await http.get(
       Uri.parse(apiUrl2),
