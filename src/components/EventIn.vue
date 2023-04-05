@@ -133,7 +133,6 @@ export default {
                 this.com();
             } catch (error) {
                 console.log(error);
-                this.errorMessage = "Erreur lors de l'envoi du commentaire.";
 
             }
         },
