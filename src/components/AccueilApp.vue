@@ -48,7 +48,7 @@ export default {
     props: {},
     data() {
         return {
-            logged: true,
+            logged: false,
         };
     },
     mounted() {
