@@ -67,6 +67,10 @@ export default {
     };
   },
   methods: {
+      /**
+       * Get places from the API
+       * @returns {Promise<void>}
+       */
     async getPlace() {
       try {
         const response = await api.get(`/places`);
@@ -81,7 +85,10 @@ export default {
         console.log(error);
       }
     },
-
+      /**
+       * Post event to the API
+       * @returns {Promise<void>}
+       */
     async postEvent() {
       let response
       this.createEvent = false

@@ -114,6 +114,9 @@ export default {
                 console.log(error);
             }
         },
+        /**
+         * Copie le lien d'invitation dans le presse-papiers.
+         */
         copyToClipboard() {
             navigator.clipboard.writeText(this.sharedLink).then(() => {
                 alert("Lien copié dans le presse-papiers !");
@@ -121,6 +124,9 @@ export default {
                 console.error("Erreur lors de la copie du lien :", error);
             });
         },
+        /**
+         * Ferme la modale.
+         */
         closeModal() {
             this.sharedLink = "";
         },

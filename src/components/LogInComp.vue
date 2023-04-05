@@ -31,12 +31,21 @@ export default {
     };
   },
   methods: {
+      /**
+       * Set focus on mail input
+       */
     setFocusOnMail() {
       this.$refs.mail.focus();
     },
+      /**
+       * Set focus on password input
+       */
     setFocusOnPwd() {
       this.$refs.pwd.focus();
     },
+      /**
+       * Log in
+       */
     logIn() {
       api
         .post(
