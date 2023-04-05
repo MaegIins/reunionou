@@ -25,9 +25,8 @@ router.get('/', async (req, res, next) => {
         const userEmail = req.headers['user-email'];
         console.log("userEmail", userEmail);
 
-        // Trouver les événements auxquels l'utilisateur participe
-        const attendingEvents = await db.select('id_event').from('Attendee').where({ mail_user: userEmail });
-
+        // Trouver les événements auxquels l'utilisateur participe avec le status 2 ou 3
+        const attendingEvents = await db.select('id_event').from('Attendee').where({ mail_user: userEmail }).whereIn('status', [2, 3]);
         // Extraire uniquement les ID d'événements
         const eventIds = attendingEvents.map(event => event.id_event);
 
