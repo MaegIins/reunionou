@@ -30,6 +30,8 @@
       </div>
     </div>
 
+      <logout-comp></logout-comp>
+
 
   </div>
 </template>
@@ -43,11 +45,12 @@ import CommentsComp from "@/components/CommentsComp.vue";
 
 
 import MapComp from "@/components/MapComp.vue";
+import LogoutComp from "@/components/LogoutComp.vue";
 
 
 export default {
   name: "EventIn",
-  components: { CommentsComp, PresentComp, MapComp, Map },
+  components: {LogoutComp, CommentsComp, PresentComp, MapComp, Map },
   methods: {
     formatDate(dateString) {
       const date = new Date(dateString);

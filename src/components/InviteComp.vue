@@ -38,6 +38,8 @@
                 <div id="map"></div>
             </div>
         </div>
+
+        <logout-comp/>
     </div>
 </template>
   
@@ -45,9 +47,11 @@
 import api from "@/api.js";
 import L from "leaflet";
 import "leaflet/dist/leaflet.css";
+import LogoutComp from "@/components/LogoutComp.vue";
 
 export default {
     name: "InviteComp",
+    components: {LogoutComp},
     data() {
         return {
             idEvent: this.$route.params.id,

@@ -1,0 +1,15 @@
+@import "font&colors";
+
+#logout{
+  position: fixed;
+  top: 10px;
+  right: 10px;
+  margin: 20px;
+  color: $white;
+  font-family: "Bungee", cursive;
+  cursor: pointer;
+
+  &:hover{
+    color: $whitehover;
+  }
+}

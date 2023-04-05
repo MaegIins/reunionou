@@ -68,16 +68,19 @@
 
         </div>
 
+        <logout-comp/>
     </div>
 </template>
 
 <script>
 import api from '../api';
 import "./../assets/style/ListEvents.css";
+import LogoutComp from "@/components/LogoutComp.vue";
 
 
 export default {
     name: "ListEvents",
+    components: {LogoutComp},
     data() {
         return {
             events: [],

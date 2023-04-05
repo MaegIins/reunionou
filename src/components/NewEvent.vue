@@ -35,15 +35,19 @@
             <p v-if="dateLower" class="error">La date ne doit pas être dans le passé</p>
         </div>
 
+        <logout-comp/>
+
     </div>
 </template>
 
 <script>
 import api from '../api';
 import "./../assets/style/NewEvent.css";
+import LogoutComp from "@/components/LogoutComp.vue";
 
 export default {
     name: "NewEvent",
+    components: {LogoutComp},
     data() {
         return {
             selectOptions: '',
