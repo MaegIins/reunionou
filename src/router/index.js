@@ -13,6 +13,7 @@ import ListEvents from "@/components/ListEvents.vue";
 import NewEvent from "@/components/NewEvent.vue";
 import ErrorFourOFour from "@/components/ErrorFourOFour.vue";
 import InviteComp from "@/components/InviteComp.vue";
+import InviteWaiting from "@/components/InviteWaiting.vue";
 
 
 const routes = [
@@ -24,6 +25,7 @@ const routes = [
     {name: 'ListEvents', path: '/liste', component: ListEvents},
     {name: 'NewReunion', path: '/newreunion', component: NewEvent},
     {name: 'invite', path: '/invites', component: InviteComp},
+    {name: 'inviteWaiting', path: '/invites/list', component: InviteWaiting},
 
 
 
