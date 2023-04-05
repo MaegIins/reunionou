@@ -13,20 +13,19 @@
             </div>
 
             <div id="listInvit">
-                <div v-on:click="redirectToEvent(invitation.event.id_event)" v-for="invitation in pendingInvitations"
-                     :key="invitation.event.id_event" class="eventPending">
+                <div v-for="invitation in pendingInvitations" :key="invitation.event.id_event" class="eventPending">
                     <h2>{{ invitation.event.name }}</h2>
                     <p>{{ invitation.event.description }}</p>
                     <p>{{ displayCorrectDate(invitation.event.date) }} à {{
                         displayCorrectTime(invitation.event.date)
-                        }}</p>
+                    }}</p>
 
                     <textarea v-model="invitation.comment" placeholder="Commentaire (obligatoire)"></textarea>
                     <div class="invitation-actions">
                         <button @click="confirmInvite(invitation.event.id_event, true, invitation.comment)">Accepter
                         </button>
                         <button id="noButton"
-                                @click="confirmInvite(invitation.event.id_event, false, invitation.comment)">Refuser
+                            @click="confirmInvite(invitation.event.id_event, false, invitation.comment)">Refuser
                         </button>
                     </div>
                 </div>
@@ -37,7 +36,7 @@
         <div id="events">
             <div id="title">
                 <h2>Mes évènements</h2>
-                <button @click="this.$router.push('/newreunion')"><i class="bi bi-plus"/></button>
+                <button @click="this.$router.push('/newreunion')"><i class="bi bi-plus" /></button>
             </div>
 
 
@@ -68,9 +67,10 @@
 
         </div>
 
-        <logout-comp/>
+        <logout-comp />
     </div>
 </template>
+
 
 <script>
 import api from '../api';
@@ -80,14 +80,13 @@ import LogoutComp from "@/components/LogoutComp.vue";
 
 export default {
     name: "ListEvents",
-    components: {LogoutComp},
+    components: { LogoutComp },
     data() {
         return {
             events: [],
             pendingInvitations: [],
             errorMessage: '',
             confirmMessage: '',
-
         }
     },
     mounted() {
@@ -96,7 +95,6 @@ export default {
     },
 
     computed: {
-        //sort the events by date and hour
         eventsSorted() {
             return this.events.sort((a, b) => {
                 const dateA = new Date(a.event.date);
@@ -104,8 +102,6 @@ export default {
 
                 return dateA - dateB;
             });
-            
-
         },
     },
     methods: {
@@ -113,35 +109,16 @@ export default {
             this.$router.push(`/events/${idEvent}`);
         },
 
-
         async getPendingInvitations() {
             try {
-                const response = await api.get('/invites/list', {params: {state: 0}});
+                const response = await api.get('/invites/list', { params: { state: 0 } });
                 this.pendingInvitations = response.data.events;
             } catch (error) {
                 this.errorMessage = "Aucune invitation en attente";
                 console.log(error);
             }
         },
-        async confirmInvite(idEvent, status, comment) {
-            try {
-                const response = await api.post('/invites/confirm/user', {
-                    event: idEvent,
-                    status,
-                    comment,
-                });
 
-                if (response.data.type === 'success') {
-                    this.getPendingInvitations();
-                    this.confirmMessage = response.data.message;
-                    this.errorMessage = '';
-                } else {
-                    this.errorMessage = response.data.message;
-                }
-            } catch (error) {
-                this.errorMessage = "Erreur lors de la confirmation de l'invitation";
-            }
-        },
         async getEvents() {
             try {
                 const response = await api.get('/events');
@@ -190,7 +167,7 @@ export default {
                     updatedEvent.status = status ? 1 : 2;
                     this.confirmMessage = response.data.message;
                     this.getPendingInvitations();
-
+                    this.getEvents();
                 } else {
                     console.error('Erreur lors de la confirmation de l\'invitation:', response.data.message);
                 }
@@ -252,6 +229,4 @@ textarea {
 .router:hover {
     text-decoration: underline;
 }
-
-
 </style>
