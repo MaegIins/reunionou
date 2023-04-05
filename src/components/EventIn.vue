@@ -4,12 +4,7 @@
     <router-link to="/accueil">
       <h1>REUNIONOU.APP</h1>
     </router-link>
-    <!-- <div id="boutons">
-      <div>
-        <button>Je viens !</button>
-        <button>Je ne viens pas</button>
-      </div>
-    </div> -->
+
     <div v-if="errorMessage">
       <p>{{ errorMessage }}</p>
     </div>
