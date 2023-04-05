@@ -45,18 +45,33 @@ export default {
     };
   },
   methods: {
+      /**
+       * Set focus on name input
+       */
     setFocusOnName() {
       this.$refs.name.focus();
     },
+      /**
+       * Set focus on mail input
+       */
     setFocusOnMail() {
       this.$refs.mail.focus();
     },
+      /**
+       * Set focus on password input
+       */
     setFocusOnPwd() {
       this.$refs.pwd.focus();
     },
+      /**
+       * Set focus on confirm password input
+       */
     setFocusOnCpwd() {
       this.$refs.cpwd.focus();
     },
+      /**
+       * Sign in
+       */
     signIn() {
 
 

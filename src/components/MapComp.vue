@@ -30,8 +30,11 @@ export default {
     this.loadEvent();
   },
   methods: {
-    
 
+      /**
+       * Load event from API
+       * @returns {Promise<void>}
+       */
     async loadEvent() {
       try {
         const response = await api.get('/events/' + this.idEvent);
@@ -41,7 +44,9 @@ export default {
         console.log(error);
       }
     },
-
+      /**
+       * Show event on map
+       */
     showEventOnMap() {
       const event = this.events.event;
       const { lat, lon, name: placeName, adress } = event.place;

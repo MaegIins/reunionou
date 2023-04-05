@@ -95,6 +95,10 @@ export default {
     },
 
     computed: {
+        /**
+         * Sort events by date
+         * @returns {[]}
+         */
         eventsSorted() {
             return this.events.sort((a, b) => {
                 const dateA = new Date(a.event.date);
@@ -105,10 +109,18 @@ export default {
         },
     },
     methods: {
+        /**
+         * Redirect to event page
+         * @param idEvent
+         */
         redirectToEvent(idEvent) {
             this.$router.push(`/events/${idEvent}`);
         },
 
+        /**
+         * Get pending invitations
+         * @returns {Promise<void>}
+         */
         async getPendingInvitations() {
             try {
                 const response = await api.get('/invites/list', { params: { state: 0 } });
@@ -119,6 +131,11 @@ export default {
             }
         },
 
+
+        /**
+         * Get events
+         * @returns {Promise<void>}
+         */
         async getEvents() {
             try {
                 const response = await api.get('/events');
@@ -128,6 +145,11 @@ export default {
             }
         },
 
+        /**
+         * Display date in correct format
+         * @param date {string} Date to display
+         * @returns {string} Date in correct format
+         */
         displayCorrectDate(date) {
             const parsedDate = new Date(date);
             const day = parsedDate.getUTCDate().toString().padStart(2, '0');
@@ -135,6 +157,11 @@ export default {
             const year = parsedDate.getUTCFullYear();
             return day + '/' + month + '/' + year;
         },
+        /**
+         * Display time in correct format
+         * @param date {string} Time to display
+         * @returns {string} Time in correct format
+         */
         displayCorrectTime(date) {
             const parsedDate = new Date(date);
             const hours = parsedDate.getUTCHours().toString().padStart(2, '0');
@@ -142,12 +169,23 @@ export default {
             return hours + ':' + minutes;
         },
 
+        /**
+         * Check if date is passed
+         * @param date {string} Date to check
+         * @returns {boolean} True if date is passed, false otherwise
+         */
         isDatePassed(date) {
             const dateToCheck = new Date(date);
             const today = new Date();
             return dateToCheck > today;
         },
-
+        /**
+         * Confirm invite
+         * @param eventId {number} Id of the event
+         * @param status {boolean} Status of the invite
+         * @param comment {string} Comment of the invite
+         * @returns {Promise<void>}
+         */
         async confirmInvite(eventId, status, comment) {
             if (!comment) {
                 this.errorMessage = 'Veuillez ajouter un commentaire';

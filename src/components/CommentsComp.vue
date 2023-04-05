@@ -51,6 +51,10 @@ export default {
     },
   },
   computed: {
+      /**
+       * Sort comments by date
+       * @returns {*}
+       */
     commentsSorted() {
       return this.comments.sort((a, b) => {
         return new Date(a.date) - new Date(b.date);
