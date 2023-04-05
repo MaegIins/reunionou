@@ -11,14 +11,16 @@ INSERT INTO `Place` (`id`, `name`, `adress`, `lat`, `lon`) VALUES
 
 -- Insertion des événements (Events)
 INSERT INTO `Event` (`id`, `name`, `description`, `date`, `name_orga`, `mail_orga`, `id_place`) VALUES
-('7904c62f-3d4f-446f-8a23-56c5660f466f', 'Fête de la Musique', 'La Fête de la Musique est une fête populaire, gratuite et ouverte à tous les musiciens.', '2023-06-21 18:00:00', 'Mairie de Nancy', 'contact@mairie-nancy.fr', '589fd4aa-a728-4a66-bec2-493109a161d3'),
-('9a105e54-cd03-4559-91d7-263de33aa7ef', 'Exposition Monet', 'Exposition des oeuvres de Monet, peintre impressionniste', '2023-08-01 10:00:00', 'Musée des Beaux-Arts de Nancy', 'contact@musee-nancy.fr', 'afff70cf-a491-43b8-b889-e8ec466c5f91');
+('7904c62f-3d4f-446f-8a23-56c5660f466f', 'Fête de la Musique', 'La Fête de la Musique est une fête populaire, gratuite et ouverte à tous les musiciens.', '2023-04-21 18:00:00', 'Jean Dupont', 'jean.dupont@mail.com', '589fd4aa-a728-4a66-bec2-493109a161d3'),
+('9a105e54-cd03-4559-91d7-263de33aa7ef', 'Exposition Monet', 'Exposition des oeuvres de Monet, peintre impressionniste', '2023-08-01 10:00:00', 'Lucie Bernard', 'lucie.bernard@mail.com', 'afff70cf-a491-43b8-b889-e8ec466c5f91');
 
 -- Insertion des participants (Attendees)
 INSERT INTO `Attendee` (`id`, `id_event`, `name_user`, `mail_user`, `status`, `details`) VALUES
-('1', '7904c62f-3d4f-446f-8a23-56c5660f466f', 'Jean Dupont', 'jean.dupont@mail.com', '1', 'Guitariste'),
+('1', '7904c62f-3d4f-446f-8a23-56c5660f466f', 'Jean Dupont', 'jean.dupont@mail.com', '3', 'Je viens avec ma guitare'),
 ('2', '7904c62f-3d4f-446f-8a23-56c5660f466f', 'Marie Martin', 'marie.martin@mail.com', '0', NULL),
-('3', '9a105e54-cd03-4559-91d7-263de33aa7ef', 'Lucie Bernard', 'lucie.bernard@mail.com', '1', 'Membre du Musée');
+('3', '9a105e54-cd03-4559-91d7-263de33aa7ef', 'Lucie Bernard', 'lucie.bernard@mail.com', '3', 'Musée, youpiii');
+('4', '9a105e54-cd03-4559-91d7-263de33aa7ef', 'Paul Dupont', 'pauk@mail.com', '2', 'Trop hâte !')
+
 
 -- Insertion des commentaires (Comments)
 INSERT INTO `Comments` (`id`,`id_event`, `id_attendee`, `text`, `date`) VALUES
