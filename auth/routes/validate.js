@@ -25,7 +25,6 @@ router.get('/', async (req, res, next) => {
             res.status(401).json({ type: "error", error: 401, message: "no authorization header present"});
         } else {
             const [type, token] = authHeader.split(' ');
-            console.log(token);
             jwt.verify(token, secretKey, async (err, decoded) => {
                 if (err) {
                     res.status(401).json({ type: "error", error: 401, message: err});

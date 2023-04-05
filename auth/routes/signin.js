@@ -26,7 +26,6 @@ router.post('/', async (req, res, next) => {
         } else {
             const [type, credentials] = authHeader.split(' ');
             const [mail, password] = Buffer.from(credentials, 'base64').toString().split(':');
-            console.log('mail : ' + mail + 'pass : ' + password)
             const result = await db('user').select('id', 'user_name', 'user_mail', 'passwd').where('user_mail', mail);
             if (result.length > 0) {
                 const hash = result[0].passwd;
@@ -43,8 +42,6 @@ router.post('/', async (req, res, next) => {
                     // refresh token
                     const refreshToken = randtoken.uid(50);
                     await db('user').update({ refresh_token: refreshToken }).where('id', result[0].id);
-                    console.log(refreshToken);
-                    console.log(token);
                     res.status(200).json({ "access_token": token, "refresh_token": refreshToken });
                 } else {
                     res.status(401).json({ type: "error", error: 401, message: "wrong password" });

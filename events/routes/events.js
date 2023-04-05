@@ -24,7 +24,6 @@ router.get('/', async (req, res, next) => {
 
         // Récupérer l'adresse e-mail donnée par le gateway
         const userEmail = req.headers['user-email'];
-        console.log("userEmail", userEmail);
 
         // Trouver les événements auxquels l'utilisateur participe
         const attendingEvents = await db.select('id_event').from('Attendee').where({ mail_user: userEmail });
@@ -162,7 +161,6 @@ router.put('/:id', async (req, res, next) => {
             res.status(404).json({ type: "error", error: 404, message: "event not found " + req.originalUrl });
         } else {
             const { name, description, date, name_orga, mail_orga, id_place } = req.body;
-            console.log(name, description, date, name_orga, mail_orga, id_place)
             // if (!name || !description || !date || !name_orga || !mail_orga || !id_place) {
             //     res.status(400).json({ type: "error", error: 400, message: "Bad request" });
             // } else {
@@ -239,7 +237,6 @@ router.get('/:id/attendees', async (req, res, next) => {
  */
 router.post('/', async (req, res, next) => {
     try {
-        console.log(req.body)
         if (req.body.title === undefined || req.body.description === undefined || req.body.date.date === undefined || req.body.date.time === undefined || req.body.name_place === undefined || req.body.adress.city === undefined || req.body.adress.street === undefined) {
             res.status(400).json({ type: "error", error: 400, message: "The request is invalid" });
         } else {
@@ -307,7 +304,6 @@ router.post('/', async (req, res, next) => {
                                             }
                                         },
                                     );
-                                    console.log(gps.data[0])
 
                                     if (gps.data[0] !== undefined) {
                                         let uuidPlace = uuidv4();

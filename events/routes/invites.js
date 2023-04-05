@@ -25,7 +25,7 @@ const secretKey = process.env.SECRET_KEY;
 router.post('/confirm', async (req, res, next) => {
     try {
         const { key, name, mail, status, comment } = req.body;
-        const { error } = schema.validate({ key, name, mail, status, comment });
+        const { error } = schema.validate({ key, name, mail, status });
         if (error) {
             res.status(400).json({ type: "error", error: 400, message: "bad request", details: error.details });
         } else {
@@ -35,7 +35,6 @@ router.post('/confirm', async (req, res, next) => {
                 res.status(404).json({ type: "error", error: 404, message: "event not found " + req.originalUrl });
             } else {
                 let participate;
-                console.log(status);
                 if (status == true) {
                     participate = 1;
                 } else {
@@ -65,7 +64,6 @@ router.post('/confirm/user', async (req, res, next) => {
         const { event, status, comment } = req.body;
         const userName = req.headers['user-name'];
         const userEmail = req.headers['user-mail'];
-        console.log(event, userName, userEmail, status, comment)
         if (!event || status == undefined || !userName || !userEmail) {
             res.status(400).json({ type: "error", error: 400, message: "bad request", details: "missing parameters" });
         }

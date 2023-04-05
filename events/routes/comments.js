@@ -82,8 +82,6 @@ router.post('/add', async (req, res, next) => {
 
             try {
                 const userEmail = req.headers['user-mail'];
-                console.log(userEmail)
-                console.log(req.body)
                 const date = new Date().toISOString().slice(0, 19).replace('T', ' ');
                 let result = await schema.validateAsync({ id_event: req.body.id_event, mail_attendee: userEmail, text: req.body.text });
                 if (result) {

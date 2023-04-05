@@ -26,7 +26,6 @@ router.post('/', async (req, res, next) => {
                 res.status(401).json({ type: "error", error: 401, message: "no authorization header present"});
             } else {
                 const [type, token] = authHeader.split(' ');
-                console.log(token);
                 const result = await db('user').select('id','user_name', 'user_mail', 'passwd', 'refresh_token').where('refresh_token', token);
                 if (result.length > 0) {
                     const payload = {
@@ -40,7 +39,6 @@ router.post('/', async (req, res, next) => {
                     // refresh token
                     const refreshToken = randtoken.uid(50);
                     await db('user').update({ refresh_token: refreshToken }).where('id', result[0].id);
-                    console.log(refreshToken);
 
                     res.status(200).json({ "access_token": accessToken, "refresh_token": refreshToken});
                 } else {
