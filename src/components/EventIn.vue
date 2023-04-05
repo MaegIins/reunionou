@@ -99,7 +99,7 @@ export default {
           id_event: this.idEvent,
           text: commentText,
         });
-        this.comments.push(response.data);
+        this.com();
       } catch (error) {
         console.log(error);
         this.errorMessage = "Erreur lors de l'envoi du commentaire.";

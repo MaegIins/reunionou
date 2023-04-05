@@ -15,10 +15,9 @@
       </div>
     </div>
     <div id="commentForm">
-
-      <textarea v-model="newCommentText" placeholder="Ajouter un commentaire..."></textarea>
+      <textarea v-model="newCommentText" placeholder="Ajouter un commentaire..."
+        @keydown.enter.prevent="sendComment"></textarea>
       <button @click="sendComment"><i class="bi bi-send"></i></button>
-
     </div>
   </div>
 </template>
