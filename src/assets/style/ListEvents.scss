@@ -19,7 +19,7 @@
 
   }
 
-  button{
+  button {
     width: 100%;
     height: 100%;
     border-radius: 20px;
@@ -42,10 +42,34 @@
   }
 
   #events {
-    padding : 10px 20px 0 20px;
-    display: grid;
-    grid-template-columns: repeat(3, 1fr); /* Crée 3 colonnes égales */
-    grid-gap: 20px; /* Ajoute un espace de 20px entre les divs */
+    display: flex;
+    flex-direction: column;
+
+    #title{
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+      vertical-align: center;
+      margin: 20px;
+
+
+
+      button{
+        height: 50px;
+        width: 50px;
+        border-radius: 50%;
+        margin-left: 20px;
+
+      }
+
+    }
+
+    #eventsDiv {
+      padding: 10px 20px 0 20px;
+      display: grid;
+      grid-template-columns: repeat(3, 1fr); /* Crée 3 colonnes égales */
+      grid-gap: 20px; /* Ajoute un espace de 20px entre les divs */
+    }
 
     .event {
 
@@ -57,6 +81,7 @@
       background: $white;
       border-radius: 20px;
       color: $black;
+
       h2 {
         font-family: "Bungee", cursive;
         font-size: 1.5em;
@@ -94,11 +119,78 @@
       }
     }
 
-    #oldEvent{
+    #oldEvent {
       background: $grey;
     }
 
 
+  }
+
+  #pending-invitations {
+    display: flex;
+    flex-direction: column;
+
+    #messages{
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        vertical-align: center;
+
+        button{
+            height: 50px;
+            width: 50px;
+            border-radius: 50%;
+            margin-left: 20px;
+
+        }
+    }
+
+    #listInvit {
+      padding: 10px 20px 0 20px;
+      display: grid;
+      grid-template-columns: repeat(3, 1fr); /* Crée 3 colonnes égales */
+      grid-gap: 20px; /* Ajoute un espace de 20px entre les divs */
+
+
+      .eventPending {
+        display: flex;
+        cursor: pointer;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        width: 100%;
+        background: $white;
+        border-radius: 20px;
+        color: $black;
+        padding: 8px;
+
+        h2{
+          font-family: "Bungee", cursive;
+          font-size: 1.5em;
+          margin: 0;
+          padding: 0;
+        }
+
+        .invitation-actions{
+          display: flex;
+          flex-direction: row;
+          justify-content: space-around;
+          width: 100%;
+          button{
+            font-size: 20px;
+            width: 200px;
+          }
+          #noButton{
+            background: red;
+            color: $white;
+          }
+
+        }
+
+
+      }
+
+    }
   }
 
 
