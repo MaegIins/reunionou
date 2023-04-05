@@ -56,9 +56,11 @@ export default {
        * @returns {*}
        */
     commentsSorted() {
-      return this.comments.sort((a, b) => {
-        return new Date(a.date) - new Date(b.date);
-      });
+      if (this.comments.length !== 0) {
+        return this.comments.sort((a, b) => {
+          return new Date(a.date) - new Date(b.date);
+        });
+      }
     },
   },
 

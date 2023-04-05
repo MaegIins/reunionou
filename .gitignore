@@ -29,3 +29,4 @@ coverage
 .env
 authdb/
 db/
+package-lock.json

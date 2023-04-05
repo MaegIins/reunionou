@@ -51,7 +51,6 @@ export default {
       const event = this.events.event;
       const { lat, lon, name: placeName, adress } = event.place;
       const { name: eventName, description, date, name_orga } = event;
-      console.log(event.place);
       const popupContent = `
   <h2>${placeName}</h2>
   <p>${adress}</p>
