@@ -25,8 +25,8 @@ router.get('/', async (req, res, next) => {
         // Récupérer l'adresse e-mail donnée par le gateway
         const userEmail = req.headers['user-email'];
 
-        // Trouver les événements auxquels l'utilisateur participe
-        const attendingEvents = await db.select('id_event').from('Attendee').where({ mail_user: userEmail });
+        // Trouver les événements auxquels l'utilisateur participe et dont le statut est "accepté" ou "en attente"
+        const attendingEvents = await db.select('id_event').from('Attendee').where({ mail_user: userEmail }).whereIn('status', [1, 3]);
 
         // Extraire uniquement les ID d'événements
         const eventIds = attendingEvents.map(event => event.id_event);
