@@ -67,13 +67,30 @@
   border-radius: 50px;
   color: #0a0a0a;
 }
-#NewEvent .newEventForm #time {
+#NewEvent .newEventForm #timeDiv {
   display: flex;
   flex-direction: row;
+  width: 60%;
   justify-content: space-between;
 }
-#NewEvent .newEventForm button {
+#NewEvent .newEventForm #timeDiv #time {
   width: 70%;
+  margin-left: 200px;
+}
+#NewEvent .newEventForm #timeDiv #date {
+  width: 70%;
+  margin-right: 200px;
+}
+#NewEvent .newEventForm #boutons {
+  display: flex;
+  flex-direction: row;
+  width: 70%;
+  justify-content: space-evenly;
+  align-items: center;
+  margin-top: 20px;
+}
+#NewEvent .newEventForm #boutons button {
+  min-width: 200px;
   height: 100%;
   border-radius: 20px;
   border: none;
@@ -85,11 +102,17 @@
   padding: 10px;
   margin-bottom: 10px;
 }
-#NewEvent .newEventForm button:focus {
+#NewEvent .newEventForm #boutons button:focus {
   outline: none;
 }
-#NewEvent .newEventForm button:hover {
+#NewEvent .newEventForm #boutons button:hover {
   border-radius: 50px;
+  color: #e6e6e6;
+}
+#NewEvent .newEventForm #boutons #stop {
+  background: red;
+}
+#NewEvent .newEventForm #boutons #stop:hover {
   color: #e6e6e6;
 }
 #NewEvent .newEventForm #adrs {
@@ -111,4 +134,6 @@
   font-size: 1.2rem;
   font-family: "Bungee", cursive;
   margin: 10px;
-}/*# sourceMappingURL=NewEvent.css.map */
+}
+
+/*# sourceMappingURL=NewEvent.css.map */
