@@ -259,28 +259,36 @@ router.post('/', async (req, res, next) => {
                         const place = await db.select("id").from("Place").where({ name: req.body.name_place });
                         //si oui alors on utilise son id pour créer l'evenement
                         if (place[0] !== undefined) {
-                            await db('Event').insert({
-                                'id': uuid,
-                                'name': req.body.title,
-                                'description': req.body.description,
-                                'date': date,
-                                'name_orga': nameOrga,
-                                'mail_orga': mailOrga,
-                                'id_place': place[0].id
-                            });
-                            try {
-                                await db('Attendee').insert({
-                                    'id_event': uuid,
-                                    'name_user': nameOrga,
-                                    'mail_user': mailOrga,
-                                    'status': 3,
+                            // Check if the event already exists at the same place and date
+                            const existingEvent = await db.select('*')
+                                .from('Event')
+                                .where({ 'id_place': place[0].id, 'date': date });
+                            if (existingEvent.length > 0) {
+                                res.status(409).json({ type: "error", error: "409", message: "Event already exists at the same place and date" });
+                            } else {
+                                await db('Event').insert({
+                                    'id': uuid,
+                                    'name': req.body.title,
+                                    'description': req.body.description,
+                                    'date': date,
+                                    'name_orga': nameOrga,
+                                    'mail_orga': mailOrga,
+                                    'id_place': place[0].id
                                 });
-                            } catch (error) {
-                                res.status(500).json({ type: "error", error: 500, message: "server error", details: error });
-                                next(error);
+                                try {
+                                    await db('Attendee').insert({
+                                        'id_event': uuid,
+                                        'name_user': nameOrga,
+                                        'mail_user': mailOrga,
+                                        'status': 3,
+                                    });
+                                } catch (error) {
+                                    res.status(500).json({ type: "error", error: 500, message: "server error", details: error });
+                                    next(error);
+                                }
+                                // Retourne un code 201 (created) et Location sur /events/{id}
+                                res.status(201).set('Location', '/events/' + uuid).json({ type: "sucess", error: 201, message: "CREATED" });
                             }
-                            // Retourne un code 201 (created) et Location sur /events/{id}
-                            res.status(201).set('Location', '/events/' + uuid).json({ type: "sucess", error: 201, message: "CREATED" });
                         } else {
                             // sinon on créer le lieu et on le ratache a l'événement
 
@@ -291,13 +299,13 @@ router.post('/', async (req, res, next) => {
                                 // axios and proxy with async/await and try/catch
                                 try {
                                     const gps = await axios.get('https://nominatim.openstreetmap.org/search?street=' + req.body.adress.street.replace(/\s+/g, '+') + '&city=' + req.body.adress.city + '&format=json',
-                                    {
-                                        proxy: {
-                                            protocol: 'http',
-                                            host: 'www-cache.iutnc.univ-lorraine.fr',
-                                            port: 3128
-                                        }
-                                    },
+                                        {
+                                            proxy: {
+                                                protocol: 'http',
+                                                host: 'www-cache.iutnc.univ-lorraine.fr',
+                                                port: 3128
+                                            }
+                                        },
                                     );
                                     console.log(gps.data[0])
 
