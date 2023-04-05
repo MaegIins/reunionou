@@ -205,7 +205,7 @@ router.get('/', async (req, res, next) => {
             if (!userInvites) {
                 res.status(404).json({ type: "error", error: 404, message: "user " + userEmail + " don't have any invite" });
             } else {
-                const eventDetails = await db.select('id', 'name', 'description', 'date', 'id_place').from('Event').whereIn('id', userInvites.map(invite => invite.id_event));
+                const eventDetails = await db.select('id', 'name', 'description', 'date', 'id_place', 'name_orga', 'mail_orga').from('Event').whereIn('id', userInvites.map(invite => invite.id_event));
                 const eventDetailsWithPlace = await Promise.all(eventDetails.map(async (event) => {
                     const id_place = event.id_place;
                     if (id_place) {
@@ -215,6 +215,9 @@ router.get('/', async (req, res, next) => {
                             id_event: event.id,
                             name: event.name,
                             date: event.date,
+                            description: event.description,
+                            name_orga: event.name_orga,
+                            mail_orga: event.mail_orga,
                             place: {
                                 id_place: place[0].id,
                                 name: place[0].name,
