@@ -48,6 +48,7 @@ import LogoutComp from "@/components/LogoutComp.vue";
 
 export default {
   name: "NewEvent",
+    components: {LogoutComp},
   data() {
     return {
       selectOptions: '',
