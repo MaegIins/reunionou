@@ -94,8 +94,14 @@ export default {
             const fullMonthinFrench = ["Janvier", "Février", "Mars", "Avril", "Mai", "Juin", "Juillet", "Août", "Septembre", "Octobre", "Novembre", "Décembre"];
             const month = fullMonthinFrench[date.getMonth()];
             const year = date.getFullYear();
-            const hours = date.getHours().toString().padStart(2, "0");
-            const minutes = date.getMinutes().toString().padStart(2, "0");
+            const options = {
+                timeZone: "Etc/GMT",
+                hour: "numeric",
+                minute: "2-digit",
+                hour12: false
+            };
+            const formattedDate = date.toLocaleString("fr-FR", options).replace(":", "h");
+            const [hours, minutes] = formattedDate.split("h");
 
             return `${day} ${getDay} ${month} ${year} à ${hours}h${minutes}`;
         },

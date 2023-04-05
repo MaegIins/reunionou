@@ -6,6 +6,7 @@
 
         <div id="pending-invitations">
             <h2>Invitations en attente</h2>
+            <p v-if="pendingInvitations.length === 0">Aucune invitation en attente</p>
 
             <div id="messages">
                 <p class="error-message">{{ errorMessage }}</p>
@@ -20,7 +21,7 @@
                         displayCorrectTime(invitation.event.date)
                     }}</p>
 
-                    <textarea v-model="invitation.comment" placeholder="Commentaire (obligatoire)"></textarea>
+                    <textarea v-model="invitation.comment" placeholder="Commentaire"></textarea>
                     <div class="invitation-actions">
                         <button @click="confirmInvite(invitation.event.id_event, true, invitation.comment)">Accepter
                         </button>
@@ -56,7 +57,7 @@
                         </div>
                     </router-link>
                     <div v-if="event.status === 0" class="invitation-actions">
-                        <textarea v-model="event.comment" placeholder="Ajoutez un commentaire..." required></textarea>
+                        <textarea v-model="event.comment" placeholder="Ajoutez un commentaire..."></textarea>
                         <button @click="confirmInvite(event.event.id_event, true, event.comment)">Accepter</button>
                         <button @click="confirmInvite(event.event.id_event, false, event.comment)">Refuser</button>
                     </div>
@@ -187,10 +188,10 @@ export default {
          * @returns {Promise<void>}
          */
         async confirmInvite(eventId, status, comment) {
-            if (!comment) {
-                this.errorMessage = 'Veuillez ajouter un commentaire';
-                return;
-            }
+            // if (!comment) {
+            //     this.errorMessage = 'Veuillez ajouter un commentaire';
+            //     return;
+            // }
 
             try {
                 const response = await api.post('/invites/confirm/user', {
