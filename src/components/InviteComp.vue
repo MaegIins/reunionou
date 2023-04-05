@@ -4,34 +4,39 @@
         <div v-if="errorMessage">
             <h2>{{ errorMessage }}</h2>
         </div>
-        <div v-else>
+        <div v-else id="content">
+            <div>
+                <h2>Vous êtes invité à un évènement</h2>
+                <h3 id="title">{{ eventName }} </h3>
+                <p>Organisé par {{ organizerName }} ({{ organizerEmail }})</p>
+                <h4>Le {{ formatDate(eventDate) }}</h4>
 
-            <h2>Vous êtes invité à un évènement</h2>
-            <h3>{{ eventName }}</h3>
-            <p>Organisé par {{ organizerName }} ({{ organizerEmail }})</p>
-            <h4>Le {{ formatDate(eventDate) }}</h4>
+                <p>Description : {{ description }}</p>
 
-            <p>Description : {{ description }}</p>
+                <div v-if="!showForm" id="buttons-primary">
+                    <button @click="showConfirmationForm(true)">Je confirme ma présence</button>
+                    <button id="noButton" @click="showConfirmationForm(false)">Je ne viens pas</button>
+                </div>
 
-            <div v-if="!showForm">
-                <button @click="showConfirmationForm(true)">Je confirme ma présence</button>
-                <button @click="showConfirmationForm(false)">Je ne viens pas</button>
+                <div id="form" v-if="showForm">
+                    <div id="namail">
+
+                        <input type="text" id="name" v-model="name" placeholder="Nom" required/>
+                        <input type="email" id="mail" v-model="mail" placeholder="Adresse Mail" required/>
+                    </div>
+
+                    <textarea id="comment" v-model="comment" placeholder="Commentaire" required></textarea>
+
+                    <div id="buttons">
+
+                        <button type="submit" @click="confirm">Envoyer</button>
+                        <button id="noButton" @click="showForm = false">Annuler</button>
+                    </div>
+                </div>
+
+                <div v-if="responseMessage">{{ responseMessage }}</div>
             </div>
 
-            <form v-if="showForm" @submit.prevent>
-                <label for="name">Nom :</label>
-                <input type="text" id="name" v-model="name" required />
-
-                <label for="mail">E-mail :</label>
-                <input type="email" id="mail" v-model="mail" required />
-
-                <label for="comment">Détails :</label>
-                <textarea id="comment" v-model="comment" required></textarea>
-
-                <button type="submit" @click="confirm">Envoyer</button>
-            </form>
-
-            <div v-if="responseMessage">{{ responseMessage }}</div>
 
             <div class="map-container">
                 <h2>Lieu de la réunion</h2>
@@ -42,12 +47,13 @@
         <logout-comp/>
     </div>
 </template>
-  
+
 <script>
 import api from "@/api.js";
 import L from "leaflet";
 import "leaflet/dist/leaflet.css";
 import LogoutComp from "@/components/LogoutComp.vue";
+import "../assets/style/inviteComp.css"
 
 export default {
     name: "InviteComp",
@@ -92,7 +98,7 @@ export default {
 
         getEventByInvit() {
             api
-                .get("/invites", { params: { key: this.key } })
+                .get("/invites", {params: {key: this.key}})
                 .then((response) => {
                     this.eventName = response.data.event.name;
                     this.description = response.data.event.description;
@@ -148,7 +154,7 @@ export default {
                     this.responseMessage = "Une erreur est survenue. Veuillez réessayer.";
                 } else if (response.data.type === "success") {
                     this.responseMessage = `Confirmation ${this.attending ? "de présence" : "d'absence"
-                        } envoyée avec succès.`;
+                    } envoyée avec succès.`;
                 } else {
                     this.responseMessage = "Une erreur est survenue. Veuillez réessayer.";
                 }
@@ -170,7 +176,7 @@ export default {
     },
 };
 </script>
-  
+
 <style scoped>
 .map-container {
     height: 500px;

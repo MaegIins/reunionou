@@ -1,0 +1,130 @@
+@import "font&colors";
+
+#inviteComp {
+  background: $background;
+  min-height: 100vh;
+  color: $white;
+
+  h1{
+    font-size: 3rem;
+    font-weight: 600;
+    margin-bottom: 1rem;
+    font-family: "Bungee", cursive;
+    cursor: pointer;
+  }
+
+  #content {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+    align-items: center;
+    margin-top: 7rem;
+
+    #buttons-primary{
+      button {
+        background: $bluePrimary;
+        color: $white;
+        border: none;
+        padding: 0.5rem 1rem;
+        border-radius: 0.5rem;
+        font-size: 1.5rem;
+        font-weight: 600;
+        font-family: "Bungee", cursive;
+        cursor: pointer;
+        transition: all 0.2s ease-in-out;
+        margin: 0 10px 0 0;
+
+        &:hover {
+          color: $whitehover;
+        }
+      }
+
+      #noButton {
+        background: red;
+        color: $white;
+        border: none;
+        padding: 0.5rem 1rem;
+        border-radius: 0.5rem;
+        font-size: 1.5rem;
+        font-weight: 600;
+        font-family: "Bungee", cursive;
+        cursor: pointer;
+        transition: all 0.2s ease-in-out;
+
+        &:hover {
+          color: $whitehover;
+        }
+      }
+    }
+
+    #title {
+      font-size: 3rem;
+      font-weight: 600;
+      margin-bottom: 1rem;
+    }
+
+    #form {
+
+      display: flex;
+      flex-direction: column;
+
+      #namail, textarea, #buttons {
+        display: flex;
+        flex-direction: row;
+        justify-content: space-around;
+        margin: 5px;
+        width: 100%;
+        border-radius: 0.5rem;
+
+        input {
+          border-radius: 0.5em;
+        }
+      }
+
+      #buttons{
+
+        button {
+          background: $bluePrimary;
+          color: $white;
+          border: none;
+          padding: 0.5rem 1rem;
+          border-radius: 0.5rem;
+          font-size: 1.5rem;
+          font-weight: 600;
+          font-family: "Bungee", cursive;
+          cursor: pointer;
+          transition: all 0.2s ease-in-out;
+          margin: 0 10px 0 0;
+
+          &:hover {
+            color: $whitehover;
+          }
+        }
+
+        #noButton {
+          background: red;
+          color: $white;
+          border: none;
+          padding: 0.5rem 1rem;
+          border-radius: 0.5rem;
+          font-size: 1.5rem;
+          font-weight: 600;
+          font-family: "Bungee", cursive;
+          cursor: pointer;
+          transition: all 0.2s ease-in-out;
+
+          &:hover {
+            color: $whitehover;
+          }
+        }
+
+      }
+
+
+
+    }
+
+
+  }
+
+}

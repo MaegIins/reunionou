@@ -1,0 +1,104 @@
+@import url("https://fonts.googleapis.com/css2?family=Averia+Libre&family=Bungee&display=swap");
+#inviteComp {
+  background: radial-gradient(circle, rgb(17, 0, 119) 0%, rgb(11, 0, 77) 17%, rgb(10, 10, 10) 59%, rgb(10, 10, 10) 100%);
+  min-height: 100vh;
+  color: #fdfdfd;
+}
+#inviteComp h1 {
+  font-size: 3rem;
+  font-weight: 600;
+  margin-bottom: 1rem;
+  font-family: "Bungee", cursive;
+  cursor: pointer;
+}
+#inviteComp #content {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-around;
+  align-items: center;
+  margin-top: 7rem;
+}
+#inviteComp #content #buttons-primary button {
+  background: rgb(17, 0, 119);
+  color: #fdfdfd;
+  border: none;
+  padding: 0.5rem 1rem;
+  border-radius: 0.5rem;
+  font-size: 1.5rem;
+  font-weight: 600;
+  font-family: "Bungee", cursive;
+  cursor: pointer;
+  transition: all 0.2s ease-in-out;
+  margin: 0 10px 0 0;
+}
+#inviteComp #content #buttons-primary button:hover {
+  color: #e6e6e6;
+}
+#inviteComp #content #buttons-primary #noButton {
+  background: red;
+  color: #fdfdfd;
+  border: none;
+  padding: 0.5rem 1rem;
+  border-radius: 0.5rem;
+  font-size: 1.5rem;
+  font-weight: 600;
+  font-family: "Bungee", cursive;
+  cursor: pointer;
+  transition: all 0.2s ease-in-out;
+}
+#inviteComp #content #buttons-primary #noButton:hover {
+  color: #e6e6e6;
+}
+#inviteComp #content #title {
+  font-size: 3rem;
+  font-weight: 600;
+  margin-bottom: 1rem;
+}
+#inviteComp #content #form {
+  display: flex;
+  flex-direction: column;
+}
+#inviteComp #content #form #namail, #inviteComp #content #form textarea, #inviteComp #content #form #buttons {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-around;
+  margin: 5px;
+  width: 100%;
+  border-radius: 0.5rem;
+}
+#inviteComp #content #form #namail input, #inviteComp #content #form textarea input, #inviteComp #content #form #buttons input {
+  border-radius: 0.5em;
+}
+#inviteComp #content #form #buttons button {
+  background: rgb(17, 0, 119);
+  color: #fdfdfd;
+  border: none;
+  padding: 0.5rem 1rem;
+  border-radius: 0.5rem;
+  font-size: 1.5rem;
+  font-weight: 600;
+  font-family: "Bungee", cursive;
+  cursor: pointer;
+  transition: all 0.2s ease-in-out;
+  margin: 0 10px 0 0;
+}
+#inviteComp #content #form #buttons button:hover {
+  color: #e6e6e6;
+}
+#inviteComp #content #form #buttons #noButton {
+  background: red;
+  color: #fdfdfd;
+  border: none;
+  padding: 0.5rem 1rem;
+  border-radius: 0.5rem;
+  font-size: 1.5rem;
+  font-weight: 600;
+  font-family: "Bungee", cursive;
+  cursor: pointer;
+  transition: all 0.2s ease-in-out;
+}
+#inviteComp #content #form #buttons #noButton:hover {
+  color: #e6e6e6;
+}
+
+/*# sourceMappingURL=inviteComp.css.map */
