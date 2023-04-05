@@ -70,7 +70,7 @@ router.post('/confirm/user', async (req, res, next) => {
             res.status(400).json({ type: "error", error: 400, message: "bad request", details: "missing parameters" });
         }
         else {
-            const { error } = schema.validate({ key: event, name: userName, mail: userEmail, status: status, comment: comment });
+            const { error } = schema.validate({ key: event, name: userName, mail: userEmail, status: status });
             if (error) {
                 res.status(400).json({ type: "error", error: 400, message: "bad request", details: error.details });
             } else {
