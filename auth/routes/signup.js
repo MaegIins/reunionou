@@ -18,9 +18,9 @@ const schema = Joi.object({
 
 router.post('/', async (req, res, next) => {
     try {
-        const { name, mail, password } = req.body;
+        let { name, mail, password } = req.body;
+        mail = mail.toLowerCase();
         try {
-            const mail = mail.toLowerCase();
             const result = await schema.validateAsync({ name: name, mail: mail, password: password });
             if (result) {
                 const user = await db('user').where({ user_mail: mail });
