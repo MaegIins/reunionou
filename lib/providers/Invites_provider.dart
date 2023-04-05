@@ -48,9 +48,11 @@ class InvitesProvider {
       final List<dynamic> invitesJson = jsonDecode(response.body)['events'];
       final List<Invite> invites = invitesJson.map((inviteJson) {
         final inviteMap = inviteJson['event'];
+        
         final placeMap = inviteMap['place'];
         return Invite(
-          email: invitesJsonMailUser['mail_user'],
+          date : inviteMap['date'],
+          email : invitesJsonMailUser['mail_user'],
           name: placeMap['name'],
           id_event: inviteMap['id_event'],
         );

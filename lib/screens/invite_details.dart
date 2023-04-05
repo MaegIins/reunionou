@@ -25,6 +25,7 @@ class _InviteDetailsPageState extends State<InviteDetailsPage> {
     return Scaffold(
       appBar: AppBar(
         title: Text(widget.inviteDetails.name ?? ''),
+        
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
@@ -39,6 +40,7 @@ class _InviteDetailsPageState extends State<InviteDetailsPage> {
               ),
               textAlign: TextAlign.center,
             ),
+            Text( widget.inviteDetails.date ),
             SizedBox(height: 24.0),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,

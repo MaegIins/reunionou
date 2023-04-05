@@ -2,14 +2,16 @@ class Invite {
   final String? name;
   final String email;
   final String id_event;
+  final String date;
 
   Invite({
     required this.name,
     required this.email,
     required this.id_event,
+    required this.date,
   });
 
-  factory Invite.fromJson(Map<String, dynamic> json) {
+  /*factory Invite.fromJson(Map<String, dynamic> json) {
     final mailUser = json['mail_user'] as String;
     final eventsJson = json['events'] as List<dynamic>;
     final events = eventsJson.map((eventJson) {
@@ -19,5 +21,5 @@ class Invite {
       return Invite(name: name, email: mailUser, id_event: idEvent);
     }).toList();
     return events.first;
-  }
+  }*/
 }

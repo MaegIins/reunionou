@@ -10,6 +10,8 @@ const String tokenEndpoint =
     "http://docketu.iutnc.univ-lorraine.fr:20005/auth/signin";
 
 class LoginPage extends StatefulWidget {
+ 
+
   @override
   _LoginPageState createState() => _LoginPageState();
 }
