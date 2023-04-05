@@ -13,7 +13,7 @@ import 'package:partouille/models/attendee.dart';
  * 
  */
 class EventsProvider {
-  final String apiUrl = 'http://localhost:3333/events';
+  final String apiUrl = 'http://docketu.iutnc.univ-lorraine.fr:20005/events';
 
 /**
  * getEvents
@@ -55,7 +55,7 @@ class EventsProvider {
  * this function is used to add an event to the API
  */
   Future<void> addEvent(String bearerToken, EventAdress eventAdress) async {
-    final String apiUrl1 = 'http://localhost:3333/events';
+    final String apiUrl1 = 'http://docketu.iutnc.univ-lorraine.fr:20005/events';
     final response = await http.post(
       Uri.parse(apiUrl1),
       headers: <String, String>{
@@ -92,7 +92,7 @@ class EventsProvider {
       String bearerToken, event eventId) async {
     final eventUrl = eventId.id.toString();
 
-    final String apiUrl2 = 'http://localhost:3333/events/$eventUrl/attendees';
+    final String apiUrl2 = 'http://docketu.iutnc.univ-lorraine.fr:20005/events/$eventUrl/attendees';
     print(apiUrl2);
     final response = await http.get(
       Uri.parse(apiUrl2),

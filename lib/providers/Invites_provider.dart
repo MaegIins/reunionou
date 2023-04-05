@@ -7,7 +7,7 @@ class InvitesProvider {
 
 
   Future<void> inviteAttendee(bearerToken , event? eventInvite , String email) async {
-    final url = 'http://localhost:3333/invites/user';
+    final url = 'http://docketu.iutnc.univ-lorraine.fr:20005/invites/user';
 
     final response = await http.post(
       Uri.parse(url),
@@ -32,7 +32,7 @@ class InvitesProvider {
 
    
   Future<List<Invite>> getInvitesList(String bearerToken) async {
-    final url = 'http://localhost:3333/invites/list?state=0';
+    final url = 'http://docketu.iutnc.univ-lorraine.fr:20005/invites/list?state=0';
 
     final response = await http.get(
       Uri.parse(url),
@@ -48,8 +48,10 @@ class InvitesProvider {
       final List<dynamic> invitesJson = jsonDecode(response.body)['events'];
       final List<Invite> invites = invitesJson.map((inviteJson) {
         final inviteMap = inviteJson['event'];
+        
         final placeMap = inviteMap['place'];
         return Invite(
+          date : inviteMap['date'],
           email : invitesJsonMailUser['mail_user'],
           name: placeMap['name'],
           id_event: inviteMap['id_event'],
@@ -63,7 +65,7 @@ class InvitesProvider {
 
 
   Future<void> reponseInvitation(String bearerToken, inviteConfirm inviteConfirm) async {
-    final url = 'http://localhost:3333/invites/confirm/user';
+    final url = 'http://docketu.iutnc.univ-lorraine.fr:20005/invites/confirm/user';
     print(inviteConfirm.status);
     final response = await http.post(
       Uri.parse(url),

@@ -25,12 +25,14 @@ class _InviteDetailsPageState extends State<InviteDetailsPage> {
     return Scaffold(
       appBar: AppBar(
         title: Text(widget.inviteDetails.name ?? ''),
+        
       ),
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Text('Détails de l\'invitation'),
+            Text( widget.inviteDetails.date ),
             SizedBox(height: 20),
             Row(
               mainAxisAlignment: MainAxisAlignment.center,

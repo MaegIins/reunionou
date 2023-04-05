@@ -69,6 +69,8 @@ class _EventParticipantsPageState extends State<EventParticipantsPage> {
                       statusText = "Accepté";
                     } else if (participant.status == 2) {
                       statusText = "Je ne viens pas";
+                    } else if (participant.status == 3) {
+                      statusText = "Organisateur";
                     }
                     return ListTile(
                       title: Text(participant.nameUser ?? ''),

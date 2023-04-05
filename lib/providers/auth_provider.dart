@@ -5,7 +5,7 @@ import '../models/auth.dart';
 
 class AuthProvider {
   Future<AuthCheck> getAuth(String bearerToken) async {
-    final url = Uri.parse('http://localhost:3333/auth/validate');
+    final url = Uri.parse('http://docketu.iutnc.univ-lorraine.fr:20005/auth/validate');
     final response = await http.get(
       url,
       headers: {'Authorization': bearerToken },

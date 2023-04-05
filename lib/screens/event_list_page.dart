@@ -87,14 +87,14 @@ class EventListPage extends StatelessWidget {
                 );
               },
             );
-          } else if (isConnected) {
+          }/* else if (isConnected) {
             return Center(
               child: Text('Vous n\'êtes pas connecté',
               style: TextStyle(
                             fontSize: 18.0),
             ),
             );
-          } else { 
+          }*/ else { 
             return Center(
               child: CircularProgressIndicator(),
             );
