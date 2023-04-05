@@ -48,7 +48,7 @@
         <button v-if="userEmail === orgaMail" @click="createInvitation"><i class="bi bi-share"></i></button>
 
         <div v-if="userEmail === orgaMail" id="invite-user-form">
-            <input v-model="inviteEmail" type="email" placeholder="Inviter un utilisateur existant (email)"/>
+            <input @keydown.enter="inviteExistingUser" v-model="inviteEmail" type="email" placeholder="Inviter un utilisateur existant (email)"/>
             <button @click="inviteExistingUser"><i class="bi bi-person-fill-add"></i></button>
         </div>
 

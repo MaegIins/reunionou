@@ -1,9 +1,9 @@
 <template>
     <div id="EventIn">
 
-        <router-link to="/accueil">
-            <h1>REUNIONOU.APP</h1>
-        </router-link>
+
+        <h1 @click="this.$router.push('/accueil')">REUNIONOU.APP</h1>
+
 
         <div v-if="errorMessage">
             <p>{{ errorMessage }}</p>
@@ -11,7 +11,11 @@
         <div v-else id="content">
 
             <div id="event-details">
-                <h2>{{ eventName }}</h2>
+                <div>
+                    <p @click="this.$router.push('/liste')" class="link"><i class="bi bi-chevron-left"/>Retour aux
+                        réunions</p>
+                    <h2>{{ eventName }}</h2>
+                </div>
                 <h3>{{ formatDate(eventDate) }}</h3>
             </div>
             <div id="elements">
@@ -25,12 +29,12 @@
                 </div>
             </div>
 
-                        </div>
+        </div>
 
-                        <logout-comp></logout-comp>
+        <logout-comp></logout-comp>
 
 
-                    </div>
+    </div>
 </template>
 
 <script>

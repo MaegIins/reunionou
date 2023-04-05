@@ -1,5 +1,8 @@
 @import "font&colors";
 
+body {
+  overflow-x: hidden;
+}
 
 #EventIn {
   min-height: 100vh;
@@ -7,6 +10,37 @@
   width: 100vw;
   background: $bluePrimary;
   background: $background;
+
+  #routerlink{
+    text-decoration: none;
+  }
+
+  #event-details{
+    display : flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    margin: 15px;
+
+    div{
+        display: grid;
+
+        grid-template-columns: 1fr 1fr 1fr;
+      width: 100%;
+
+      *{
+        width: 100%;
+      }
+
+      p{
+        cursor: pointer;
+        &:hover{
+          font-weight: bold;
+        }
+      }
+    }
+
+  }
 
 
   #boutons {
@@ -56,12 +90,14 @@
     font-family: "Bungee", cursive;
     text-decoration: none;
     color: $white;
+    cursor: pointer;
 
   }
 
   div {
     h2 {
       font-family: "Bungee", cursive;
+      font-size: 3em;
       text-align: center;
     }
   }
