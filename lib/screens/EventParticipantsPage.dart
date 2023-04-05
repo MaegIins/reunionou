@@ -29,7 +29,8 @@ class _EventParticipantsPageState extends State<EventParticipantsPage> {
   Future<void> getParticipants() async {
     final bearerToken = "Bearer " + Auth().token;
     try {
-      final attendees = await EventsProvider().getEventAttendees(bearerToken, widget.eventDetails!);
+      final attendees = await EventsProvider()
+          .getEventAttendees(bearerToken, widget.eventDetails!);
       print(attendees);
       setState(() {
         _participantsList = attendees;
