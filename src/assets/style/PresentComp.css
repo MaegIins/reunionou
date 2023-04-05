@@ -5,6 +5,73 @@
   justify-content: center;
   width: 20%;
 }
+#pplList .modal {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: fixed;
+  z-index: 1;
+  top: -20px;
+  left: -10px;
+  width: 100vw;
+  height: 100vh;
+  background-color: rgba(0, 0, 0, 0.5);
+  overflow: hidden;
+}
+#pplList .modal .modal-title {
+  color: black;
+}
+#pplList .modal .modal-dialog {
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+}
+#pplList .modal .modal-content {
+  background-color: white;
+  padding: 20px;
+  border-radius: 4px;
+  width: 90%;
+  max-width: 500px;
+}
+#pplList .modal .modal-content .modal-header .close {
+  height: 50px;
+  width: 50px;
+  border-radius: 50%;
+}
+#pplList .modal .modal-content .modal-footer button {
+  height: 50px;
+  width: 50px;
+  border-radius: 50%;
+}
+#pplList #invite-user-form {
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-around;
+  vertical-align: center;
+}
+#pplList #invite-user-form input {
+  width: 80%;
+  height: 50px;
+  border-radius: 20px;
+  border: none;
+  padding: 10px;
+  font-size: 1rem;
+  color: #fdfdfd;
+  background: rgb(17, 0, 119);
+}
+#pplList #invite-user-form button {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  border: none;
+  padding: 10px;
+  font-size: 1rem;
+  color: #fdfdfd;
+  background: rgb(17, 0, 119);
+}
 #pplList #everyPpl {
   display: flex;
   flex-direction: column;
@@ -69,4 +136,6 @@
 #pplList #pplin #maybe {
   background: #fdfdfd;
   color: #0a0a0a;
-}/*# sourceMappingURL=PresentComp.css.map */
+}
+
+/*# sourceMappingURL=PresentComp.css.map */
