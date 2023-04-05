@@ -59,63 +59,142 @@ class _ChatWidgetState extends State<ChatWidget> {
   }
 
   @override
-  Widget build(BuildContext context) {
-    return FutureBuilder<List<Message>>(
-      future: getComment(),
-      builder: (context, snapshot) {
-        if (snapshot.connectionState == ConnectionState.waiting) {
-          return CircularProgressIndicator();
-        } else if (snapshot.hasData) {
-          final messages = snapshot.data!;
-          return Scaffold(
-            appBar: AppBar(title: Text('Chat')),
-            body: Column(
-              children: [
-                Expanded(
-                  child: ListView.builder(
-                    itemCount: messages.length,
-                    itemBuilder: (context, index) {
-                      final message = messages[index];
-                      return ListTile(
-                        title: Text(message.text),
-                        subtitle: Text(message.username.toString()),
-                      );
-                    },
+Widget build(BuildContext context) {
+  return FutureBuilder<List<Message>>(
+    future: getComment(),
+    builder: (context, snapshot) {
+      if (snapshot.connectionState == ConnectionState.waiting) {
+        return Center(
+          child: CircularProgressIndicator(),
+        );
+      } else if (snapshot.hasData) {
+        final messages = snapshot.data!;
+        return Scaffold(
+          appBar: AppBar(
+            title: Text('Commentaires'),
+            centerTitle: true,
+            
+          ),
+          body: Column(
+            children: [
+              Expanded(
+                child: ListView.builder(
+                  itemCount: messages.length,
+                  itemBuilder: (context, index) {
+                    final message = messages[index];
+                    return Card(
+                      margin: EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                      elevation: 4,
+                      child: ListTile(
+                        title: Text(
+                          message.text,
+                          style: TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                        subtitle: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            SizedBox(height: 4),
+                            Text(
+                              message.username.toString(),
+                              style: TextStyle(
+                                color: Colors.grey[600],
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                            SizedBox(height: 4),
+                            Text(
+                              message.date.toString().substring(0, 16),
+                              style: TextStyle(
+                                color: Colors.grey[500],
+                                fontStyle: FontStyle.italic,
+                              ),
+                            ),
+                            SizedBox(height: 8),
+                          ],
+                        ),
+                      ),
+                    );
+                  },
+                ),
+              ),
+              Container(
+                padding: EdgeInsets.all(8),
+                decoration: BoxDecoration(
+                  border: Border(
+                    top: BorderSide(
+                      color: Colors.grey[300]!,
+                      width: 1,
+                    ),
                   ),
                 ),
-                Container(
-                  padding: EdgeInsets.symmetric(horizontal: 8),
-                  child: Row(
-                    children: [
-                      Expanded(
-                        child: TextField(
-                          controller: _messageController,
-                          decoration: InputDecoration(
-                            hintText: 'Enter a message',
+                child: Row(
+                  children: [
+                    Expanded(
+                      child: TextField(
+                        controller: _messageController,
+                        decoration: InputDecoration(
+                          hintText: 'Entrez un commentaire',
+                          border: InputBorder.none,
+                         
+                          filled: true,
+                          contentPadding: EdgeInsets.symmetric(
+                            horizontal: 16,
+                            vertical: 8,
                           ),
                         ),
                       ),
-                      IconButton(
-                        icon: const Icon(Icons.send),
-                        onPressed: () => _sendMessage(),
-                      ),
-                    ],
-                  ),
+                    ),
+                    SizedBox(width: 8),
+                    FloatingActionButton(
+                      
+                      child: Icon(Icons.send),
+                      onPressed: () => _sendMessage(),
+                    ),
+                  ],
                 ),
-              ],
+              ),
+            ],
+          ),
+        );
+      } else if (snapshot.hasError) {
+        return Scaffold(
+          appBar: AppBar(
+            title: Text('Erreur'),
+            centerTitle: true,
+            backgroundColor: Colors.red[800],
+          ),
+          body: Center(
+            child: Text(
+              'Erreur : ${snapshot.error}',
+              style: TextStyle(
+                fontSize: 16,
+                fontWeight: FontWeight.bold,
+              ),
             ),
-          );
-        } else if (snapshot.hasError) {
-          return Text('Erreur : ${snapshot.error}');
-        } else {
-          return Scaffold(
-            appBar: AppBar(title: Text('Chat')),
-            body: Center(
-              child: Text('Aucun commentaire trouvé'),
+          ),
+        );
+      } else {
+        return Scaffold(
+          appBar: AppBar(
+            title: Text('Commentaires'),
+            centerTitle: true,
+            
+          ),
+          body: Center(
+            child: Text(
+              'Aucun commentaire trouvé',
+              style: TextStyle(
+                fontSize: 16,
+                fontWeight: FontWeight.bold,
+              ),
             ),
-          );
-        }
-      },
-    );
-  }
+          ),
+        );
+      }
+    },
+  );
+}
 }
