@@ -16,10 +16,14 @@
             <div id="listInvit">
                 <div v-for="invitation in pendingInvitations" :key="invitation.event.id_event" class="eventPending">
                     <h2>{{ invitation.event.name }}</h2>
+                    <router-link class="router" :to="`/events/${invitation.event.id_event}`">
+                        <button>+ Infos</button>
+                    </router-link>
                     <p>{{ invitation.event.description }}</p>
                     <p>{{ displayCorrectDate(invitation.event.date) }} à {{
                         displayCorrectTime(invitation.event.date)
                     }}</p>
+                    <p>{{ invitation.event.place.adress }}</p>
 
                     <textarea v-model="invitation.comment" placeholder="Commentaire"></textarea>
                     <div class="invitation-actions">
@@ -40,10 +44,10 @@
                 <button @click="this.$router.push('/newreunion')"><i class="bi bi-plus" /></button>
             </div>
 
-<div id="mapCont">
+            <div id="mapCont">
 
-    <div id="map"></div>
-</div>
+                <div id="map"></div>
+            </div>
 
             <div id="eventsDiv">
 
@@ -215,9 +219,7 @@ export default {
 
                 if (response.data.type === 'success') {
                     this.errorMessage = '';
-                    const updatedEvent = this.events.find((event) => event.event.id_event === eventId);
-                    updatedEvent.status = status ? 1 : 2;
-                    this.confirmMessage = response.data.message;
+                    this.confirmMessage = 'Votre réponse a bien été enregistrée'; // Personnalisez ce message
                     this.getPendingInvitations();
                     this.getEvents();
                 } else {
@@ -241,7 +243,7 @@ export default {
                 const eventName = event.event.name;
 
                 const marker = L.marker([lat, lon]).addTo(map);
-                marker.bindPopup(`<a href="/events/`+event.event.id_event +`"><b>${eventName}</b></a>`);
+                marker.bindPopup(`<a href="/events/` + event.event.id_event + `"><b>${eventName}</b></a>`);
             });
         },
         toPage(page) {
@@ -254,9 +256,9 @@ export default {
 </script>
 
 <style scoped>
-
 #map {
-    height: 300px; /* Définir la hauteur de la carte */
+    height: 300px;
+    /* Définir la hauteur de la carte */
     margin-bottom: 1rem;
 }
 

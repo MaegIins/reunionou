@@ -11,7 +11,7 @@
         <option v-for="option in options" :value="option.value">{{ option.label }}</option>
       </select>
 
-      <input type="text" id="name" name="name" v-model="title" placeholder="Nom de la réunion">
+      <input type="text" id="name" name="name" v-model="title" placeholder="Nom de l'évènement">
       <input type="text" id="description" name="description" v-model="descr" placeholder="Description">
       <div id="timeDiv">
         <input type="date" id="date" name="date" v-model="date.date" v-bind:min="currentDate">
