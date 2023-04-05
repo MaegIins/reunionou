@@ -41,6 +41,8 @@
             </div>
 
 
+            <div id="map"></div>
+
             <div id="eventsDiv">
 
                 <div v-for="event in eventsSorted" :key="event.event.id_event">
@@ -74,9 +76,13 @@
 
 
 <script>
+import L from 'leaflet';
+import 'leaflet/dist/leaflet.css';
 import api from '../api';
 import "./../assets/style/ListEvents.css";
 import LogoutComp from "@/components/LogoutComp.vue";
+
+
 
 
 export default {
@@ -90,9 +96,10 @@ export default {
             confirmMessage: '',
         }
     },
-    mounted() {
-        this.getEvents();
+    async mounted() {
+        await this.getEvents();
         this.getPendingInvitations();
+        this.initLeafletMap();
     },
 
     computed: {
@@ -214,12 +221,35 @@ export default {
                 console.error('Erreur lors de la confirmation de l\'invitation:', error);
             }
         },
+        initLeafletMap() {
+            const map = L.map('map').setView([48.69345, 6.18237], 13);
+
+            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+                maxZoom: 18,
+            }).addTo(map);
+
+            this.events.forEach((event) => {
+                const lat = event.event.place.lat;
+                const lon = event.event.place.lon;
+                const eventName = event.event.name;
+
+                const marker = L.marker([lat, lon]).addTo(map);
+                marker.bindPopup(`<b>${eventName}</b>`);
+            });
+        },
     },
 };
 
 </script>
 
 <style scoped>
+
+#map {
+    height: 300px; /* Définir la hauteur de la carte */
+    margin-bottom: 1rem;
+}
+
 #pending-invitations {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
