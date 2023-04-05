@@ -81,6 +81,11 @@ export default {
         };
     },
     methods: {
+        /**
+         * Méthode qui permet de formater la date
+         * @param dateString date a formater
+         * @returns {string} date formatée
+         */
         formatDate(dateString) {
             const date = new Date(dateString);
             const fullDayinFrench = ["Dimanche", "Lundi", "Mardi", "Mercredi", "Jeudi", "Vendredi", "Samedi"];
@@ -95,7 +100,9 @@ export default {
             return `${day} ${getDay} ${month} ${year} à ${hours}h${minutes}`;
         },
 
-
+        /**
+         * Méthode qui permet de récupérer les informations de l'évènement
+         */
         getEventByInvit() {
             api
                 .get("/invites", {params: {key: this.key}})
@@ -123,6 +130,9 @@ export default {
                 });
         },
 
+        /**
+         * Méthode qui permet d'afficher la carte
+         */
         showEventOnMap() {
             this.map = L.map("map").setView(this.eventPosition, 13);
             L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
@@ -135,11 +145,18 @@ export default {
                 .bindPopup(`<h2>${this.namePlace}</h2><p>${this.adressPlace}</p>`)
                 .openPopup();
         },
+        /**
+         * Méthode qui permet d'afficher le formulaire de confirmation
+         * @param attending boolean qui permet de savoir si l'utilisateur confirme sa présence ou non
+         */
         showConfirmationForm(attending) {
             this.showForm = true;
             this.attending = attending;
         },
 
+        /**
+         * Méthode qui permet d'envoyer la confirmation de présence ou d'absence
+         */
         async confirm() {
             try {
                 const response = await api.post("/invites/confirm", {
@@ -166,12 +183,17 @@ export default {
         },
     },
     computed: {
+        /**
+         * Méthode qui permet d'accéder au paramètre de requête key
+         * @returns {*} paramètre de requête key
+         */
         key() {
             // Accéder au paramètre de requête key
             return this.$route.query.key;
         },
     },
     mounted() {
+
         console.log("La clé est :", this.key);
         this.getEventByInvit();
     },

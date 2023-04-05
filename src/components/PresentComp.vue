@@ -66,7 +66,10 @@ export default {
     name: "PresentComp",
     props: ["listPpl", "organizer", "orgaMail", "userEmail"],
     methods: {
-
+        /**
+         * Invite un utilisateur existant à l'événement.
+         * @returns {Promise<void>}
+         */
         async inviteExistingUser() {
             this.errorMessage = ""; // Réinitialise le message d'erreur
 
@@ -99,6 +102,10 @@ export default {
                 }
             }
         },
+        /**
+         * Crée un lien d'invitation à l'événement.
+         * @returns {Promise<void>}
+         */
         async createInvitation() {
             try {
                 const response = await api.get(`/events/${this.$route.params.id}/share`);

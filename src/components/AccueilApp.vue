@@ -40,6 +40,10 @@ import LogoutComp from "@/components/LogoutComp.vue";
 export default {
     name: "AccueilApp",
     methods: {
+        /**
+         * Returns the router
+         * @returns {Router} the router
+         */
         router() {
             return router
         }
@@ -52,11 +56,8 @@ export default {
         };
     },
     mounted() {
-        if (sessionStorage.getItem("access_token") === null) {
-            this.logged = false;
-        } else {
-            this.logged = true;
-        }
+        // Check if the user is logged
+        this.logged = sessionStorage.getItem("access_token") !== null;
     }
 }
 </script>
